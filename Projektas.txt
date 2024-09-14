@@ -1,0 +1,31 @@
+Ideja: Sukurti programa kurioje yra surinktos lavinancios kognitivias funkcijas uzduotis.
+
+Struktura ir funkcijos:
+	Main menu (Pagrindinis langas):
+		Pradzios ar kolekcijos migtukas kuris pakeicia langa i kita kur galima pasirinkti viena is esamu uzduociu.
+		Galimibe sukurti paskira kurioje bus issaugoma informacija is visu uzduociu.
+		Nustatimai:
+			Kalbos pakeitimas.
+			Audio nustatimai (Jeigu pridesime garsus).
+		Programos uzdarimo migtukas.
+
+	Uzduotis:
+		Greitas matematiniu uzduociu sprendimas.
+			Gaunama informacija:
+				Kiek matematiniu uzduociu buvo isspresta teisingai ir klaidingai.
+		Poros radimas.
+			Gaunama informacija:
+				Kiek laiko uztruko surasti visas poras.
+		Sudoku.
+			Gaunama informacija:
+				Kiek laiko uztruko isspresti.
+		Aim trainer.
+			Gaunama informacija:
+				Kiek kartu pataike ir koks buvo greitis.
+
+	Kiekviena uzduotis tures:
+		Keli sunkumo lygiai.
+		Scoreboard.
+		Statistica.
+		Duomenu issaugojimas i paskira.
+		Galimibe naudotis be paskiros bet tada nebus saugojama informacija.
