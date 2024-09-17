@@ -2,12 +2,11 @@ Ideja: Sukurti programa kurioje yra surinktos lavinancios kognitivias funkcijas 
 
 Struktura ir funkcijos:
 	Main menu (Pagrindinis langas):
-		Pradzios ar kolekcijos migtukas kuris pakeicia langa i kita kur galima pasirinkti viena is esamu uzduociu.
-		Galimibe sukurti paskira kurioje bus issaugoma informacija is visu uzduociu.
+		Uzduociu sarasas, kur galima pasirinkti kokia uzduoti ijungti.
+		Galimibe sukurti arba prisijungti prie sukurtos paskiros kurioje bus issaugoma informacija is visu uzduociu.
 		Nustatimai:
 			Kalbos pakeitimas.
 			Audio nustatimai (Jeigu pridesime garsus).
-		Programos uzdarimo migtukas.
 
 	Uzduotis:
 		Greitas matematiniu uzduociu sprendimas.
