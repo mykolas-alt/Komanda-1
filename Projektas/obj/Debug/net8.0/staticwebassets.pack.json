@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Projektas.bundle.scp.css",
+      "PackagePath": "staticwebassets\\Projektas.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Projektas.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Projektas.props",
+      "PackagePath": "build\\Projektas.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Projektas.props",
+      "PackagePath": "buildMultiTargeting\\Projektas.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Projektas.props",
+      "PackagePath": "buildTransitive\\Projektas.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
