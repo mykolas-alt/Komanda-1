@@ -1,10 +1,14 @@
 using Projektas.Components;
+using Projektas.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddScoped<MathGameService>();
+builder.Services.AddScoped<TimerService>();
 
 var app = builder.Build();
 
