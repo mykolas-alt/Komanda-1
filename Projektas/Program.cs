@@ -9,6 +9,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<MathGameService>();
 builder.Services.AddScoped<TimerService>();
+builder.Services.AddScoped<AimTrainerService>();
 
 var app = builder.Build();
 

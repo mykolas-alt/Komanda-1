@@ -1,0 +1,99 @@
+﻿@page "/aim-trainer"
+@inject Projektas.Services.AimTrainerService AimService
+@inject Projektas.Services.TimerService TimerService
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <h1>Aim Trainer</h1>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px; flex-direction: column;">
+    <div style="text-align: center; width: 100%; max-width: 1000px; margin: auto;">
+        @if (!isGameActive)
+        {
+            @if (!isGameOver)
+            {
+                <div style="margin-top: 20px;">
+                    <button @onclick="StartGame" style="padding: 10px 20px;">Start Game</button>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <h2>Game Over!</h2>
+                    <h3>Your Final Score: @AimService.Score</h3>
+                    <button @onclick="TryAgain" style="padding: 10px 20px;">Try Again</button>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="position: relative; width: 100%; max-width: 1000px; height: 400px; background-color: lightgray; margin: auto;">
+                <button @onclick="OnTargetClicked"
+                        style="position: absolute; left:@(AimService.TargetPosition.x)px; top:@(AimService.TargetPosition.y)px;
+                        width: 50px; height: 50px; background-color: red; border: none; border-radius: 50%;">
+                </button>
+            </div>
+        }
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-right: 20px; width: 100%; max-width: 1000px;">
+        @if (isGameActive)
+        {
+            <h4 style="font-size: 18px; margin-right: 10px;">Score: @AimService.Score</h4>
+            <h4 style="font-size: 18px;">Time Remaining: @TimerService.GetRemainingTime() seconds</h4>
+        }
+    </div>
+</div>
+
+@code {
+    private bool isGameActive = false;
+    private bool isGameOver = false;
+
+    private void StartGame()
+    {
+        isGameActive = true;
+        isGameOver = false;
+        AimService.ResetGame(1000, 400); 
+        TimerService.Start(30); 
+        TimerService.OnTick += TimerTick;
+        StateHasChanged(); 
+    }
+
+    private void TimerTick()
+    {
+        InvokeAsync(StateHasChanged);
+
+        if (TimerService.GetRemainingTime() == 0)
+        {
+            EndGame(); 
+        }
+    }
+
+    private void OnTargetClicked()
+    {
+        if (TimerService.GetRemainingTime() > 0)
+        {
+            AimService.RegisterHit(1000, 400);
+            StateHasChanged(); 
+        }
+    }
+
+    private async Task EndGame()
+    {
+        isGameActive = false;
+        isGameOver = true;
+        TimerService.OnTick -= TimerTick; 
+        await InvokeAsync(StateHasChanged); 
+    }
+
+    private void TryAgain()
+    {
+        isGameOver = false;
+        StartGame(); 
+    }
+
+    public void Dispose()
+    {
+        TimerService.OnTick -= TimerTick; 
+    }
+}

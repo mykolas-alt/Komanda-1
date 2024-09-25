@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "vgTBlcQlqN8E1aJq081ZDS/aqyO4vIjNoI6T7CgMGmA=",
+  "Hash": "x3fEgIGze6vijlNEVgE28XaOY1Xeh3WaIgPZ1tKOIWg=",
   "Source": "Projektas",
   "BasePath": "_content/Projektas",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "Projektas\\wwwroot",
       "Source": "Projektas",
-      "ContentRoot": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\",
+      "ContentRoot": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\",
       "BasePath": "_content/Projektas",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Projektas.styles.css",
+      "Identity": "C:\\c#\\Komanda-1\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Projektas.styles.css",
       "SourceId": "Projektas",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\c#\\Komanda-1\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/Projektas",
       "RelativePath": "Projektas.styles.css",
       "AssetKind": "All",
@@ -33,13 +33,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Projektas.styles.css"
+      "OriginalItemSpec": "C:\\c#\\Komanda-1\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Projektas.styles.css"
     },
     {
-      "Identity": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Projektas.bundle.scp.css",
+      "Identity": "C:\\c#\\Komanda-1\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Projektas.bundle.scp.css",
       "SourceId": "Projektas",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\c#\\Komanda-1\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/Projektas",
       "RelativePath": "Projektas.bundle.scp.css",
       "AssetKind": "All",
@@ -52,13 +52,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Projektas.bundle.scp.css"
+      "OriginalItemSpec": "C:\\c#\\Komanda-1\\Projektas\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Projektas.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\app.css",
+      "Identity": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\app.css",
       "SourceId": "Projektas",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\",
+      "ContentRoot": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\",
       "BasePath": "_content/Projektas",
       "RelativePath": "app.css",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot\\app.css"
     },
     {
-      "Identity": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Identity": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\bootstrap\\bootstrap.min.css",
       "SourceId": "Projektas",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\",
+      "ContentRoot": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\",
       "BasePath": "_content/Projektas",
       "RelativePath": "bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "Projektas",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\",
+      "ContentRoot": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\",
       "BasePath": "_content/Projektas",
       "RelativePath": "bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -112,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\favicon.png",
+      "Identity": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\favicon.png",
       "SourceId": "Projektas",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\lenovo\\Desktop\\Artiom\\Studies\\2course\\1semester\\Software_engineering\\Project\\Projektas\\wwwroot\\",
+      "ContentRoot": "C:\\c#\\Komanda-1\\Projektas\\wwwroot\\",
       "BasePath": "_content/Projektas",
       "RelativePath": "favicon.png",
       "AssetKind": "All",
