@@ -1,1 +1,12 @@
 .vs/
+*.pdb
+*.dll
+*.exe
+/Projektas/obj/Debug/net8.0/apphost.exe
+/Projektas/obj/Debug/net8.0/Projektas.AssemblyInfo.cs
+/Projektas/obj/Debug/net8.0/Projektas.AssemblyInfoInputs.cache
+/Projektas/obj/Debug/net8.0/Projektas.csproj.CoreCompileInputs.cache
+/Projektas/obj/Debug/net8.0/Projektas.dll
+/Projektas/obj/Debug/net8.0/Projektas.GeneratedMSBuildEditorConfig.editorconfig
+/Projektas/obj/Debug/net8.0/Projektas.pdb
+/Projektas/obj/Debug/net8.0/Projektas.sourcelink.json
