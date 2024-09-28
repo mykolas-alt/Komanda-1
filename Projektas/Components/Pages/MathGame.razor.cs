@@ -1,10 +1,13 @@
 namespace Projektas.Components.Pages
 {
     using Projektas.Services;
+    using System.Numerics;
 
     public partial class MathGame
     {
-        private (int, int, Operation)? question;
+        private string? question;
+        private List<int>? numbers;
+        private List<Operation>? operations;
         private string userAnswer = string.Empty;
         private string? result;
         private bool isSubmitted = false;
@@ -27,7 +30,10 @@ namespace Projektas.Components.Pages
         // generates a question and resets userAnswer, result and isSubmitted fields
         private void GenerateQuestion()
         {
-            question = MathGameService.GenerateQuestion();
+            var questionData = MathGameService.GenerateQuestion();
+            question = questionData.question;
+            numbers = questionData.numbers;
+            operations = questionData.operations;
             userAnswer = string.Empty;
             result = null;
             isSubmitted = false;
@@ -39,11 +45,11 @@ namespace Projektas.Components.Pages
             // then checks the answer and returns true or false
             // according to the true/false value it sets the result value accordingly (correct or try again)
             // if user input was not and integer number, then result is set to "try again"
-            if (question.HasValue)
+            if (question != null && numbers != null && operations != null)
             {
                 if (int.TryParse(userAnswer, out int parsedAnswer))
                 {
-                    bool isCorrect = MathGameService.CheckAnswer(question.Value.Item1, question.Value.Item2, question.Value.Item3, parsedAnswer);
+                    bool isCorrect = MathGameService.CheckAnswer(numbers, operations, parsedAnswer);
                     result = isCorrect ? "Correct!" : "Try again!";
                     isSubmitted = true;
                 }
@@ -76,29 +82,6 @@ namespace Projektas.Components.Pages
         {
             // unsubscribes from the OnTick event to prevent memory leaks
             TimerService.OnTick -= OnTimerTick;
-        }
-
-        // displays question operation accordingly
-        public string DisplayQuestionOperationValue(Operation operation)
-        {
-            if (operation == Operation.Addition)
-            {
-                return "+";
-            }
-            else if (operation == Operation.Subtraction)
-            {
-                return "-";
-            }
-            else if (operation == Operation.Multiplication)
-            {
-                return "*";
-            }
-            else if (operation == Operation.Division)
-            {
-                return "/";
-            }
-            return "";
-
         }
     }
 }

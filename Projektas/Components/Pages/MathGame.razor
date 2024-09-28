@@ -10,7 +10,7 @@
     // if the question is not null, display the question and input field
     @if (!isSubmitted || result == "Try again!")
     {
-        <p>What is @question.Value.Item1 @DisplayQuestionOperationValue(question.Value.Item3) @question.Value.Item2?</p>
+        <p>What is @question = ?</p>
         <input @bind="userAnswer" />
         <button @onclick="CheckAnswer">Submit</button>
     }

@@ -1,4 +1,6 @@
-﻿namespace Projektas.Services
+﻿using System.Text;
+
+namespace Projektas.Services
 {
     public enum Operation
     {
@@ -14,76 +16,191 @@
 
         public int Score { get; set; } = 0;
 
-        public (int, int, Operation) GenerateQuestion()
+        public (string question, List<int> numbers, List<Operation> operations) GenerateQuestion()
         {
             // increase difficulty based on the current score
-            int maxNumber = 100 + (Score * 10); // increases the range of numbers as the score increases
-            int number1 = _random.Next(1, maxNumber);
-            int number2 = _random.Next(1, maxNumber);
-            Operation[] operations = { Operation.Addition, Operation.Subtraction, Operation.Multiplication, Operation.Division };
-            Operation operation = operations[_random.Next(operations.Length)]; // chooses a random operation
+            int maxNumber = 10 + (Score * 10); // increases the range of numbers as the score increases
+            int maxOperands = (int)(3 + (Score * 0.1)); // increases the range of operands as the score inscreases
+            int numberOfOperands = _random.Next(2, maxOperands);
 
-            // checks if there is no division by 0, number1 is divisible by number2, number1 is not prime and number1 >= number2
-            // if true, then new numbers are generated to meet the criteria
-            if (operation == Operation.Division)
+            // generate numbers and operations
+            List<int> numbers = GenerateNumbers(numberOfOperands, maxNumber);
+            List<Operation> operations = GenerateOperations(numberOfOperands);
+
+            // adjust numbers by operation (division or multiplication)
+            AdjustNumbersForOperations(numbers, operations, maxNumber);
+
+            return (BuildQuestion(numbers,operations), numbers, operations);
+        }
+
+        // generates numbers and adds to the list
+        private List<int> GenerateNumbers(int numberOfOperands, int maxNumber)
+        {
+            List<int> numbers = [];
+            for (int i = 0; i < numberOfOperands; i++)
             {
-                while (number2 == 0 || number2 == 1 || number1 % number2 != 0 || number1 < number2 || IsPrime(number1))
+                numbers.Add(GenerateNumber(maxNumber));
+            }
+            return numbers;
+        }
+
+        // generates operations and adds to the list
+        private List<Operation> GenerateOperations(int numberOfOperands)
+        {
+            List<Operation> operations = [];
+            Operation[] possibleOperations = { Operation.Addition, Operation.Subtraction, Operation.Multiplication, Operation.Division };
+
+            for (int i = 0; i < numberOfOperands - 1; i++)
+            {
+                operations.Add(possibleOperations[_random.Next(possibleOperations.Length)]);
+            }
+
+            return operations;
+        }
+
+        // adjusts numbers by operations
+        private void AdjustNumbersForOperations(List<int> numbers, List<Operation> operations, int maxNumber)
+        {
+            for (int i = 1; i < numbers.Count; i++)
+            {
+                if (operations[i - 1] == Operation.Division)
                 {
-                    number1 = _random.Next(1, maxNumber);
-                    number2 = _random.Next(1, maxNumber);
+                    AdjustForDivision(numbers, i, maxNumber);
+                }
+                else if (operations[i - 1] == Operation.Multiplication)
+                {
+                    numbers[i] = _random.Next(2, 10 + (Score / 2));
                 }
             }
-            else if (operation == Operation.Multiplication)
-            {
-                number2 = _random.Next(2, 10 + (Score / 2)); // increases the range of the second number for multiplication
-            }
+        }
 
-            return (number1, number2, operation);
+        private void AdjustForDivision(List<int> numbers, int index, int maxNumber)
+        {
+            // checks division by 0 and if number is not 1
+            // then if 1st number is bigger than 2nd or if they are divisable
+            while (numbers[index] == 0 || numbers[index] == 1 || numbers[index - 1] < numbers[index] || numbers[index - 1] % numbers[index] != 0)
+            {
+                numbers[index] = GenerateNumber(maxNumber);
+            }
+        }
+
+        // generates the string of the quesrion
+        private static string BuildQuestion(List<int> numbers, List<Operation> operations)
+        {
+            StringBuilder questionBuilder = new();
+            questionBuilder.Append(numbers[0]);
+            for (int i = 0; i < operations.Count; i++)
+            {
+                questionBuilder.Append($" {GetOperationSymbol(operations[i])} {numbers[i + 1] }");
+            }
+            return questionBuilder.ToString();
+        }
+
+        // calculates the result of the generated question
+        private static int CalculateAnswer(List<int> numbers, List<Operation> operations)
+        {
+            // handles multiplication and division
+            List<int> processedNumbers = new(numbers);
+            List<Operation> processedOperations = new(operations);
+
+            HandleMultiplicationAndDivision(processedNumbers, processedOperations);
+
+            // handles addition and subtraction
+            int finalResult = HandleAdditionAndSubtraction(processedNumbers, processedOperations);
+
+            return finalResult;
+        }
+
+        // handles multiplication and division
+        private static void HandleMultiplicationAndDivision(List<int> numbers, List<Operation> operations)
+        {
+            for (int i = 0; i < operations.Count; i++)
+            {
+                if (operations[i] == Operation.Multiplication || operations[i] == Operation.Division)
+                {
+                    int left = numbers[i];
+                    int right = numbers[i + 1];
+                    int result = PerformOperation(left, right, operations[i]);
+
+                    // replaces the left number with the result and removes the right number and the operation
+                    numbers[i] = result;
+                    numbers.RemoveAt(i + 1);
+                    operations.RemoveAt(i);
+                    i--; // adjust index
+                }
+            }
+        }
+
+        // handles addition and subtraction
+        private static int HandleAdditionAndSubtraction(List<int> numbers, List<Operation> operations)
+        {
+            int result = numbers[0];
+            for (int i = 0; i < operations.Count; i++)
+            {
+                int right = numbers[i + 1];
+                result = PerformOperation(result, right, operations[i]);
+            }
+            return result;
+        }
+
+        // performs calculations by operation
+        private static int PerformOperation(int left, int right, Operation operation)
+        {
+            switch (operation)
+            {
+                case Operation.Multiplication:
+                    return left * right;
+                case Operation.Division:
+                    return left / right;
+                case Operation.Addition:
+                    return left + right;
+                case Operation.Subtraction:
+                    return left - right;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
+            }
         }
 
         // checks answer and returns true or false
-        public bool CheckAnswer(int number1, int number2, Operation operation, int answer)
+        public bool CheckAnswer(List<int> numbers, List<Operation> operations, int answer)
         {
-            bool isCorrect = false;
-            switch (operation)
-            {
-                case Operation.Addition:
-                    isCorrect = number1 + number2 == answer;
-                    break;
-                case Operation.Subtraction:
-                    isCorrect = number1 - number2 == answer;
-                    break;
-                case Operation.Multiplication:
-                    isCorrect = number1 * number2 == answer;
-                    break;
-                case Operation.Division:
-                    isCorrect = number1 / number2 == answer;
-                    break;
-            }
+            int finalResult = CalculateAnswer(numbers, operations);
+            bool isCorrect = finalResult == answer;
 
             // if correct, score is incremented
             if (isCorrect)
             {
                 Score++;
             }
+
             return isCorrect;
         }
 
-        // checks if the number is prime and returns true or false
-        private static bool IsPrime(int number)
+        // generates a random number
+        private int GenerateNumber(int maxNumber)
         {
-            if (number <= 1)
-                return false;
-            if (number == 2)
-                return true;
-            if (number % 2 == 0)
-                return false;
-            for (int i = 3; i <= Math.Sqrt(number); i += 2)
-            {
-                if (number % i == 0)
-                    return false;
-            }
-            return true;
+            int number = _random.Next(1, maxNumber);
+
+            return number;
         }
+
+        // returns a symbol of an operation
+        private static string GetOperationSymbol(Operation operation)
+        {
+            switch (operation)
+            {
+                case Operation.Addition:
+                    return "+";
+                case Operation.Subtraction:
+                    return "-";
+                case Operation.Multiplication:
+                    return "*";
+                case Operation.Division:
+                    return "/";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
+            }
+        }
+
     }
 }
