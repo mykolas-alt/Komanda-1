@@ -1,49 +1,68 @@
 ﻿@page "/mathgame"
 @inject Projektas.Services.MathGameService MathGameService
 @inject Projektas.Services.TimerService TimerService
+@using Projektas.Components
 @rendermode InteractiveServer
 
-<h3>Math Game</h3>
-
-@if (question != null)
-{
-    // if the question is not null, display the question and input field
-    @if (!isSubmitted || result == "Try again!")
-    {
-        <p>What is @question = ?</p>
-        <input @bind="userAnswer" />
-        <button @onclick="CheckAnswer">Submit</button>
-    }
-
-    // display the result if it is not null
-    @if (result != null)
-    {
-        <p>@result</p>
-        // if the answer is correct, show the "Next" button to generate a new question
-        @if (result == "Correct!")
+<div class="container">
+    <div class="math-game">
+        @if(question != null && isTimesUp == false)
         {
-            <button @onclick="GenerateQuestion">Next</button>
+            <div class="app-title">
+                Math Game!
+            </div>
+            <div class="math-game-header">
+                <p>What is @question = ?</p>
+            </div>
+            <div class="math-game-body">
+                @foreach (var option in options)
+                {
+                    <OptionCard Option="@option" OnOptionSelected="CheckAnswer" IsDisabled="@(result == "Correct!")"></OptionCard>
+
+                }
+
+                @if (result != null)
+                {
+                    <p>@result</p>
+                    @if (result == "Correct!")
+                    {
+                        GenerateQuestionWithDelay();
+                    }
+                }
+
+                <div class="score-time-container">
+                    <div class="score">
+                        <p>Score: @MathGameService.Score</p>
+                    </div>
+                    <div class="time">
+                        <p>Time left: @TimerService.GetRemainingTime() seconds</p>
+                    </div>
+                </div>
+            </div>
         }
-    }
-
-    // display the current score
-    <p>Score: @MathGameService.Score</p>
-
-    // if the time is not up, show the remaining time
-    @if (result != "Time's up!")
-    {
-        <p>Time left: @TimerService.GetRemainingTime() seconds</p>
-    }
-
-    // if the time is up, show the "Replay" button to start a new game
-    else if (result == "Time's up!")
-    {
-        <button class="btn btn-primary" @onclick="StartGame">Replay</button>
-    }
-}
-else
-{
-    // if the question is null, prompt the user to start the game
-    <p>Test your math skills!</p>
-    <button class="btn btn-primary" @onclick="StartGame">Start Game</button>
-}
+        else if (isTimesUp == false && question == null)
+        {
+            <div class="app-title">
+                Math Game!
+            </div>
+            <div class="math-game-header">
+                <p>Test your math skills!</p>
+            </div>
+            <div class="math-game-footer">
+                <button class="play-btn" @onclick="StartGame">Start game</button>
+            </div>
+        }
+        else if (isTimesUp == true && question != null)
+        {
+            <div class="app-title">
+                Game over!
+            </div>
+            <div class="math-game-header">
+                <b>You scored @MathGameService.Score points!</b>
+            </div>
+            <div class="math-game-footer">
+                <button class="play-btn" @onclick="StartGame">Play again</button>
+            </div>
+        }
+    </div>
+</div>

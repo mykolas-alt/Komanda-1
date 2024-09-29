@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Formats.Asn1;
+using System.Text;
 
 namespace Projektas.Services
 {
@@ -162,10 +163,10 @@ namespace Projektas.Services
         }
 
         // checks answer and returns true or false
-        public bool CheckAnswer(List<int> numbers, List<Operation> operations, int answer)
+        public bool CheckAnswer(int option, List<int> numbers, List<Operation> operations)
         {
             int finalResult = CalculateAnswer(numbers, operations);
-            bool isCorrect = finalResult == answer;
+            bool isCorrect = finalResult == option;
 
             // if correct, score is incremented
             if (isCorrect)
@@ -201,6 +202,15 @@ namespace Projektas.Services
                     throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
             }
         }
-
+        // generates four options, including the correct answer
+        public List<int> GenerateOptions(List<int> numbers, List<Operation> operations)
+        {
+            int answer = CalculateAnswer(numbers, operations);
+            int option1 = _random.Next(answer - 100, answer + 100);
+            int option2 = _random.Next(answer - 100, answer + 100);
+            int option3 = _random.Next(answer - 100, answer + 100);
+            var options = new List<int> { option1, option2, option3, answer };
+            return options.OrderBy(x => Guid.NewGuid()).ToList(); // shuffles options
+        }
     }
 }

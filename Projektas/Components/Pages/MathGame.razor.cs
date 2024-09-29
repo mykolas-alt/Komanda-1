@@ -1,16 +1,15 @@
 namespace Projektas.Components.Pages
 {
     using Projektas.Services;
-    using System.Numerics;
 
     public partial class MathGame
     {
         private string? question;
         private List<int>? numbers;
         private List<Operation>? operations;
-        private string userAnswer = string.Empty;
         private string? result;
-        private bool isSubmitted = false;
+        private bool isTimesUp = false;
+        private List<int>? options;
 
         protected override void OnInitialized()
         {
@@ -27,36 +26,32 @@ namespace Projektas.Components.Pages
             GenerateQuestion();
         }
 
-        // generates a question and resets userAnswer, result and isSubmitted fields
+        // generates a question and answer options
         private void GenerateQuestion()
         {
             var questionData = MathGameService.GenerateQuestion();
             question = questionData.question;
             numbers = questionData.numbers;
             operations = questionData.operations;
-            userAnswer = string.Empty;
+            options = MathGameService.GenerateOptions(numbers, operations);
             result = null;
-            isSubmitted = false;
+            isTimesUp = false;
         }
 
-        private void CheckAnswer()
+        private async void GenerateQuestionWithDelay()
         {
-            // parses the answer from the user input to an integer number
-            // then checks the answer and returns true or false
-            // according to the true/false value it sets the result value accordingly (correct or try again)
-            // if user input was not and integer number, then result is set to "try again"
+            await Task.Delay(750);
+            GenerateQuestion();
+        }
+
+        // checks the answer if it's correct
+        private void CheckAnswer(int option)
+        {
             if (question != null && numbers != null && operations != null)
             {
-                if (int.TryParse(userAnswer, out int parsedAnswer))
-                {
-                    bool isCorrect = MathGameService.CheckAnswer(numbers, operations, parsedAnswer);
-                    result = isCorrect ? "Correct!" : "Try again!";
-                    isSubmitted = true;
-                }
-                else
-                {
-                    result = "Try again!";
-                }
+                bool isCorrect = MathGameService.CheckAnswer(option, numbers, operations);
+                result = isCorrect ? "Correct!" : "Try again!";
+                StateHasChanged();
             }
         }
 
@@ -69,8 +64,7 @@ namespace Projektas.Components.Pages
                 // then stop the timer
                 if (TimerService.GetRemainingTime() == 0)
                 {
-                    result = "Time's up!";
-                    isSubmitted = true;
+                    isTimesUp = true;
                     TimerService.Stop();
                 }
                 // updates the UI to reflect the changes
