@@ -1,0 +1,57 @@
+﻿.col {
+    flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.nav-item {
+    font-size: 0.9rem;
+    padding-top: 0rem;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+
+    .nav-item ::deep .nav-link {
+        color: #303030;
+        background: #a3a3a3;
+        border: solid;
+        border-radius: 4px;
+        border-color: black;
+        height: 16rem;
+        display: flex;
+        line-height: 3rem;
+        width: 20rem;
+    }
+
+    .nav-item ::deep .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: black;
+    }
+
+.bi {
+    display: inline-block;
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+    top: -1px;
+    background-size: cover;
+}
+
+.name {
+    border: solid;
+    border-radius: 4px;
+    border-color: black;
+    font-size: 25px;
+    margin-top: -2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.desc {
+    border: solid;
+    border-radius: 4px;
+    border-color: black;
+    height: 10rem;
+}

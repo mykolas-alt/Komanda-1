@@ -16,6 +16,7 @@ main {
 
 .sidebar {
     background: #a1a1a1;
+    border-right: 3px solid #7d7c7c;
 }
 
 .top-row {
