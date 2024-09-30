@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="math-game">
-        @if(question != null && isTimesUp == false)
+        @if(question != null && isTimesUp == false && MathGameService.Lives > 0)
         {
             <div class="app-title">
                 Math Game!
@@ -18,7 +18,6 @@
                 @foreach (var option in options)
                 {
                     <OptionCard Option="@option" OnOptionSelected="CheckAnswer" IsDisabled="@(result == "Correct!")"></OptionCard>
-
                 }
 
                 @if (result != null)
@@ -28,19 +27,26 @@
                     {
                         GenerateQuestionWithDelay();
                     }
+                    else if (result == "Try again!")
+                    {
+                        ResetResultWithDelay();
+                    }
                 }
 
-                <div class="score-time-container">
+                <div class="score-time-lives-container">
                     <div class="score">
                         <p>Score: @MathGameService.Score</p>
                     </div>
                     <div class="time">
                         <p>Time left: @TimerService.GetRemainingTime() seconds</p>
                     </div>
+                    <div class="lives">
+                        <p>Lives: @MathGameService.Lives</p>
+                    </div>
                 </div>
             </div>
         }
-        else if (isTimesUp == false && question == null)
+        else if (isTimesUp == false && question == null && MathGameService.Lives > 0)
         {
             <div class="app-title">
                 Math Game!
@@ -52,8 +58,12 @@
                 <button class="play-btn" @onclick="StartGame">Start game</button>
             </div>
         }
-        else if (isTimesUp == true && question != null)
+        else if ((isTimesUp == true || MathGameService.Lives == 0) && question != null)
         {
+            @if(isTimesUp == true && MathGameService.Lives == 0)
+            {
+                StopGame();
+            }
             <div class="app-title">
                 Game over!
             </div>

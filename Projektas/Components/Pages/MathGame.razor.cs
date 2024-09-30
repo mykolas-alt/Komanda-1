@@ -20,6 +20,7 @@ namespace Projektas.Components.Pages
         private void StartGame()
         {
             MathGameService.Score = 0;
+            MathGameService.Lives = 3;
             TimerService.Start(60);
             GenerateQuestion();
         }
@@ -39,6 +40,12 @@ namespace Projektas.Components.Pages
             GenerateQuestion();
         }
 
+        private async void ResetResultWithDelay()
+        {
+            await Task.Delay(500);
+            result = null;
+        }
+
         // checks the answer if it's correct
         private void CheckAnswer(int option)
         {
@@ -48,6 +55,12 @@ namespace Projektas.Components.Pages
                 result = isCorrect ? "Correct!" : "Try again!";
                 StateHasChanged();
             }
+        }
+
+        private void StopGame()
+        {
+            TimerService.Stop();
+            isTimesUp = true;
         }
 
         private void OnTimerTick()

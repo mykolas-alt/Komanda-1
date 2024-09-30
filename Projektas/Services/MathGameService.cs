@@ -17,6 +17,7 @@ namespace Projektas.Services
 
         private int Answer;
         public int Score { get; set; } = 0;
+        public int Lives { get; set; } = 3;
         private List<int> numbers = [];
         private List<Operation> operations = [];
         private int MaxNumber => 10 + (Score * 10); // increases the range of numbers as the score increases
@@ -177,6 +178,10 @@ namespace Projektas.Services
             {
                 Score++;
             }
+            else
+            {
+                Lives--;
+            }
 
             return isCorrect;
         }
@@ -206,13 +211,16 @@ namespace Projektas.Services
                     throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
             }
         }
-        // generates four options, including the correct answer
+        // generates 4 unique options, including the correct answer
         public List<int> GenerateOptions()
         {
-            int option1 = _random.Next(Answer - MaxNumber, Answer + MaxNumber);
-            int option2 = _random.Next(Answer - MaxNumber, Answer + MaxNumber);
-            int option3 = _random.Next(Answer - MaxNumber, Answer + MaxNumber);
-            var options = new List<int> { option1, option2, option3, Answer };
+            HashSet<int> options = new();
+            options.Add(Answer);
+            while (options.Count < 4)
+            {
+                int option = _random.Next(Answer - MaxNumber, Answer + MaxNumber);
+                options.Add(option);
+            }
             return options.OrderBy(x => Guid.NewGuid()).ToList(); // shuffles options
         }
     }
