@@ -5,8 +5,6 @@ namespace Projektas.Components.Pages
     public partial class MathGame
     {
         private string? question;
-        private List<int>? numbers;
-        private List<Operation>? operations;
         private string? result;
         private bool isTimesUp = false;
         private List<int>? options;
@@ -29,27 +27,24 @@ namespace Projektas.Components.Pages
         // generates a question and answer options
         private void GenerateQuestion()
         {
-            var questionData = MathGameService.GenerateQuestion();
-            question = questionData.question;
-            numbers = questionData.numbers;
-            operations = questionData.operations;
-            options = MathGameService.GenerateOptions(numbers, operations);
+            question = MathGameService.GenerateQuestion();
+            options = MathGameService.GenerateOptions();
             result = null;
             isTimesUp = false;
         }
 
         private async void GenerateQuestionWithDelay()
         {
-            await Task.Delay(750);
+            await Task.Delay(500);
             GenerateQuestion();
         }
 
         // checks the answer if it's correct
         private void CheckAnswer(int option)
         {
-            if (question != null && numbers != null && operations != null)
+            if (question != null)
             {
-                bool isCorrect = MathGameService.CheckAnswer(option, numbers, operations);
+                bool isCorrect = MathGameService.CheckAnswer(option);
                 result = isCorrect ? "Correct!" : "Try again!";
                 StateHasChanged();
             }
