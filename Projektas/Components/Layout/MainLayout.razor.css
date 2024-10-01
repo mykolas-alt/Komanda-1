@@ -1,6 +1,6 @@
 ﻿.page {
-    background: #d1d1d1;
-    position:relative;
+    background: #f0f0f0;
+    position: relative;
     display: flex;
     flex-direction: column;
 }
@@ -15,12 +15,12 @@ main {
 }
 
 .sidebar {
-    background: #a1a1a1;
+    background: #b8b8b8;
     border-right: 3px solid #7d7c7c;
 }
 
 .top-row {
-    background: #ababab;
+    background: #c9c9c9;
     border-bottom: 3px solid #6b6b6b;
     justify-content: flex-start;
     height: 3.5rem;
@@ -44,7 +44,7 @@ main {
     }
 
 .bottom-row {
-    background: #ababab;
+    background: #c9c9c9;
     border-top: 3px solid #6b6b6b;
     justify-content: flex-start;
     height: 2.5rem;

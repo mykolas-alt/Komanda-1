@@ -8,19 +8,19 @@
     top: -3.1rem;
     right: 1rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: gray;
+    background: #c9c9c9;
 }
 
-.navbar-toggler:checked {
-    background-color: rgba(255, 255, 255, 0.5);
-}
+    .navbar-toggler:checked {
+        background-color: #a6a6a6;
+    }
 
 .navbar-brand {
     font-size: 1.1rem;
 }
 
 .nav-item {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     padding-bottom: 0.5rem;
 }
 
@@ -34,9 +34,10 @@
 
     .nav-item ::deep .nav-link {
         color: #303030;
-        background: none;
-        border: none;
+        background: #a6a6a6;
+        border: solid;
         border-radius: 4px;
+        border-color: #7a7a7a;
         height: 3rem;
         display: flex;
         align-items: center;
@@ -44,15 +45,15 @@
         width: 100%;
     }
 
-.nav-item ::deep a.active {
-    background-color: rgba(255, 255, 255, 0.37);
-    color: #303030;
-}
+    .nav-item ::deep a.active {
+        background-color: #c9c9c9;
+        color: #303030;
+    }
 
-.nav-item ::deep .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: black;
-}
+    .nav-item ::deep .nav-link:hover {
+        background-color: #c9c9c9;
+        color: black;
+    }
 
 .nav-scrollable {
     display: none;
