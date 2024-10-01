@@ -58,3 +58,4 @@ C:\c#\Komanda-1\Projektas\obj\Debug\net8.0\refint\Projektas.dll
 C:\c#\Komanda-1\Projektas\obj\Debug\net8.0\Projektas.pdb
 C:\c#\Komanda-1\Projektas\obj\Debug\net8.0\Projektas.genruntimeconfig.cache
 C:\c#\Komanda-1\Projektas\obj\Debug\net8.0\ref\Projektas.dll
+C:\c#\Komanda-1\Projektas\obj\Debug\net8.0\scopedcss\Components\Pages\Home.razor.rz.scp.css

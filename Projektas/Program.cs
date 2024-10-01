@@ -1,4 +1,5 @@
 using Projektas.Components;
+using Projektas.Components.Pages;
 using Projektas.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,6 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<MathGameService>();
 builder.Services.AddScoped<TimerService>();
 builder.Services.AddScoped<AimTrainerService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

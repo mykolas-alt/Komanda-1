@@ -1,54 +1,70 @@
 .page[b-ixegdm85gv] {
+    background: #f0f0f0;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
 main[b-ixegdm85gv] {
-    flex: 1;
+    flex:1;
+}
+
+.title[b-ixegdm85gv] {
+    font-size:1.5rem;
+    color:black;
 }
 
 .sidebar[b-ixegdm85gv] {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background: #b8b8b8;
+    border-right: 3px solid #7d7c7c;
 }
 
 .top-row[b-ixegdm85gv] {
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #d6d5d5;
-    justify-content: flex-end;
+    background: #c9c9c9;
+    border-bottom: 3px solid #6b6b6b;
+    justify-content: flex-start;
     height: 3.5rem;
     display: flex;
     align-items: center;
 }
 
     .top-row[b-ixegdm85gv]  a, .top-row[b-ixegdm85gv]  .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
+        white-space:nowrap;
+        margin-left:1rem;
+        text-decoration:none;
     }
 
-    .top-row[b-ixegdm85gv]  a:hover, .top-row[b-ixegdm85gv]  .btn-link:hover {
-        text-decoration: underline;
+    .top-row[b-ixegdm85gv]  a:hover, .top-row[b-ixegdm85gv]  .btn-link {
+        text-decoration:underline;
     }
 
     .top-row[b-ixegdm85gv]  a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow:hidden;
+        text-overflow:ellipsis;
     }
+
+.bottom-row[b-ixegdm85gv] {
+    background: #c9c9c9;
+    border-top: 3px solid #6b6b6b;
+    justify-content: flex-start;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+}
 
 @media (max-width: 640.98px) {
     .top-row[b-ixegdm85gv] {
-        justify-content: space-between;
+        justify-content:space-between;
     }
 
     .top-row[b-ixegdm85gv]  a, .top-row[b-ixegdm85gv]  .btn-link {
-        margin-left: 0;
+        margin-right:0;
     }
 }
 
 @media (min-width: 641px) {
-    .page[b-ixegdm85gv] {
-        flex-direction: row;
+    .middle[b-ixegdm85gv] {
+        flex-direction:row;
     }
 
     .sidebar[b-ixegdm85gv] {
@@ -63,10 +79,10 @@ main[b-ixegdm85gv] {
         top: 0;
         z-index: 1;
     }
-
+    
     .top-row.auth[b-ixegdm85gv]  a:first-child {
         flex: 1;
-        text-align: right;
+        text-align: left;
         width: 0;
     }
 
@@ -79,7 +95,7 @@ main[b-ixegdm85gv] {
 #blazor-error-ui[b-ixegdm85gv] {
     background: lightyellow;
     bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.2);
     display: none;
     left: 0;
     padding: 0.6rem 1.25rem 0.7rem 1.25rem;
@@ -87,10 +103,9 @@ main[b-ixegdm85gv] {
     width: 100%;
     z-index: 1000;
 }
-
     #blazor-error-ui .dismiss[b-ixegdm85gv] {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
+        cursor:pointer;
+        position:absolute;
+        right:0.75rem;
+        top:0.5rem;
     }

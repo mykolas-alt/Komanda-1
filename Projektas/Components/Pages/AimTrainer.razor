@@ -13,7 +13,7 @@
             @if (!isGameOver)
             {
                 <div style="margin-top: 20px;">
-                    <button @onclick="StartGame" style="padding: 10px 20px;">Start Game</button>
+                    <button class="btn btn-primary" @onclick="StartGame" style="padding: 10px 20px;">Start Game</button>
                 </div>
             }
             else
@@ -21,16 +21,16 @@
                 <div>
                     <h2>Game Over!</h2>
                     <h3>Your Final Score: @AimService.Score</h3>
-                    <button @onclick="TryAgain" style="padding: 10px 20px;">Try Again</button>
+                    <button class="btn btn-primary" @onclick="TryAgain" style="padding: 10px 20px;">Replay</button>
                 </div>
             }
         }
         else
         {
-            <div style="position: relative; width: 100%; max-width: 1000px; height: 400px; background-color: lightgray; margin: auto;">
+            <div style="position: relative; width: 100%; max-width: 1000px; height: 400px; background-color: lightgray; margin: auto;border: solid; border-radius: 4px;border-color: #7a7a7a;">
                 <button @onclick="OnTargetClicked"
                         style="position: absolute; left:@(AimService.TargetPosition.x)px; top:@(AimService.TargetPosition.y)px;
-                        width: 50px; height: 50px; background-color: red; border: none; border-radius: 50%;">
+                        width: 50px; height: 50px; background-color: blue; border: none; border-radius: 50%;">
                 </button>
             </div>
         }

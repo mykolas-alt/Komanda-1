@@ -20,8 +20,8 @@
 
         public void SetRandomTargetPosition(int boxWidth, int boxHeight)
         {
-            int x = _random.Next(0, boxWidth - 50);
-            int y = _random.Next(0, boxHeight - 50);
+            int x = _random.Next(5, boxWidth - 55);
+            int y = _random.Next(5, boxHeight - 55);
             TargetPosition = (x, y);
         }
     }
