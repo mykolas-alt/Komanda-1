@@ -1,5 +1,4 @@
 using Projektas.Components;
-using Projektas.Components.Pages;
 using Projektas.Services;
 
 var builder = WebApplication.CreateBuilder(args);
