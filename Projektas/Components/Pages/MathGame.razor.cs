@@ -4,7 +4,7 @@ namespace Projektas.Components.Pages
 
     public partial class MathGame
     {
-        private string? question;
+        private string? question = null;
         private string? result;
         private bool isTimesUp = false;
         private List<int>? options;
@@ -14,6 +14,8 @@ namespace Projektas.Components.Pages
             // subscribes the OnTimerTick method to the TimerService's onTick event
             // so it gets called every time the timer ticks
             TimerService.OnTick += OnTimerTick;
+            MathGameService.Score = 0;
+            MathGameService.Lives = 3;
         }
 
         // starts a 60 second timer, resets score and generates the 1st question
@@ -59,8 +61,8 @@ namespace Projektas.Components.Pages
 
         private void StopGame()
         {
-            TimerService.Stop();
             isTimesUp = true;
+            TimerService.Stop();
         }
 
         private void OnTimerTick()
@@ -70,10 +72,9 @@ namespace Projektas.Components.Pages
                 // checks if the timer has run out of time,
                 // then mark the game as submitted
                 // then stop the timer
-                if (TimerService.GetRemainingTime() == 0)
+                if (TimerService.GetRemainingTime() == 0 || MathGameService.Lives == 0)
                 {
-                    isTimesUp = true;
-                    TimerService.Stop();
+                    StopGame();
                 }
                 // updates the UI to reflect the changes
                 StateHasChanged();

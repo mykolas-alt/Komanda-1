@@ -33,7 +33,7 @@
                     }
                 }
 
-                <div class="score-time-lives-container">
+                <div class="score-time-lives-highscore-container">
                     <div class="score">
                         <p>Score: @MathGameService.Score</p>
                     </div>
@@ -42,6 +42,9 @@
                     </div>
                     <div class="lives">
                         <p>Lives: @MathGameService.Lives</p>
+                    </div>
+                    <div class="highscore">
+                        <p>Highscore: @MathGameService.Highscore</p>
                     </div>
                 </div>
             </div>
@@ -60,15 +63,16 @@
         }
         else if ((isTimesUp == true || MathGameService.Lives == 0) && question != null)
         {
-            @if(isTimesUp == true && MathGameService.Lives == 0)
-            {
-                StopGame();
-            }
             <div class="app-title">
                 Game over!
             </div>
-            <div class="math-game-header">
-                <b>You scored @MathGameService.Score points!</b>
+            <div class="score-highscore-after-game-container">
+                <div class="score-after-game">
+                    <b>You scored @MathGameService.Score points!</b>
+                </div>
+                <div class="highscore-after-game">
+                    <b>Your highscore: @MathGameService.Highscore</b>
+                </div>
             </div>
             <div class="math-game-footer">
                 <button class="play-btn" @onclick="StartGame">Play again</button>

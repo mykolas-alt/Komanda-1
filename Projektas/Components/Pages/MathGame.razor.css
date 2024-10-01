@@ -22,7 +22,7 @@
     box-shadow: -20px 20px 30px rgba(0, 0, 0, 0.3);
 }
 
-.math-game-header {
+.math-game-header, .score-after-game, .highscore-after-game {
     font-size: 22px;
     margin: 0;
 }
@@ -32,13 +32,13 @@
     padding-top: 15px;
 }
 
-.score-time-lives-container {
+.score-time-lives-highscore-container, .score-highscore-after-game-container {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-.score, .time, .lives {
+.score, .time, .lives, .highscore {
     font-size: 16px;
     font-weight: bold;
 }

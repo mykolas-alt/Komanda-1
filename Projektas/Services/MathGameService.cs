@@ -18,6 +18,8 @@ namespace Projektas.Services
         private int Answer;
         public int Score { get; set; } = 0;
         public int Lives { get; set; } = 3;
+
+        public int Highscore { get; set; }
         private List<int> numbers = [];
         private List<Operation> operations = [];
         private int MaxNumber => 10 + (Score * 10); // increases the range of numbers as the score increases
@@ -177,6 +179,10 @@ namespace Projektas.Services
             if (isCorrect)
             {
                 Score++;
+                if (Score > Highscore)
+                {
+                    Highscore = Score;
+                }
             }
             else
             {
