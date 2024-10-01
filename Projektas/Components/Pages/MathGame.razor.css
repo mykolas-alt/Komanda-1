@@ -1,0 +1,66 @@
+﻿* {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Segoe UI';
+    box-sizing: border-box;
+}
+
+.app-title {
+    margin: 30px auto;
+    padding: 10px;
+    font-size: 40pt;
+    width: 100%;
+    text-align: center;
+}
+
+.math-game {
+    margin: 10px auto;
+    width: 50%;
+    background-color: #f5f6f6;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: -20px 20px 30px rgba(0, 0, 0, 0.3);
+}
+
+.math-game-header, .score-after-game, .highscore-after-game {
+    font-size: 22px;
+    margin: 0;
+}
+
+
+.math-game-body {
+    padding-top: 15px;
+}
+
+.score-time-lives-highscore-container, .score-highscore-after-game-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.score, .time, .lives, .highscore {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.math-game-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.play-btn{
+    width: 100px;
+    padding: 5px;
+    background-color: #28a745;
+    color: #fff;
+    font-size: 14pt;
+    border-radius: 3px;
+    border: none;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.play-btn:hover {
+    box-shadow: -1.5px 1.5px 10px rgba(0, 0, 0, 0.3);
+}

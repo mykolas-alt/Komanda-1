@@ -4,54 +4,65 @@ namespace Projektas.Components.Pages
 
     public partial class MathGame
     {
-        private (int, int, Operation)? question;
-        private string userAnswer = string.Empty;
+        private string? question = null;
         private string? result;
-        private bool isSubmitted = false;
+        private bool isTimesUp = false;
+        private List<int>? options;
 
         protected override void OnInitialized()
         {
             // subscribes the OnTimerTick method to the TimerService's onTick event
             // so it gets called every time the timer ticks
             TimerService.OnTick += OnTimerTick;
+            MathGameService.Score = 0;
+            MathGameService.Lives = 3;
         }
 
         // starts a 60 second timer, resets score and generates the 1st question
         private void StartGame()
         {
             MathGameService.Score = 0;
+            MathGameService.Lives = 3;
             TimerService.Start(60);
             GenerateQuestion();
         }
 
-        // generates a question and resets userAnswer, result and isSubmitted fields
+        // generates a question and answer options
         private void GenerateQuestion()
         {
             question = MathGameService.GenerateQuestion();
-            userAnswer = string.Empty;
+            options = MathGameService.GenerateOptions();
             result = null;
-            isSubmitted = false;
+            isTimesUp = false;
         }
 
-        private void CheckAnswer()
+        private async void GenerateQuestionWithDelay()
         {
-            // parses the answer from the user input to an integer number
-            // then checks the answer and returns true or false
-            // according to the true/false value it sets the result value accordingly (correct or try again)
-            // if user input was not and integer number, then result is set to "try again"
-            if (question.HasValue)
+            await Task.Delay(500);
+            GenerateQuestion();
+        }
+
+        private async void ResetResultWithDelay()
+        {
+            await Task.Delay(500);
+            result = null;
+        }
+
+        // checks the answer if it's correct
+        private void CheckAnswer(int option)
+        {
+            if (question != null)
             {
-                if (int.TryParse(userAnswer, out int parsedAnswer))
-                {
-                    bool isCorrect = MathGameService.CheckAnswer(question.Value.Item1, question.Value.Item2, question.Value.Item3, parsedAnswer);
-                    result = isCorrect ? "Correct!" : "Try again!";
-                    isSubmitted = true;
-                }
-                else
-                {
-                    result = "Try again!";
-                }
+                bool isCorrect = MathGameService.CheckAnswer(option);
+                result = isCorrect ? "Correct!" : "Try again!";
+                StateHasChanged();
             }
+        }
+
+        private void StopGame()
+        {
+            isTimesUp = true;
+            TimerService.Stop();
         }
 
         private void OnTimerTick()
@@ -61,11 +72,9 @@ namespace Projektas.Components.Pages
                 // checks if the timer has run out of time,
                 // then mark the game as submitted
                 // then stop the timer
-                if (TimerService.GetRemainingTime() == 0)
+                if (TimerService.GetRemainingTime() == 0 || MathGameService.Lives == 0)
                 {
-                    result = "Time's up!";
-                    isSubmitted = true;
-                    TimerService.Stop();
+                    StopGame();
                 }
                 // updates the UI to reflect the changes
                 StateHasChanged();
@@ -76,29 +85,6 @@ namespace Projektas.Components.Pages
         {
             // unsubscribes from the OnTick event to prevent memory leaks
             TimerService.OnTick -= OnTimerTick;
-        }
-
-        // displays question operation accordingly
-        public string DisplayQuestionOperationValue(Operation operation)
-        {
-            if (operation == Operation.Addition)
-            {
-                return "+";
-            }
-            else if (operation == Operation.Subtraction)
-            {
-                return "-";
-            }
-            else if (operation == Operation.Multiplication)
-            {
-                return "*";
-            }
-            else if (operation == Operation.Division)
-            {
-                return "/";
-            }
-            return "";
-
         }
     }
 }
