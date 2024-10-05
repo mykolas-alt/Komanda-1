@@ -1,9 +1,20 @@
-﻿@page "/aim-trainer"
+﻿@page "/aimtrainer"
 @inject Projektas.Services.AimTrainerService AimService
 @inject Projektas.Services.TimerService TimerService
+@rendermode InteractiveServer
+
+<PageTitle>Aim Trainer</PageTitle>
 
 <div style="text-align: center; margin-bottom: 20px;">
     <h1>Aim Trainer</h1>
+    <div>
+        <label>
+            <input type="radio" name="difficulty" value="Normal" checked @onchange="OnDifficultyChanged" disabled="@isGameActive" /> Normal
+        </label>
+        <label>
+            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" disabled="@isGameActive" /> Hard
+        </label>
+    </div>
 </div>
 
 <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px; flex-direction: column;">
@@ -27,10 +38,11 @@
         }
         else
         {
-            <div style="position: relative; width: 100%; max-width: 1000px; height: 400px; background-color: lightgray; margin: auto;border: solid; border-radius: 4px;border-color: #7a7a7a;">
+            <div style="position: relative; width: 100%; max-width: 1000px; height: 400px; background-color: lightgray; margin: auto; border: solid; border-radius: 4px; border-color: #7a7a7a; user-select: none;">
                 <button @onclick="OnTargetClicked"
                         style="position: absolute; left:@(AimService.TargetPosition.x)px; top:@(AimService.TargetPosition.y)px;
-                        width: 50px; height: 50px; background-color: blue; border: none; border-radius: 50%;">
+                        width: @(AimService.IsHardMode ? 30 : 50)px; height: @(AimService.IsHardMode ? 30 : 50)px;
+                        background-color: @(AimService.GetTargetColor(AimService.IsHardMode)); border: none; border-radius: 50%;">
                 </button>
             </div>
         }
@@ -48,24 +60,54 @@
 @code {
     private bool isGameActive = false;
     private bool isGameOver = false;
+    private bool isHardMode = false;
+    private System.Timers.Timer? moveDotTimer;
+
+    private void OnDifficultyChanged(ChangeEventArgs e)
+    {
+        if (!isGameActive)
+        {
+            isHardMode = e.Value?.ToString() == "Hard";
+            AimService.IsHardMode = isHardMode;
+        }
+    }
 
     private void StartGame()
     {
         isGameActive = true;
         isGameOver = false;
-        AimService.ResetGame(1000, 400); 
-        TimerService.Start(30); 
+        AimService.ResetGame(1000, 400);
+        TimerService.Start(30);
         TimerService.OnTick += TimerTick;
-        StateHasChanged(); 
+
+        if (isHardMode)
+        {
+            StartMovingDotTimer(); 
+        }
+
+        StateHasChanged();
+    }
+
+    private void StartMovingDotTimer()
+    {
+        moveDotTimer = new System.Timers.Timer(10);
+        moveDotTimer.Elapsed += (sender, e) =>
+        {
+            AimService.MoveTarget(1000, 400); 
+            InvokeAsync(StateHasChanged);
+        };
+        moveDotTimer.Start();
     }
 
     private void TimerTick()
     {
-        InvokeAsync(StateHasChanged);
-
         if (TimerService.GetRemainingTime() == 0)
         {
-            EndGame(); 
+            EndGame();
+        }
+        else
+        {
+            InvokeAsync(StateHasChanged); 
         }
     }
 
@@ -74,7 +116,7 @@
         if (TimerService.GetRemainingTime() > 0)
         {
             AimService.RegisterHit(1000, 400);
-            StateHasChanged(); 
+            StateHasChanged();
         }
     }
 
@@ -82,18 +124,22 @@
     {
         isGameActive = false;
         isGameOver = true;
-        TimerService.OnTick -= TimerTick; 
-        await InvokeAsync(StateHasChanged); 
+        TimerService.OnTick -= TimerTick;
+        moveDotTimer?.Stop();
+        moveDotTimer?.Dispose();
+        await InvokeAsync(StateHasChanged);
     }
 
     private void TryAgain()
     {
         isGameOver = false;
-        StartGame(); 
+        StartGame();
     }
 
     public void Dispose()
     {
-        TimerService.OnTick -= TimerTick; 
+        TimerService.OnTick -= TimerTick;
+        moveDotTimer?.Stop(); 
+        moveDotTimer?.Dispose();
     }
 }
