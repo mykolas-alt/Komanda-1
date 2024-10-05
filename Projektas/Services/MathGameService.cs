@@ -1,16 +1,9 @@
 ﻿using System.Formats.Asn1;
 using System.Text;
+using Projektas.Enums;
 
 namespace Projektas.Services
 {
-    public enum Operation
-    {
-        Addition,
-        Subtraction,
-        Multiplication,
-        Division
-    }
-
     public class MathGameService
     {
         private readonly Random _random = new();
@@ -18,17 +11,18 @@ namespace Projektas.Services
         private int Answer;
         public int Score { get; set; } = 0;
         public int Lives { get; set; } = 3;
-
         public int Highscore { get; set; }
+
         private List<int> numbers = [];
         private List<Operation> operations = [];
-        private int MaxNumber => 10 + (Score * 10); // increases the range of numbers as the score increases
+        private int MaxNumber => 10 + (Score * 2); // increases the range of numbers as the score increases
+        private int MinNumber => 1 + Score;
         public string GenerateQuestion()
         {
-            // increase difficulty based on the current score
-            
-            int maxOperands = (int)(3 + (Score * 0.2)); // increases the range of operands as the score inscreases
-            int numberOfOperands = _random.Next(2, maxOperands);
+
+            int minOperands = (int)(2 + (Score * 0.1));
+            int maxOperands = (int)(3 + (Score * 0.1)); // increases the range of operands as the score inscreases
+            int numberOfOperands = _random.Next(minOperands, maxOperands);
 
             // generate numbers and operations
             numbers = GenerateNumbers(numberOfOperands);
@@ -41,9 +35,9 @@ namespace Projektas.Services
 
             return BuildQuestion();
         }
-
+        
         // generates numbers and adds to the list
-        private List<int> GenerateNumbers(int numberOfOperands)
+        private List<int> GenerateNumbers(int numberOfOperands = 2)
         {
             List<int> numbers = [];
             for (int i = 0; i < numberOfOperands; i++)
@@ -54,10 +48,19 @@ namespace Projektas.Services
         }
 
         // generates operations and adds to the list
-        private List<Operation> GenerateOperations(int numberOfOperands)
+        private List<Operation> GenerateOperations(int numberOfOperands = 2)
         {
-            List<Operation> operations = [];
-            Operation[] possibleOperations = { Operation.Addition, Operation.Subtraction, Operation.Multiplication, Operation.Division };
+            List<Operation> operations = new();
+            Operation[] possibleOperations;
+
+            if (Score <= 5)
+            {
+                possibleOperations = new[] { Operation.Addition, Operation.Subtraction };
+            }
+            else
+            {
+                possibleOperations = new[] { Operation.Addition, Operation.Subtraction, Operation.Multiplication, Operation.Division };
+            }
 
             for (int i = 0; i < numberOfOperands - 1; i++)
             {
@@ -74,23 +77,31 @@ namespace Projektas.Services
             {
                 if (operations[i - 1] == Operation.Division)
                 {
-                    AdjustForDivision(index:i);
+                    AdjustForDivision(i);
                 }
                 else if (operations[i - 1] == Operation.Multiplication)
                 {
-                    numbers[i] = _random.Next(2, 10 + (Score / 2));
+                    int limit = Math.Max(2, Score / 2);
+                    numbers[i] = _random.Next(2, limit);
+
                 }
             }
         }
 
+        // selects a random divisor for the number
         private void AdjustForDivision(int index)
         {
-            // checks division by 0 and if number is not 1
-            // then if 1st number is bigger than 2nd or if they are divisable
-            while (numbers[index] == 0 || numbers[index] == 1 || numbers[index - 1] < numbers[index] || numbers[index - 1] % numbers[index] != 0)
+            int previousNumber = numbers[index - 1];
+
+            List<int> divisors = GetDivisors(previousNumber);
+
+            if (divisors.Count == 0)
             {
-                numbers[index] = GenerateNumber();
+                numbers[index] = 1;
+                return;
             }
+
+            numbers[index] = divisors[_random.Next(divisors.Count)];
         }
 
         // generates the string of the quesrion
@@ -195,7 +206,7 @@ namespace Projektas.Services
         // generates a random number
         private int GenerateNumber()
         {
-            int number = _random.Next(1, MaxNumber);
+            int number = _random.Next(MinNumber, MaxNumber);
 
             return number;
         }
@@ -217,14 +228,29 @@ namespace Projektas.Services
                     throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
             }
         }
+
+        // gets all the divisors of a number
+        private static List<int> GetDivisors(int number)
+        {
+            List<int> divisors = new();
+            for (int i = 2; i <= number; i++)
+            {
+                if (number % i == 0)
+                {
+                    divisors.Add(i);
+                }
+            }
+            return divisors;
+        }
         // generates 4 unique options, including the correct answer
         public List<int> GenerateOptions()
         {
+            int limit = Math.Max(2, Answer / 10); // adjusts the limit to be a smaller range
             HashSet<int> options = new();
             options.Add(Answer);
             while (options.Count < 4)
             {
-                int option = _random.Next(Answer - MaxNumber, Answer + MaxNumber);
+                int option = _random.Next(Answer - limit, Answer + limit + 1);
                 options.Add(option);
             }
             return options.OrderBy(x => Guid.NewGuid()).ToList(); // shuffles options

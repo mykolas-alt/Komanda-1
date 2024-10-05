@@ -5,7 +5,6 @@ namespace Projektas.Components.Pages
     public partial class MathGame
     {
         private string? question = null;
-        private string? result;
         private bool isTimesUp = false;
         private List<int>? options;
 
@@ -32,20 +31,7 @@ namespace Projektas.Components.Pages
         {
             question = MathGameService.GenerateQuestion();
             options = MathGameService.GenerateOptions();
-            result = null;
             isTimesUp = false;
-        }
-
-        private async void GenerateQuestionWithDelay()
-        {
-            await Task.Delay(500);
-            GenerateQuestion();
-        }
-
-        private async void ResetResultWithDelay()
-        {
-            await Task.Delay(500);
-            result = null;
         }
 
         // checks the answer if it's correct
@@ -54,15 +40,9 @@ namespace Projektas.Components.Pages
             if (question != null)
             {
                 bool isCorrect = MathGameService.CheckAnswer(option);
-                result = isCorrect ? "Correct!" : "Try again!";
+                GenerateQuestion();
                 StateHasChanged();
             }
-        }
-
-        private void StopGame()
-        {
-            isTimesUp = true;
-            TimerService.Stop();
         }
 
         private void OnTimerTick()
@@ -74,7 +54,8 @@ namespace Projektas.Components.Pages
                 // then stop the timer
                 if (TimerService.GetRemainingTime() == 0 || MathGameService.Lives == 0)
                 {
-                    StopGame();
+                    isTimesUp = true;
+                    TimerService.Stop();
                 }
                 // updates the UI to reflect the changes
                 StateHasChanged();

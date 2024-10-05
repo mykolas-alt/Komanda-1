@@ -17,23 +17,10 @@
             <div class="math-game-body">
                 @foreach (var option in options)
                 {
-                    <OptionCard Option="@option" OnOptionSelected="CheckAnswer" IsDisabled="@(result == "Correct!")"></OptionCard>
+                    <OptionCard Option="@option" OnOptionSelected="CheckAnswer"></OptionCard>
                 }
 
-                @if (result != null)
-                {
-                    <p>@result</p>
-                    @if (result == "Correct!")
-                    {
-                        GenerateQuestionWithDelay();
-                    }
-                    else if (result == "Try again!")
-                    {
-                        ResetResultWithDelay();
-                    }
-                }
-
-                <div class="score-time-lives-highscore-container">
+                <div class="score-time-lives-container">
                     <div class="score">
                         <p>Score: @MathGameService.Score</p>
                     </div>
@@ -42,9 +29,6 @@
                     </div>
                     <div class="lives">
                         <p>Lives: @MathGameService.Lives</p>
-                    </div>
-                    <div class="highscore">
-                        <p>Highscore: @MathGameService.Highscore</p>
                     </div>
                 </div>
             </div>
