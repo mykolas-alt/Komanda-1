@@ -27,22 +27,15 @@ namespace Projektas.Server.Controllers
         }
 
         [HttpPost("check-answer")]
-        public IActionResult CheckAnswer([FromBody] int answer)
+        public ActionResult<bool> CheckAnswer([FromBody] int answer)
         {
-            _mathGameService.CheckAnswer(answer);
-            return Ok();
+            return _mathGameService.CheckAnswer(answer);
         }
 
         [HttpGet("score")]
         public ActionResult<int> GetScore()
         {
             return _mathGameService.Score;
-        }
-
-        [HttpGet("lives")]
-        public ActionResult<int> GetLives()
-        {
-            return _mathGameService.Lives;
         }
 
         [HttpGet("highscore")]
@@ -56,13 +49,6 @@ namespace Projektas.Server.Controllers
         {
             _mathGameService.Score = 0;
             return _mathGameService.Score;
-        }
-
-        [HttpPost("reset-lives")]
-        public ActionResult<int> ResetLives()
-        {
-            _mathGameService.Lives = 3;
-            return _mathGameService.Lives;
         }
     }
 }

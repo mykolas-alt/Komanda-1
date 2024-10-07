@@ -9,7 +9,6 @@ namespace Projektas.Server.Services
 
         private int Answer;
         public int Score { get; set; } = 0;
-        public int Lives { get; set; } = 3;
         public int Highscore { get; set; }
 
         private List<int> numbers = new();
@@ -181,10 +180,11 @@ namespace Projektas.Server.Services
         }
 
         // checks answer and returns true or false
-        public void CheckAnswer(int option)
+        public bool CheckAnswer(int option)
         {
+            bool isCorrect = Answer == option;
             // if correct, score is incremented
-            if (Answer == option)
+            if (isCorrect)
             {
                 Score++;
                 if (Score > Highscore)
@@ -192,10 +192,7 @@ namespace Projektas.Server.Services
                     Highscore = Score;
                 }
             }
-            else
-            {
-                Lives--;
-            }
+            return isCorrect;
         }
 
         // generates a random number

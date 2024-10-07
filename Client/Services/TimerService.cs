@@ -3,13 +3,13 @@
     public class TimerService
     {
         private Timer? _timer;
-        private int _seconds;
+        public int RemainingTime { get; set; }
         public event Action? OnTick;
 
         // a timer is created for a selected amount of seconds
         public void Start(int seconds)
         {
-            _seconds = seconds;
+            RemainingTime = seconds;
             _timer?.Dispose(); // disposes any existing timer instance
             _timer = new Timer(OnTimerElapsed, null, 0, 1000);
         }
@@ -19,7 +19,7 @@
         {
             _timer?.Dispose();
             _timer = null;
-            _seconds = 0;
+            RemainingTime = 0;
         }
 
         // method is called once a second has passed
@@ -27,21 +27,15 @@
         // else, the time is stopped
         private void OnTimerElapsed(object? state)
         {
-            if (_seconds > 0)
+            if (RemainingTime > 0)
             {
-                _seconds--;
+                RemainingTime--;
                 OnTick?.Invoke(); // notifies subscribers that a second has passed
             }
             else
             {
                 Stop();
             }
-        }
-
-        // returns remaining time in seconds
-        public int GetRemainingTime()
-        {
-            return _seconds;
         }
     }
 }

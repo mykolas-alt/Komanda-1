@@ -7,7 +7,7 @@
 
 <div class="container">
     <div class="math-game">
-        @if(question != null && isTimesUp == false && lives > 0)
+        @if(question != null && isTimesUp == false)
         {
             <div class="app-title">
                 Math Game!
@@ -20,21 +20,17 @@
                 {
                     <OptionCard Option="@option" OnOptionSelected="CheckAnswer"></OptionCard>
                 }
-
-                <div class="score-time-lives-container">
+                <div class="score-time-container">
                     <div class="score">
                         <p>Score: @score</p>
                     </div>
                     <div class="time">
-                        <p>Time left: @remainingTime seconds</p>
-                    </div>
-                    <div class="lives">
-                        <p>Lives: @lives</p>
+                        <p>Time left: @TimerService.RemainingTime seconds</p>
                     </div>
                 </div>
             </div>
         }
-        else if (isTimesUp == false && question == null && lives > 0)
+        else if (isTimesUp == false && question == null)
         {
             <div class="app-title">
                 Math Game!
@@ -46,7 +42,7 @@
                 <button class="play-btn" @onclick="StartGame">Start game</button>
             </div>
         }
-        else if ((isTimesUp == true || lives == 0) && question != null)
+        else if (isTimesUp == true && question != null)
         {
             <div class="app-title">
                 Game over!

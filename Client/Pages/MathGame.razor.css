@@ -32,13 +32,13 @@
     padding-top: 15px;
 }
 
-.score-time-lives-container, .score-highscore-after-game-container {
+.score-time-container, .score-highscore-after-game-container {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-.score, .time, .lives {
+.score, .time {
     font-size: 16px;
     font-weight: bold;
 }

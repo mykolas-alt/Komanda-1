@@ -22,20 +22,15 @@ namespace Projektas.Client.Services
             return await _httpClient.GetFromJsonAsync<List<int>>("api/mathgame/options");
         }
 
-        public async Task CheckAnswerAsync(int answer)
+        public async Task<bool> CheckAnswerAsync(int answer)
         {
             var response = await _httpClient.PostAsJsonAsync("api/mathgame/check-answer", answer);
-            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<bool>();
         }
 
         public async Task<int> GetScoreAsync()
         {
             return await _httpClient.GetFromJsonAsync<int>("api/mathgame/score");
-        }
-
-        public async Task<int> GetLivesAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<int>("api/mathgame/lives");
         }
 
         public async Task<int> GetHighscoreAsync()
@@ -46,12 +41,6 @@ namespace Projektas.Client.Services
         public async Task<int> ResetScoreAsync()
         {
             var response = await _httpClient.PostAsync("api/mathgame/reset-score", null);
-            return await response.Content.ReadFromJsonAsync<int>();
-        }
-
-        public async Task<int> ResetLivesAsync()
-        {
-            var response = await _httpClient.PostAsync("api/mathgame/reset-lives", null);
             return await response.Content.ReadFromJsonAsync<int>();
         }
     }

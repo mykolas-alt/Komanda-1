@@ -7,24 +7,20 @@
         private string? question = null;
         private bool isTimesUp = false;
         private List<int>? options;
-        private int remainingTime;
         private int score;
-        private int lives;
         private int highscore;
+        private bool? isCorrect = null;
 
         protected override async Task OnInitializedAsync()
         {
             TimerService.OnTick += OnTimerTick;
             score = await MathGameService.GetScoreAsync();
-            lives = await MathGameService.GetLivesAsync();
         }
 
 
         private async Task StartGame()
         {
             await MathGameService.ResetScoreAsync();
-            await MathGameService.ResetLivesAsync();
-            lives = await MathGameService.GetLivesAsync();
             TimerService.Start(60);
             await GenerateQuestion();
             highscore = await MathGameService.GetHighscoreAsync();
@@ -34,6 +30,7 @@
 
         private async Task GenerateQuestion()
         {
+            isCorrect = null;
             question = await MathGameService.GetQuestionAsync();
             options = await MathGameService.GetOptionsAsync();
             isTimesUp = false;
@@ -43,10 +40,22 @@
         {
             if (question != null)
             {
-                await MathGameService.CheckAnswerAsync(option);
+                isCorrect = await MathGameService.CheckAnswerAsync(option);
+                if (isCorrect == false)
+                {
+                    if (TimerService.RemainingTime > 5)
+                    {
+                        TimerService.RemainingTime = TimerService.RemainingTime - 5;
+                    }
+                    else
+                    {
+                        TimerService.RemainingTime = 0;
+                        OnTimerTick();
+                        return;
+                    }
+                }
                 await GenerateQuestion();
                 score = await MathGameService.GetScoreAsync();
-                lives = await MathGameService.GetLivesAsync();
                 highscore = await MathGameService.GetHighscoreAsync();
                 StateHasChanged();
             }
@@ -56,12 +65,12 @@
         {
             await InvokeAsync(() =>
             {
-                remainingTime = TimerService.GetRemainingTime();
-                if (remainingTime == 0 || lives == 0)
+                if (TimerService.RemainingTime == 0)
                 {
                     isTimesUp = true;
                     TimerService.Stop();
                 }
+                Console.WriteLine($"isTimesUp: {isTimesUp}, RemainingTime: {TimerService.RemainingTime}");
                 StateHasChanged();
             });
         }
