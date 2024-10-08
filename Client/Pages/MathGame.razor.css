@@ -64,3 +64,11 @@
     .play-btn:hover {
         box-shadow: -1.5px 1.5px 10px rgba(0, 0, 0, 0.3);
     }
+
+    .scoreboard{
+        text-align: center;
+    }
+
+.scoreboard-title {
+    font-size: 20px;
+}

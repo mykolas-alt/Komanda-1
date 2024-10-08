@@ -10,11 +10,14 @@
         private int score;
         private int highscore;
         private bool? isCorrect = null;
+        private List<int>? topScores;
 
         protected override async Task OnInitializedAsync()
         {
             TimerService.OnTick += OnTimerTick;
             score = await MathGameService.GetScoreAsync();
+            List<int> loadedData = await DataService.LoadDataAsync();
+            topScores = await ScoreService.GetTopScoresAsync(loadedData);
         }
 
 
@@ -63,12 +66,15 @@
 
         private async void OnTimerTick()
         {
-            await InvokeAsync(() =>
+            await InvokeAsync(async () =>
             {
                 if (TimerService.RemainingTime == 0)
                 {
                     isTimesUp = true;
                     TimerService.Stop();
+                    await DataService.SaveDataAsync(score);
+                    List<int> loadedData = await DataService.LoadDataAsync();
+                    topScores = await ScoreService.GetTopScoresAsync(loadedData);
                 }
                 StateHasChanged();
             });
