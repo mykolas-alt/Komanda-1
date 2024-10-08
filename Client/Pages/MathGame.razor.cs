@@ -70,7 +70,6 @@
                     isTimesUp = true;
                     TimerService.Stop();
                 }
-                Console.WriteLine($"isTimesUp: {isTimesUp}, RemainingTime: {TimerService.RemainingTime}");
                 StateHasChanged();
             });
         }
