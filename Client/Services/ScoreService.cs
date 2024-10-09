@@ -11,9 +11,10 @@ namespace Projektas.Client.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<int>> GetTopScoresAsync(List<int> scores)
+        public async Task<List<int>> GetTopScoresAsync(List<int> scores, int topCount = 10)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/score/top", scores);
+            var url = $"api/score/top?topCount={topCount}";
+            var response = await _httpClient.PostAsJsonAsync(url, scores);
             return await response.Content.ReadFromJsonAsync<List<int>>();
         }
     }

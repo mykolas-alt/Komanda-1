@@ -16,8 +16,6 @@
         {
             TimerService.OnTick += OnTimerTick;
             score = await MathGameService.GetScoreAsync();
-            List<int> loadedData = await DataService.LoadDataAsync();
-            topScores = await ScoreService.GetTopScoresAsync(loadedData);
         }
 
 
@@ -74,7 +72,7 @@
                     TimerService.Stop();
                     await DataService.SaveDataAsync(score);
                     List<int> loadedData = await DataService.LoadDataAsync();
-                    topScores = await ScoreService.GetTopScoresAsync(loadedData);
+                    topScores = await ScoreService.GetTopScoresAsync(loadedData,topCount:5);
                 }
                 StateHasChanged();
             });
