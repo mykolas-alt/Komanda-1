@@ -1,0 +1,59 @@
+﻿.title-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-direction: column;
+}
+
+.game-area {
+    text-align: center;
+    width: 100%;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.start-button {
+    margin-top: 20px;
+}
+
+.target-area {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    height: 400px;
+    background-color: lightgray;
+    margin: auto;
+    border: solid;
+    border-radius: 4px;
+    border-color: #7a7a7a;
+    user-select: none;
+}
+
+.target-button {
+    position: absolute;
+    border: none;
+    border-radius: 50%;
+}
+
+.score-timer {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.score-text {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.timer-text {
+    font-size: 18px;
+}
