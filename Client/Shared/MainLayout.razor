@@ -1,8 +1,12 @@
 ﻿@inherits LayoutComponentBase
+@inject Projektas.Client.Services.AccountServices AccountServices
 
 <div class="page">
 	<div class="top-row px-4">
 		<a class="title" href="">Projektas</a>
+		<div class="account">
+			@test
+		</div>
 	</div>
 	<div class="page middle">
 		<div class="sidebar">
@@ -16,3 +20,11 @@
 	</div>
 	<div class="bottom-row px-4"></div>
 </div>
+
+@code {
+	private string? test = "";
+
+	protected override async Task OnInitializedAsync() {
+		test=await AccountServices.GetTestAsync();
+	}
+}

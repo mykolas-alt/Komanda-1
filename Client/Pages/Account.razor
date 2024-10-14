@@ -1,5 +1,41 @@
 ﻿@page "/account"
+@inject Projektas.Client.Services.AccountServices AccountServices
 
 <PageTitle>Account</PageTitle>
 
-<h3>Account</h3>
+<div class="row">
+	<div class="px-3 login col">
+		<div class="type">
+			Log In
+		</div>
+		<label class="textbox" for="accNickname">
+			Nickname: <input type="text" name="accNickname" @bind="@accountNickname" />
+		</label>
+		<label class="textbox" for="accPassword">
+			Password: <input type="text" name="accPassword" @bind="@accountPassword" />
+		</label>
+		<button class="submit" @onclick="OnInputEvent">Submit</button>
+		<br /><br />
+		@newValue
+	</div>
+	<div class="px-3 singup">
+		<div class="type">
+			Sign Up
+		</div>
+	</div>
+</div>
+
+@code {
+	private string? test = "";
+	private string? accountNickname { get; set; }
+	private string? accountPassword { get; set; }
+	private string? newValue { get; set; }
+
+	protected override async Task OnInitializedAsync() {
+		test=await AccountServices.GetTestAsync();
+	}
+
+	private void OnInputEvent() {
+		newValue=accountNickname;
+	}
+}
