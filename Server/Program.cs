@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<AccountService>();
+builder.Services.AddSingleton<AccountService>(provider => new AccountService(Path.Combine("Data","AccountData.txt")));
 
 var app = builder.Build();
 

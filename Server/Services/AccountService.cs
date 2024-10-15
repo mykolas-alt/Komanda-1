@@ -4,20 +4,27 @@ using System.Text.Json;
 
 namespace Projektas.Server.Services {
 	public class AccountService {
-		public string Test {get;set;}="testing";
-		private List<AccountInfo> AccountList=new List<AccountInfo>();
+		private readonly string _filepath;
+		private List<AccountInfo>? AccountList=new List<AccountInfo>();
 
-		public string GetTestServ() {
-			/*AccountList.Add(new AccountInfo(){Name="Artiom"});
-			AccountList.Add(new AccountInfo(){Name="Tomas"});
+		public AccountService(string filepath) {
+			_filepath=filepath;
+		}
+
+		public void CreateAccount(AccountInfo newAccount) {
+			string AccListSerialized;
+			using (StreamReader reader = new StreamReader(_filepath)) {
+				AccListSerialized=reader.ReadToEnd();
+			}
+			AccountList=JsonSerializer.Deserialize<List<AccountInfo>>(AccListSerialized);
 			
-			var serialized=JsonSerializer.Serialize(AccountList);
+			AccountList.Add(new AccountInfo(){Name=newAccount.Name,Surname=newAccount.Surname,Nickname=newAccount.Nickname,Password=newAccount.Password});
+			
+			AccListSerialized=JsonSerializer.Serialize(AccountList);
 
-			using (StreamWriter writer = new StreamWriter("AccountInfo.txt")) {
-				writer.Write(serialized);
-			}*/
-
-			return Test;
+			using (StreamWriter writer = new StreamWriter(_filepath, append: false)) {
+				writer.Write(AccListSerialized);
+			}
 		}
 	}
 }

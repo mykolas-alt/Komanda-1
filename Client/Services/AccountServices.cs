@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using Projektas.Shared;
+using System.Net.Http.Json;
 
 namespace Projektas.Client.Services {
 	public class AccountServices {
@@ -8,8 +9,8 @@ namespace Projektas.Client.Services {
 			_httpClient = httpClient;
 		}
 
-		public async Task<string> GetTestAsync() {
-			return await _httpClient.GetStringAsync("api/account/test");
+		public async Task CreateAccount(AccountInfo newAccount) {
+			await _httpClient.PostAsJsonAsync("api/account/create_account",newAccount);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Projektas.Server.Services;
+using Projektas.Shared;
 
 namespace Projektas.Server.Controllers {
 	[ApiController]
@@ -13,9 +14,10 @@ namespace Projektas.Server.Controllers {
 		}
 
 
-		[HttpGet("test")]
-		public ActionResult<string> GetTest() {
-			return _accountService.GetTestServ();
+		[HttpPost("create_account")]
+		public IActionResult CreateAccount([FromBody] AccountInfo newAccount) {
+			_accountService.CreateAccount(newAccount);
+			return Ok();
 		}
 	}
 }

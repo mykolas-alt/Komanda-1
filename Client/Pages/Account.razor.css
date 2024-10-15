@@ -34,7 +34,7 @@
     border: 3px solid #858585;
     border-radius: 10px;
     width: 35rem;
-    height: 40rem;
+    height: 26rem;
     text-align: center;
     font-size: 0.9rem;
     padding-top: 1rem;
@@ -62,11 +62,13 @@
     border: 3px solid #858585;
     border-radius: 10px;
     align-items: center;
+    text-align: right;
     font-size: 1rem;
     font-weight: bold;
     width: 20rem;
     height: 3rem;
     padding-top: 0.35rem;
+    padding-right: 0.7rem;
     margin-left: auto;
     margin-right: auto;
     margin-top: 1rem;
