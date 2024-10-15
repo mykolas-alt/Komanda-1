@@ -1,0 +1,30 @@
+﻿.cards-container {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    background-color: lightgray;
+    border: 2px solid #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px; 
+}
+
+.card-value {
+    line-height: 100px;
+    display: block;
+    text-align: center; 
+    font-size: 36px; 
+}
+
+.btn {
+    padding: 10px 20px;
+}
