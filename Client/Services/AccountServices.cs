@@ -12,5 +12,9 @@ namespace Projektas.Client.Services {
 		public async Task CreateAccount(AccountInfo newAccount) {
 			await _httpClient.PostAsJsonAsync("api/account/create_account",newAccount);
 		}
+
+		public async Task<List<string>> GetNicknames() {
+			return await _httpClient.GetFromJsonAsync<List<string>>("api/account/get_nicknames");
+		}
 	}
 }

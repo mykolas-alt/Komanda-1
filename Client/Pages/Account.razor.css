@@ -100,3 +100,8 @@ input[type=text] {
     .submit:hover {
         background: #c2c2c2;
     }
+
+.new-account-warning {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

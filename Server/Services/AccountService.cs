@@ -26,5 +26,21 @@ namespace Projektas.Server.Services {
 				writer.Write(AccListSerialized);
 			}
 		}
+
+		public List<string> GetNicknames() {
+			List<string> nicknames = new List<string>();
+
+			string AccListSerialized;
+			using (StreamReader reader = new StreamReader(_filepath)) {
+				AccListSerialized=reader.ReadToEnd();
+			}
+			AccountList=JsonSerializer.Deserialize<List<AccountInfo>>(AccListSerialized);
+
+			foreach(AccountInfo account in AccountList) {
+				nicknames.Add(account.Nickname);
+			}
+
+			return nicknames;
+		}
 	}
 }

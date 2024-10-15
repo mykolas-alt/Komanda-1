@@ -19,5 +19,10 @@ namespace Projektas.Server.Controllers {
 			_accountService.CreateAccount(newAccount);
 			return Ok();
 		}
+
+		[HttpGet("get_nicknames")]
+		public ActionResult <List<string>> GetNicknames() {
+			return _accountService.GetNicknames();
+		}
 	}
 }
