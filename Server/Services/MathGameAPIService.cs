@@ -1,24 +1,20 @@
 ﻿using Projektas.Server.Enums;
-using Projektas.Server.Extensions;
 using System.Text;
+using Projektas.Server.Extensions;
+using System;
 
-namespace Projektas.Server.Services.MathGame
+namespace Projektas.Server.Services
 {
-    public class MathQuestionService
+    public class MathGameAPIService
     {
         private readonly Random _random = new();
-        private readonly MathCalculationService _mathCalculationsService;
+
         public int Answer { get; set; }
         public List<int> numbers = new();
         public List<Operation> operations = new();
 
-        public MathQuestionService(MathCalculationService mathCalculationsService)
-        {
-            _mathCalculationsService = mathCalculationsService;
-        }
-
-        private int MaxNumber(int score) => 10 + score * 2; // increases the range of numbers as the score increases
-        private int MinNumber(int score) => 1 + score;
+        private static int MaxNumber(int score) => 10 + score * 2; // increases the range of numbers as the score increases
+        private static int MinNumber(int score) => 1 + score;
 
         public string GenerateQuestion(int score)
         {
@@ -37,6 +33,27 @@ namespace Projektas.Server.Services.MathGame
 
             return BuildQuestion();
         }
+
+        public bool CheckAnswer(int option)
+        {
+            return Answer == option;
+        }
+        public List<int> GenerateOptions()
+        {
+            int limit = Math.Max(2, Answer / 10); // adjusts the limit to be a smaller range
+            HashSet<int> options = new();
+            options.Add(Answer);
+            while (options.Count < 4)
+            {
+                int option = _random.Next(Answer - limit, Answer + limit + 1);
+                options.Add(option);
+            }
+            return options.OrderBy(x => Guid.NewGuid()).ToList(); // shuffles options
+        }
+
+
+
+        // Generating part
 
         // generates numbers and adds to the list
         private List<int> GenerateNumbers(int numberOfOperands, int score)
@@ -117,25 +134,6 @@ namespace Projektas.Server.Services.MathGame
             return questionBuilder.ToString();
         }
 
-        public List<int> GenerateOptions()
-        {
-            int limit = Math.Max(2, Answer / 10); // adjusts the limit to be a smaller range
-            HashSet<int> options = new();
-            options.Add(Answer);
-            while (options.Count < 4)
-            {
-                int option = _random.Next(Answer - limit, Answer + limit + 1);
-                options.Add(option);
-            }
-            return options.OrderBy(x => Guid.NewGuid()).ToList(); // shuffles options
-        }
-
-        private int CalculateAnswer()
-        {
-            Answer = _mathCalculationsService.CalculateAnswer(numbers, operations);
-            return Answer;
-        }
-
         private int GenerateNumber(int score)
         {
             int number = _random.Next(MinNumber(score), MaxNumber(score));
@@ -155,5 +153,74 @@ namespace Projektas.Server.Services.MathGame
             }
             return divisors;
         }
+
+
+
+        // Calculation part
+
+        public int CalculateAnswer()
+        {
+            // handles multiplication and division
+            List<int> processedNumbers = new(numbers);
+            List<Operation> processedOperations = new(operations);
+
+            HandleMultiplicationAndDivision(processedNumbers, processedOperations);
+
+            // handles addition and subtraction
+            int finalResult = HandleAdditionAndSubtraction(processedNumbers, processedOperations);
+
+            return finalResult;
+        }
+
+        // handles multiplication and division
+        private static void HandleMultiplicationAndDivision(List<int> processedNumbers, List<Operation> processedOperations)
+        {
+            for (int i = 0; i < processedOperations.Count; i++)
+            {
+                if (processedOperations[i] == Operation.Multiplication || processedOperations[i] == Operation.Division)
+                {
+                    int left = processedNumbers[i];
+                    int right = processedNumbers[i + 1];
+                    int result = PerformOperation(left, right, processedOperations[i]);
+
+                    // replaces the left number with the result and removes the right number and the operation
+                    processedNumbers[i] = result;
+                    processedNumbers.RemoveAt(i + 1);
+                    processedOperations.RemoveAt(i);
+                    i--; // adjust index
+                }
+            }
+        }
+
+        // handles addition and subtraction
+        private static int HandleAdditionAndSubtraction(List<int> processedNumbers, List<Operation> processedOperations)
+        {
+            int result = processedNumbers[0];
+            for (int i = 0; i < processedOperations.Count; i++)
+            {
+                int right = processedNumbers[i + 1];
+                result = PerformOperation(left: result, right, processedOperations[i]);
+            }
+            return result;
+        }
+
+        // performs calculations by operation
+        private static int PerformOperation(int left, int right, Operation operation)
+        {
+            switch (operation)
+            {
+                case Operation.Multiplication:
+                    return left * right;
+                case Operation.Division:
+                    return left / right;
+                case Operation.Addition:
+                    return left + right;
+                case Operation.Subtraction:
+                    return left - right;
+                default:
+                    return 0;
+            }
+        }
     }
+
 }

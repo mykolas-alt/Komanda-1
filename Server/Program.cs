@@ -1,5 +1,4 @@
 using Projektas.Server.Services;
-using Projektas.Server.Services.MathGame;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +10,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<MathGameAPIService>();
-builder.Services.AddSingleton<MathQuestionService>();
-builder.Services.AddSingleton<MathCalculationService>();
 builder.Services.AddSingleton<DataAPIService>(provider => new DataAPIService(Path.Combine("Data", "MathGameData.txt")));
 builder.Services.AddSingleton<ScoreboardAPIService>();
 
