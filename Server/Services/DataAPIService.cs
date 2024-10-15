@@ -1,10 +1,10 @@
 ﻿namespace Projektas.Server.Services
 {
-    public class DataService
+    public class DataAPIService
     {
         private readonly string _filepath;
 
-        public DataService(string filepath)
+        public DataAPIService(string filepath)
         {
             _filepath = filepath;
         }

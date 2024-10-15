@@ -8,9 +8,9 @@ namespace Projektas.Server.Controllers
     [Route("api/[controller]")]
     public class DataServiceController : ControllerBase
     {
-        private readonly DataService _dataService;
+        private readonly DataAPIService _dataService;
 
-        public DataServiceController(DataService dataService)
+        public DataServiceController(DataAPIService dataService)
         {
             _dataService = dataService;
         }

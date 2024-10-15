@@ -2,7 +2,7 @@
 
 namespace Projektas.Server.Services.MathGame
 {
-    public class MathCalculations
+    public class MathCalculationService
     {
         public int CalculateAnswer(List<int> numbers, List<Operation> operations)
         {

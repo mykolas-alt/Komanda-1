@@ -1,6 +1,6 @@
 ﻿namespace Projektas.Server.Services
 {
-    public class ScoreService
+    public class ScoreboardAPIService
     {
         public List<int> GetTopScores(List<int> scores, int topCount = 10)
         {

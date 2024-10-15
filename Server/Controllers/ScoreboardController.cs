@@ -5,19 +5,19 @@ namespace Projektas.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ScoreController : ControllerBase
+    public class ScoreboardController : ControllerBase
     {
-        private readonly ScoreService _scoreService;
+        private readonly ScoreboardAPIService _scoreboardService;
         
-        public ScoreController(ScoreService scoreService)
+        public ScoreboardController(ScoreboardAPIService scoreboardService)
         {
-            _scoreService = scoreService;
+            _scoreboardService = scoreboardService;
         }
 
         [HttpPost("top")] 
         public ActionResult<List<int>> GetTopScores([FromBody] List<int> scores, [FromQuery] int topCount = 10)
         {
-            return _scoreService.GetTopScores(scores, topCount);
+            return _scoreboardService.GetTopScores(scores, topCount);
         }
     }
 }

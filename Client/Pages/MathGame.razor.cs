@@ -1,38 +1,37 @@
 ﻿namespace Projektas.Client.Pages
 {
     using Projektas.Client.Services;
+    using Projektas.Shared.Models;
 
     public partial class MathGame
     {
         private string? question = null;
         private bool isTimesUp = false;
         private List<int>? options;
-        private int score;
-        private int highscore;
+        private GameState gameState;
         private bool? isCorrect = null;
         private List<int>? topScores;
 
-        protected override async Task OnInitializedAsync()
+        protected override async void OnInitialized()
         {
             TimerService.OnTick += OnTimerTick;
-            score = await MathGameService.GetScoreAsync();
+            gameState = await GameStateService.GetGameState();
         }
 
 
         private async Task StartGame()
         {
-            await MathGameService.ResetScoreAsync();
+            
             TimerService.Start(60);
             await GenerateQuestion();
-            highscore = await MathGameService.GetHighscoreAsync();
-            score = await MathGameService.GetScoreAsync();
-
+            gameState.Score = 0;
+            await GameStateService.UpdateGameState(gameState);
         }
 
         private async Task GenerateQuestion()
         {
             isCorrect = null;
-            question = await MathGameService.GetQuestionAsync();
+            question = await MathGameService.GetQuestionAsync(gameState.Score);
             options = await MathGameService.GetOptionsAsync();
             isTimesUp = false;
         }
@@ -55,9 +54,11 @@
                         return;
                     }
                 }
+                else
+                {
+                    await GameStateService.IncrementScore(gameState);
+                }
                 await GenerateQuestion();
-                score = await MathGameService.GetScoreAsync();
-                highscore = await MathGameService.GetHighscoreAsync();
                 StateHasChanged();
             }
         }
@@ -70,9 +71,9 @@
                 {
                     isTimesUp = true;
                     TimerService.Stop();
-                    await DataService.SaveDataAsync(score);
+                    await DataService.SaveDataAsync(gameState.Score);
                     List<int> loadedData = await DataService.LoadDataAsync();
-                    topScores = await ScoreService.GetTopScoresAsync(loadedData,topCount:5);
+                    topScores = await ScoreboardService.GetTopScoresAsync(loadedData,topCount:5);
                 }
                 StateHasChanged();
             });

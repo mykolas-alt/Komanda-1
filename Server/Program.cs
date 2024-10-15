@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.ResponseCompression;
 using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
 
@@ -6,14 +5,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
-builder.Services.AddSingleton<MathGameService>();
-builder.Services.AddSingleton<MathQuestion>();
-builder.Services.AddSingleton<MathCalculations>();
-builder.Services.AddSingleton<DataService>(provider => new DataService(Path.Combine("Data", "MathGameData.txt")));
-builder.Services.AddSingleton<ScoreService>();
+builder.Services.AddSingleton<MathGameAPIService>();
+builder.Services.AddSingleton<MathQuestionService>();
+builder.Services.AddSingleton<MathCalculationService>();
+builder.Services.AddSingleton<DataAPIService>(provider => new DataAPIService(Path.Combine("Data", "MathGameData.txt")));
+builder.Services.AddSingleton<ScoreboardAPIService>();
 
 var app = builder.Build();
 

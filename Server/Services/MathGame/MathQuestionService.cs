@@ -4,36 +4,34 @@ using System.Text;
 
 namespace Projektas.Server.Services.MathGame
 {
-    public class MathQuestion
+    public class MathQuestionService
     {
         private readonly Random _random = new();
-        private readonly MathGameService _mathGameService;
-        private readonly MathCalculations _mathCalculations;
+        private readonly MathCalculationService _mathCalculationsService;
         public int Answer { get; set; }
         public List<int> numbers = new();
         public List<Operation> operations = new();
 
-        public MathQuestion(MathGameService mathGameService, MathCalculations mathCalculations)
+        public MathQuestionService(MathCalculationService mathCalculationsService)
         {
-            _mathGameService = mathGameService;
-            _mathCalculations = mathCalculations;
+            _mathCalculationsService = mathCalculationsService;
         }
 
-        private int MaxNumber => 10 + _mathGameService.Score * 2; // increases the range of numbers as the score increases
-        private int MinNumber => 1 + _mathGameService.Score;
+        private int MaxNumber(int score) => 10 + score * 2; // increases the range of numbers as the score increases
+        private int MinNumber(int score) => 1 + score;
 
-        public string GenerateQuestion()
+        public string GenerateQuestion(int score)
         {
-            int minOperands = (int)(2 + _mathGameService.Score * 0.1);
-            int maxOperands = (int)(3 + _mathGameService.Score * 0.1); // increases the range of operands as the score inscreases
+            int minOperands = (int)(2 + score * 0.1);
+            int maxOperands = (int)(3 + score * 0.1); // increases the range of operands as the score inscreases
             int numberOfOperands = _random.Next(minOperands, maxOperands);
 
             // generate numbers and operations
-            numbers = GenerateNumbers(numberOfOperands);
-            operations = GenerateOperations(numberOfOperands);
+            numbers = GenerateNumbers(numberOfOperands, score);
+            operations = GenerateOperations(numberOfOperands, score);
 
             // adjust numbers by operation (division or multiplication)
-            AdjustNumbersForOperations();
+            AdjustNumbersForOperations(score);
 
             Answer = CalculateAnswer();
 
@@ -41,23 +39,23 @@ namespace Projektas.Server.Services.MathGame
         }
 
         // generates numbers and adds to the list
-        private List<int> GenerateNumbers(int numberOfOperands)
+        private List<int> GenerateNumbers(int numberOfOperands, int score)
         {
             List<int> numbers = new();
             for (int i = 0; i < numberOfOperands; i++)
             {
-                numbers.Add(GenerateNumber());
+                numbers.Add(GenerateNumber(score));
             }
             return numbers;
         }
 
         // generates operations and adds to the list
-        private List<Operation> GenerateOperations(int numberOfOperands)
+        private List<Operation> GenerateOperations(int numberOfOperands, int score)
         {
             List<Operation> operations = new();
             Operation[] possibleOperations;
 
-            if (_mathGameService.Score <= 5)
+            if (score <= 5)
             {
                 possibleOperations = new[] { Operation.Addition, Operation.Subtraction };
             }
@@ -75,7 +73,7 @@ namespace Projektas.Server.Services.MathGame
         }
 
         // adjusts numbers by operations
-        private void AdjustNumbersForOperations()
+        private void AdjustNumbersForOperations(int score)
         {
             for (int i = 1; i < numbers.Count; i++)
             {
@@ -85,7 +83,7 @@ namespace Projektas.Server.Services.MathGame
                 }
                 else if (operations[i - 1] == Operation.Multiplication)
                 {
-                    int limit = Math.Max(2, _mathGameService.Score / 2);
+                    int limit = Math.Max(2, score / 2);
                     numbers[i] = _random.Next(2, limit);
 
                 }
@@ -134,13 +132,13 @@ namespace Projektas.Server.Services.MathGame
 
         private int CalculateAnswer()
         {
-            Answer = _mathCalculations.CalculateAnswer(numbers, operations);
+            Answer = _mathCalculationsService.CalculateAnswer(numbers, operations);
             return Answer;
         }
 
-        private int GenerateNumber()
+        private int GenerateNumber(int score)
         {
-            int number = _random.Next(MinNumber, MaxNumber);
+            int number = _random.Next(MinNumber(score), MaxNumber(score));
 
             return number;
         }

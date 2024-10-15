@@ -7,17 +7,17 @@ namespace Projektas.Server.Controllers
     [Route("api/[controller]")]
     public class MathGameController : ControllerBase
     {
-        private readonly MathGameService _mathGameService;
+        private readonly MathGameAPIService _mathGameService;
 
-        public MathGameController(MathGameService mathGameService)
+        public MathGameController(MathGameAPIService mathGameService)
         {
             _mathGameService = mathGameService;
         }
 
         [HttpGet("question")]
-        public ActionResult<string> GetQuestion()
+        public ActionResult<string> GetQuestion([FromQuery] int score)
         {
-            return _mathGameService.GenerateQuestion();
+            return _mathGameService.GenerateQuestion(score);
         }
 
         [HttpGet("options")]
@@ -30,25 +30,6 @@ namespace Projektas.Server.Controllers
         public ActionResult<bool> CheckAnswer([FromBody] int answer)
         {
             return _mathGameService.CheckAnswer(answer);
-        }
-
-        [HttpGet("score")]
-        public ActionResult<int> GetScore()
-        {
-            return _mathGameService.Score;
-        }
-
-        [HttpGet("highscore")]
-        public ActionResult<int> GetHighscore()
-        {
-            return _mathGameService.Highscore;
-        }
-
-        [HttpPost("reset-score")]
-        public ActionResult<int> ResetScore()
-        {
-            _mathGameService.Score = 0;
-            return _mathGameService.Score;
         }
     }
 }
