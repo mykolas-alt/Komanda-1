@@ -1,5 +1,35 @@
 ﻿@page "/pairup"
 
-<PageTitle>Pair Up</PageTitle>
+<div style="text-align: center;">
+    <h1>Pair Up</h1>
+    <div>
+        @if (isGameActive)
+        {
+            <h2>Attempts: @attempts</h2>
+        }
+        else
+        {
+            <h2>Score: @attempts</h2> 
+        }
+    </div>
 
-<h3>Pair Up</h3>
+    <div class="cards-container">
+        @foreach (var card in cards)
+        {
+            <button @onclick="() => OnCardSelected(card)"
+                    disabled="@(card.IsMatched || !isGameActive)"
+                    class="card">
+                @if (card.IsSelected || card.IsMatched)
+                {
+                    <span class="card-value">@card.Value</span>
+                }
+                else
+                {
+                    <span class="card-value">?</span>
+                }
+            </button>
+        }
+    </div>
+
+    <button @onclick="ResetGame" class="btn btn-primary" style="margin-top: 20px;">@(isGameActive ? "Reset Cards" : "Replay")</button>
+</div>
