@@ -1,5 +1,78 @@
-﻿@page "/mathgame"
+@page "/mathgame"
+@inject Projektas.Client.Services.MathGameService MathGameService
+@inject Projektas.Client.Services.TimerService TimerService
+@inject Projektas.Client.Services.DataService DataService
+@inject Projektas.Client.Services.ScoreboardService ScoreboardService
+@inject Projektas.Client.Services.GameStateService GameStateService
+@using Projektas.Client.Components
 
 <PageTitle>Math Game</PageTitle>
 
-<h3>Math Game</h3>
+<div class="container">
+    <div class="math-game">
+        @if(question != null && isTimesUp == false)
+        {
+            <div class="app-title">
+                Math Game!
+            </div>
+            <div class="math-game-header">
+                <p>What is @question = ?</p>
+            </div>
+            <div class="math-game-body">
+                @foreach (var option in options)
+                {
+                    <OptionCard Option="@option" OnOptionSelected="CheckAnswer"></OptionCard>
+                }
+                <div class="score-time-container">
+                    <div class="score">
+                        <p>Score: @gameState.Score</p>
+                    </div>
+                    <div class="time">
+                        <p>Time left: @TimerService.RemainingTime seconds</p>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (isTimesUp == false && question == null)
+        {
+            <div class="app-title">
+                Math Game!
+            </div>
+            <div class="math-game-header">
+                <p>Test your math skills!</p>
+            </div>
+            <div class="math-game-footer">
+                <button class="play-btn" @onclick="StartGame">Start game</button>
+            </div>
+        }
+        else if (isTimesUp == true && question != null)
+        {
+            <div class="app-title">
+                Game over!
+            </div>
+            <div class="score-highscore-after-game-container">
+                <div class="score-after-game">
+                    <b>You scored @gameState.Score points!</b>
+                </div>
+                <div class="highscore-after-game">
+                    <b>Your highscore: @gameState.Highscore</b>
+                </div>
+            </div>
+            <div class="math-game-footer">
+                <button class="play-btn" @onclick="StartGame">Play again</button>
+            </div>
+            <div class="scoreboard">
+                <div class="scoreboard-title">
+                    <b>Scoreboard</b>
+                </div>
+                @if (topScores != null)
+                {
+                    for (int i = 0; i < topScores.Count; i++)
+                    {
+                        <p>@(i + 1). @topScores[i]</p>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
