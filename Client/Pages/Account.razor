@@ -16,6 +16,16 @@
 			Password: <input type="text" name="accPassword" @bind="@accountPassword" />
 		</label>
 		<button class="submit" @onclick="LogInEvent">Submit</button>
+		@if(isFieldsFilled==false) {
+			<div class="new-account-warning">
+				Not all fields are filled!
+			</div>
+		}
+		@if(test) {
+			<div class="new-account-warning">
+				Logged In
+			</div>
+		}
 	</div>
 	<div class="px-3 singup col">
 		<div class="type">
@@ -38,8 +48,7 @@
 			<div class="new-account-warning">
 				This nickname is in use
 			</div>
-		}
-		@if(isFieldsFilled==false) {
+		} else if(isNewFieldsFilled==false) {
 			<div class="new-account-warning">
 				Not all fields are filled!
 			</div>
@@ -57,17 +66,31 @@
 
 	private bool isNicknameNew = true;
 	private bool isFieldsFilled = true;
+	private bool isNewFieldsFilled = true;
+	private bool test = false;
 
-	private void LogInEvent() {
+	private async void LogInEvent() {
+		if(accountNickname==null ||accountPassword==null) {
+			isFieldsFilled = false;
+		} else {
+			AccountInfo account = new AccountInfo();
+
+			isFieldsFilled=true;
+
+			account.Nickname=accountNickname;
+			account.Password=accountPassword;
+
+			test = await AccountServices.LogIn(account);
+		}
 	}
 
 	private async void SignUpEvent() {
 		if(newAccountName==null || newAccountSurname==null || newAccountNickname==null ||newAccountPassword==null) {
-			isFieldsFilled = false;
+			isNewFieldsFilled=false;
 		} else if(isNicknameNew) {
 			AccountInfo newAccount = new AccountInfo();
 
-			isFieldsFilled = true;
+			isNewFieldsFilled=true;
 
 			newAccount.Name=newAccountName;
 			newAccount.Surname=newAccountSurname;
@@ -89,9 +112,6 @@
 		foreach(string nickname in nicknames) {
 			if(nickname==newAccountNickname) {
 				isNicknameNew=false;
-				if(isFieldsFilled==false) {
-					isFieldsFilled = true;
-				}
 			}
 		}
 

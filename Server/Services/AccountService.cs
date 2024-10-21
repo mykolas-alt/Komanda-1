@@ -11,6 +11,23 @@ namespace Projektas.Server.Services {
 			_filepath=filepath;
 		}
 
+		public bool LogInToAccount(AccountInfo accountInfo) {
+			string AccListSerialized;
+			bool accountMached=false;
+			using (StreamReader reader = new StreamReader(_filepath)) {
+				AccListSerialized=reader.ReadToEnd();
+			}
+			AccountList=JsonSerializer.Deserialize<List<AccountInfo>>(AccListSerialized);
+
+			foreach(AccountInfo account in AccountList) {
+				if(account.Nickname==accountInfo.Nickname && account.Password==accountInfo.Password) {
+					accountMached=true;
+				}
+			}
+
+			return accountMached;
+		}
+
 		public void CreateAccount(AccountInfo newAccount) {
 			string AccListSerialized;
 			using (StreamReader reader = new StreamReader(_filepath)) {

@@ -9,6 +9,16 @@ namespace Projektas.Client.Services {
 			_httpClient = httpClient;
 		}
 
+		public async Task<bool> LogIn(AccountInfo account) {
+			var response=await _httpClient.PostAsJsonAsync("api/account/log_in",account);
+
+			if(response.IsSuccessStatusCode) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		public async Task CreateAccount(AccountInfo newAccount) {
 			await _httpClient.PostAsJsonAsync("api/account/create_account",newAccount);
 		}

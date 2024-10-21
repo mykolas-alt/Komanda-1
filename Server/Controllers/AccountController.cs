@@ -13,6 +13,11 @@ namespace Projektas.Server.Controllers {
 			_accountService=accountService;	
 		}
 
+		[HttpPost("log_in")]
+		public IActionResult LogIn([FromBody]AccountInfo account) {
+			var response=_accountService.LogInToAccount(account);
+			return Ok(response);
+		}
 
 		[HttpPost("create_account")]
 		public IActionResult CreateAccount([FromBody] AccountInfo newAccount) {
