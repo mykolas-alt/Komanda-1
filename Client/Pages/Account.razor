@@ -39,6 +39,11 @@
 				This nickname is in use
 			</div>
 		}
+		@if(isFieldsFilled==false) {
+			<div class="new-account-warning">
+				Not all fields are filled!
+			</div>
+		}
 	</div>
 </div>
 
@@ -51,13 +56,18 @@
 	private string? newAccountPassword = null;
 
 	private bool isNicknameNew = true;
+	private bool isFieldsFilled = true;
 
 	private void LogInEvent() {
 	}
 
 	private async void SignUpEvent() {
-		if(isNicknameNew) {
+		if(newAccountName==null || newAccountSurname==null || newAccountNickname==null ||newAccountPassword==null) {
+			isFieldsFilled = false;
+		} else if(isNicknameNew) {
 			AccountInfo newAccount = new AccountInfo();
+
+			isFieldsFilled = true;
 
 			newAccount.Name=newAccountName;
 			newAccount.Surname=newAccountSurname;
@@ -66,17 +76,25 @@
 
 			await AccountServices.CreateAccount(newAccount);
 		}
+		StateHasChanged();
 	}
 
 	private async void NicknameChange(ChangeEventArgs changeEvent) {
 		List<string> nicknames = await AccountServices.GetNicknames();
+
+		newAccountNickname =(string) changeEvent.Value;
 
 		isNicknameNew = true;
 
 		foreach(string nickname in nicknames) {
 			if(nickname==newAccountNickname) {
 				isNicknameNew=false;
+				if(isFieldsFilled==false) {
+					isFieldsFilled = true;
+				}
 			}
 		}
+
+		StateHasChanged();
 	}
 }

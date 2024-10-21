@@ -34,7 +34,7 @@
     border: 3px solid #858585;
     border-radius: 10px;
     width: 35rem;
-    height: 26rem;
+    height: 28rem;
     text-align: center;
     font-size: 0.9rem;
     padding-top: 1rem;
@@ -104,4 +104,6 @@ input[type=text] {
 .new-account-warning {
     font-size: 1.2rem;
     font-weight: bold;
+    color: #7a0800;
+    text-decoration: underline;
 }
