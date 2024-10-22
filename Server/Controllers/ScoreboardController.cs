@@ -15,7 +15,7 @@ namespace Projektas.Server.Controllers
         }
 
         [HttpPost("top")] 
-        public ActionResult<List<int>> GetTopScores([FromBody] List<int> scores, [FromQuery] int topCount = 10)
+        public ActionResult<List<int>> GetTopScores([FromBody] List<int> scores, [FromQuery] int topCount)
         {
             return _scoreboardService.GetTopScores(scores, topCount);
         }

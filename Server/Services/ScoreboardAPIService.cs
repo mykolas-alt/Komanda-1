@@ -2,7 +2,7 @@
 {
     public class ScoreboardAPIService
     {
-        public List<int> GetTopScores(List<int> scores, int topCount = 10)
+        public List<int> GetTopScores(List<int> scores, int topCount)
         {
             scores.Sort(CompareScoresDescending);
 
