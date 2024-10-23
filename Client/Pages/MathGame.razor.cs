@@ -21,10 +21,10 @@
 
         private async Task StartGame()
         {
-            
             TimerService.Start(60);
-            await GenerateQuestion();
+            isTimesUp = false;
             gameState.Score = 0;
+            await GenerateQuestion();
             await GameStateService.UpdateGameState(gameState);
         }
 
@@ -33,7 +33,6 @@
             isCorrect = null;
             question = await MathGameService.GetQuestionAsync(gameState.Score);
             options = await MathGameService.GetOptionsAsync();
-            isTimesUp = false;
         }
 
         private async Task CheckAnswer(int option)

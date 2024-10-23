@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Projektas.Server.Services;
+using Projektas.Server.Services.MathGame;
 
 namespace Projektas.Server.Controllers
 {

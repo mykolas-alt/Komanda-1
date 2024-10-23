@@ -21,7 +21,7 @@
             <div class="math-game-body">
                 @foreach (var option in options)
                 {
-                    <OptionCard Option="@option" OnOptionSelected="CheckAnswer"></OptionCard>
+                    <OptionCard Option="@option" OnOptionSelected="@CheckAnswer"></OptionCard>
                 }
                 <div class="score-time-container">
                     <div class="score">
