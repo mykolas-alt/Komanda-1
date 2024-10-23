@@ -1,6 +1,6 @@
 ﻿@page "/account"
 @inject Projektas.Client.Services.AccountServices AccountServices
-@using Projektas.Shared;
+@using Projektas.Shared.Models;
 
 <PageTitle>Account</PageTitle>
 
@@ -9,8 +9,8 @@
 		<div class="type">
 			Log In
 		</div>
-		<label class="textbox" for="accNickname">
-			Nickname: <input type="text" name="accNickname" @bind="@accountNickname" />
+		<label class="textbox" for="accUsername">
+			Username: <input type="text" name="accUsername" @bind="@accountUsername" />
 		</label>
 		<label class="textbox" for="accPassword">
 			Password: <input type="text" name="accPassword" @bind="@accountPassword" />
@@ -37,16 +37,16 @@
 		<label class="textbox" for="accSurname">
 			Surname: <input type="text" name="accSurname" @bind="@newAccountSurname" />
 		</label>
-		<label class="textbox" for="accNickname">
-			Nickname: <input type="text" name="accNickname" @bind="@newAccountNickname" @oninput="NicknameChange" />
+		<label class="textbox" for="accUsername">
+			Username: <input type="text" name="accUsername" @bind="@newAccountUsername" @oninput="UsernameChange" />
 		</label>
 		<label class="textbox" for="accPassword">
 			Password: <input type="text" name="accPassword" @bind="@newAccountPassword" />
 		</label>
 		<button class="submit" @onclick="SignUpEvent">Submit</button>
-		@if(isNicknameNew==false) {
+		@if(isUsernameNew==false) {
 			<div class="new-account-warning">
-				This nickname is in use
+				This username is in use
 			</div>
 		} else if(isNewFieldsFilled==false) {
 			<div class="new-account-warning">
@@ -57,27 +57,27 @@
 </div>
 
 @code {
-	private string? accountNickname = null;
+	private string? accountUsername = null;
 	private string? accountPassword = null;
 	private string? newAccountName = null;
 	private string? newAccountSurname = null;
-	private string? newAccountNickname = null;
+	private string? newAccountUsername = null;
 	private string? newAccountPassword = null;
 
-	private bool isNicknameNew = true;
+	private bool isUsernameNew = true;
 	private bool isFieldsFilled = true;
 	private bool isNewFieldsFilled = true;
 	private bool test = false;
 
 	private async void LogInEvent() {
-		if(accountNickname==null ||accountPassword==null) {
+		if(accountUsername==null||accountPassword==null) {
 			isFieldsFilled = false;
 		} else {
-			AccountInfo account = new AccountInfo();
+			User account = new User();
 
 			isFieldsFilled=true;
 
-			account.Nickname=accountNickname;
+			account.Username=accountUsername;
 			account.Password=accountPassword;
 
 			test = await AccountServices.LogIn(account);
@@ -85,16 +85,16 @@
 	}
 
 	private async void SignUpEvent() {
-		if(newAccountName==null || newAccountSurname==null || newAccountNickname==null ||newAccountPassword==null) {
+		if(newAccountName==null||newAccountSurname==null||newAccountUsername==null||newAccountPassword==null) {
 			isNewFieldsFilled=false;
-		} else if(isNicknameNew) {
-			AccountInfo newAccount = new AccountInfo();
+		} else if(isUsernameNew) {
+			User newAccount = new User();
 
 			isNewFieldsFilled=true;
 
 			newAccount.Name=newAccountName;
 			newAccount.Surname=newAccountSurname;
-			newAccount.Nickname=newAccountNickname;
+			newAccount.Username=newAccountUsername;
 			newAccount.Password=newAccountPassword;
 
 			await AccountServices.CreateAccount(newAccount);
@@ -102,16 +102,16 @@
 		StateHasChanged();
 	}
 
-	private async void NicknameChange(ChangeEventArgs changeEvent) {
-		List<string> nicknames = await AccountServices.GetNicknames();
+	private async void UsernameChange(ChangeEventArgs changeEvent) {
+		List<string> usernames = await AccountServices.GetUsernames();
 
-		newAccountNickname =(string) changeEvent.Value;
+		newAccountUsername=(string)changeEvent.Value;
 
-		isNicknameNew = true;
+		isUsernameNew=true;
 
-		foreach(string nickname in nicknames) {
-			if(nickname==newAccountNickname) {
-				isNicknameNew=false;
+		foreach(string username in usernames) {
+			if(username==newAccountUsername) {
+				isUsernameNew=false;
 			}
 		}
 

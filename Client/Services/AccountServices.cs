@@ -1,16 +1,17 @@
-﻿using Projektas.Shared;
+﻿using Projektas.Shared.Models;
 using System.Net.Http.Json;
 
-namespace Projektas.Client.Services {
-	public class AccountServices {
+namespace Projektas.Client.Services
+{
+    public class AccountServices {
 		private readonly HttpClient _httpClient;
 
 		public AccountServices(HttpClient httpClient) {
 			_httpClient = httpClient;
 		}
 
-		public async Task<bool> LogIn(AccountInfo account) {
-			var response=await _httpClient.PostAsJsonAsync("api/account/log_in",account);
+		public async Task<bool> LogIn(User user) {
+			var response=await _httpClient.PostAsJsonAsync("api/account/log_in",user);
 
 			if(response.IsSuccessStatusCode) {
 				return true;
@@ -19,12 +20,12 @@ namespace Projektas.Client.Services {
 			}
 		}
 
-		public async Task CreateAccount(AccountInfo newAccount) {
-			await _httpClient.PostAsJsonAsync("api/account/create_account",newAccount);
+		public async Task CreateAccount(User newUser) {
+			await _httpClient.PostAsJsonAsync("api/account/create_user",newUser);
 		}
 
-		public async Task<List<string>> GetNicknames() {
-			return await _httpClient.GetFromJsonAsync<List<string>>("api/account/get_nicknames");
+		public async Task<List<string>> GetUsernames() {
+			return await _httpClient.GetFromJsonAsync<List<string>>("api/account/get_usernames");
 		}
 	}
 }
