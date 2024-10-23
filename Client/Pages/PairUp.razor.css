@@ -1,14 +1,13 @@
 ﻿.cards-container {
     display: grid;
-    grid-template-columns: repeat(4, 100px);
     grid-gap: 10px;
     justify-content: center;
     margin-top: 20px;
 }
 
 .card {
-    width: 100px;
-    height: 100px;
+    width: 81px;
+    height: 81px;
     background-color: lightgray;
     border: 2px solid #333;
     cursor: pointer;
@@ -19,7 +18,7 @@
 }
 
 .card-value {
-    line-height: 100px;
+    line-height: 81px;
     display: block;
     text-align: center; 
     font-size: 36px; 

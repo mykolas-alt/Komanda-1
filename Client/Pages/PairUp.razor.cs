@@ -11,10 +11,38 @@ namespace Projektas.Client.Pages
         private bool missMatch;
         private int matchedPairsCount;
         private int attempts;
+        private bool isHardMode;
+        private string gridStyle;
+        private bool changeIcon;
+
+        string[] cardIcons = new string[]
+        {
+        "\u2660",  // Spade: ♠
+        "\u2663",  // Club: ♣
+        "\u25A1",  // Square: □ 
+        "\u25B3",  // Triangle: △ 
+        "\u2605",  // Star: ★
+        "\u2609",  // Sun: ☉
+        "\u2602",  // Umbrella: ☂
+        "\u263A",  // Smiley Face: ☺
+        "\u260E",  // Telephone: ☎ 
+        "\u2708",  // Airplane: ✈
+        "\u2709",  // Envelope: ✉
+        "\u266B",  // Music Note: ♫
+        "\u25CB",  // Circle: ○ 
+        "\u263D",  // Crescent Moon: ☽
+        "\u2714",  // Checkmark: ✔ 
+        "\u273F"   // Flower: ✿
+        };
 
         public PairUp()
         {
             ResetGame();
+        }
+        private void OnDifficultyChanged(ChangeEventArgs e)
+        {
+            isHardMode = e.Value?.ToString() == "Hard";
+            Console.WriteLine(isHardMode);
         }
 
         private void ResetGame()
@@ -25,12 +53,26 @@ namespace Projektas.Client.Pages
             secondSelectedCard = null;
             missMatch = false;
             isGameActive = true;
+            int count;
 
-            cards = GenerateCardDeck().OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
+            if (isHardMode)
+            {
+                gridStyle = "grid-template-columns: repeat(8, 81px);";
+                changeIcon = true;
+                count = 16;
+            }
+            else
+            {
+                gridStyle = "grid-template-columns: repeat(4, 81px);";
+                changeIcon = false;
+                count = 8;
+            }
+            
+            cards = GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
         }
-        private List<Card> GenerateCardDeck()
+        private List<Card> GenerateCardDeck(int count)
         {
-            var cardValues = Enumerable.Range(1, 8).ToList(); 
+            var cardValues = Enumerable.Range(1, count).ToList(); 
             var allCards = cardValues.Concat(cardValues)
                                      .Select(value => new Card { Value = (object)value, IsMatched = false, IsSelected = false })
                                      .ToList();
