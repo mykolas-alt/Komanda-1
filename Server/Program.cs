@@ -15,7 +15,7 @@ builder.Services.AddSingleton<MathGameAPIService>();
 builder.Services.AddSingleton<MathCalculationService>();
 builder.Services.AddSingleton<MathGenerationService>();
 builder.Services.AddSingleton<DataAPIService>(provider => new DataAPIService(Path.Combine("Data", "MathGameData.txt")));
-builder.Services.AddSingleton<UserService>(provider => new UserService(Path.Combine("Data","AccountData.txt")));
+builder.Services.AddSingleton<UserService>(provider => new UserService(Path.Combine("Data","UsersData.txt")));
 builder.Services.AddSingleton<ScoreboardAPIService>();
 
 var app = builder.Build();
