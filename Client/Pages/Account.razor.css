@@ -1,0 +1,111 @@
+﻿.col {
+    flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.login {
+    display: flex;
+    position: relative;
+    align-items: center;
+    background: #c9c9c9;
+    border: 3px solid #858585;
+    border-radius: 10px;
+    width: 35rem;
+    height: 20rem;
+    text-align: center;
+    font-size: 0.9rem;
+    padding-top: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0rem;
+    margin-left: auto;
+    margin-right: 1.5rem;
+    margin-top: 0.5rem;
+    top: -1px;
+}
+
+.singup {
+    display: flex;
+    position: relative;
+    align-items: center;
+    background: #c9c9c9;
+    border: 3px solid #858585;
+    border-radius: 10px;
+    width: 35rem;
+    height: 28rem;
+    text-align: center;
+    font-size: 0.9rem;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+    margin-left: auto;
+    margin-right: 1.5rem;
+    margin-top: 0.5rem;
+    top: -1px;
+}
+
+.type {
+    background: #b8b8b8;
+    border: 3px solid #858585;
+    border-radius: 10px;
+    width: 30rem;
+    height: 3rem;
+    font-size: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.textbox {
+    background: #c7c7c7;
+    border: 3px solid #858585;
+    border-radius: 10px;
+    align-items: center;
+    text-align: right;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 20rem;
+    height: 3rem;
+    padding-top: 0.35rem;
+    padding-right: 0.7rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+}
+
+input[type=text] {
+    background: #d9d9d9;
+    border: 3px solid #858585;
+    border-radius: 5px;
+}
+
+    input[type=text]:hover {
+        background: #cfcfcf;
+    }
+
+.submit {
+    background: #b8b8b8;
+    border: 3px solid #858585;
+    border-radius: 10px;
+    align-items: center;
+    font-size: 2rem;
+    width: 22rem;
+    height: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+}
+
+    .submit:hover {
+        background: #c2c2c2;
+    }
+
+.new-account-warning {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #7a0800;
+    text-decoration: underline;
+}
