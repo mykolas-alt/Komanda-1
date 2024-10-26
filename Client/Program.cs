@@ -12,7 +12,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress=new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddScoped<AccountServices>();
+builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<MathGameService>();
 builder.Services.AddScoped<GameStateService>();
 builder.Services.AddScoped<TimerService>();

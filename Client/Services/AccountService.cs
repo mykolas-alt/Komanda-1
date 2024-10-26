@@ -3,10 +3,10 @@ using System.Net.Http.Json;
 
 namespace Projektas.Client.Services
 {
-    public class AccountServices {
+    public class AccountService {
 		private readonly HttpClient _httpClient;
 
-		public AccountServices(HttpClient httpClient) {
+		public AccountService(HttpClient httpClient) {
 			_httpClient = httpClient;
 		}
 

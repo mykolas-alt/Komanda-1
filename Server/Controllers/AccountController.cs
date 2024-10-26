@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Projektas.Server.Services;
 using Projektas.Shared.Models;
 
@@ -9,12 +12,14 @@ namespace Projektas.Server.Controllers
 	[Route("api/[controller]")]
 	public class AccountController:ControllerBase {
 		private readonly UserService _userService;
+		private readonly IConfiguration _configuration;
 
-		public AccountController(UserService userService) {
-			_userService=userService;	
+		public AccountController(UserService userService, IConfiguration configuration) {
+			_userService=userService;
+			_configuration=configuration;
 		}
 
-		[HttpPost("log_in")]
+		[HttpPost("login")]
 		public IActionResult LogIn([FromBody]User user) {
 			var response=_userService.LogInToUser(user);
 			return Ok(response);
