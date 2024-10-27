@@ -70,9 +70,8 @@
                 {
                     isTimesUp = true;
                     TimerService.Stop();
-                    await DataService.SaveDataAsync(gameState.Score);
-                    List<int> loadedData = await DataService.LoadDataAsync();
-                    topScores = await ScoreboardService.GetTopScoresAsync(loadedData,topCount:5);
+                    await MathGameService.SaveDataAsync(gameState.Score);
+                    topScores = await MathGameService.GetTopScoresAsync(topCount:5);
                 }
                 StateHasChanged();
             });

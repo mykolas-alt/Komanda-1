@@ -1,10 +1,10 @@
-﻿namespace Projektas.Server.Services
+﻿namespace Projektas.Server.Services.MathGame
 {
-    public class DataAPIService
+    public class MathGameDataService
     {
         private readonly string _filepath;
 
-        public DataAPIService(string filepath)
+        public MathGameDataService(string filepath)
         {
             _filepath = filepath;
         }
@@ -28,7 +28,7 @@
             using (StreamReader reader = new StreamReader(_filepath))
             {
                 string? line;
-                while ((line = reader.ReadLine())!= null)
+                while ((line = reader.ReadLine()) != null)
                 {
                     if (int.TryParse(line, out int number))
                     {

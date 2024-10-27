@@ -3,11 +3,11 @@ using Projektas.Shared.Models;
 
 namespace Projektas.Client.Services
 {
-    public class GameStateService
+    public class MathGameStateService
     {
         private readonly ILocalStorageService _localStorage;
 
-        public GameStateService(ILocalStorageService localStorage)
+        public MathGameStateService(ILocalStorageService localStorage)
         {
             _localStorage = localStorage;
         }

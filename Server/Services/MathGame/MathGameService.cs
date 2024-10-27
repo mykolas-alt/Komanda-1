@@ -5,7 +5,7 @@ using System;
 
 namespace Projektas.Server.Services.MathGame
 {
-    public class MathGameAPIService
+    public class MathGameService
     {
         private readonly Random _random = new();
         private readonly MathCalculationService _mathCalculationService;
@@ -15,7 +15,7 @@ namespace Projektas.Server.Services.MathGame
         public List<int> numbers = new();
         public List<Operation> operations = new();
 
-        public MathGameAPIService(MathCalculationService mathCalculationService, MathGenerationService mathGenerationService)
+        public MathGameService(MathCalculationService mathCalculationService, MathGenerationService mathGenerationService)
         {
             _mathCalculationService = mathCalculationService;
             _mathGenerationService = mathGenerationService;

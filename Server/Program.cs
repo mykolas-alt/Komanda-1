@@ -11,12 +11,12 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
-builder.Services.AddSingleton<MathGameAPIService>();
+builder.Services.AddSingleton<MathGameService>();
 builder.Services.AddSingleton<MathCalculationService>();
 builder.Services.AddSingleton<MathGenerationService>();
-builder.Services.AddSingleton<DataAPIService>(provider => new DataAPIService(Path.Combine("Data", "MathGameData.txt")));
+builder.Services.AddSingleton<MathGameDataService>(provider => new MathGameDataService(Path.Combine("Data", "MathGameData.txt")));
 builder.Services.AddSingleton<UserService>(provider => new UserService(Path.Combine("Data","UsersData.txt")));
-builder.Services.AddSingleton<ScoreboardAPIService>();
+builder.Services.AddSingleton<MathGameScoreboardService>();
 
 var app = builder.Build();
 
