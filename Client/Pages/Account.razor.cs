@@ -3,20 +3,22 @@ using Projektas.Shared.Models;
 
 namespace Projektas.Client.Pages {
 	public partial class Account {
-		private string? accountUsername = null;
-		private string? accountPassword = null;
-		private string? newAccountName = null;
-		private string? newAccountSurname = null;
-		private string? newAccountUsername = null;
-		private string? newAccountPassword = null;
+		private string? username=null;
+		private string accountUsername = "";
+		private string accountPassword = "";
+		private string newAccountName = "";
+		private string newAccountSurname = "";
+		private string newAccountUsername = "";
+		private string newAccountPassword = "";
+
+		private string? token = "";
 
 		private bool isUsernameNew = true;
 		private bool isFieldsFilled = true;
 		private bool isNewFieldsFilled = true;
-		private bool test = false;
 
 		private async void LogInEvent() {
-			if(accountUsername==null||accountPassword==null) {
+			if(accountUsername==""||accountPassword=="") {
 				isFieldsFilled = false;
 			} else {
 				User account = new User();
@@ -26,12 +28,27 @@ namespace Projektas.Client.Pages {
 				account.Username=accountUsername;
 				account.Password=accountPassword;
 
-				test = await AccountServices.LogIn(account);
+				token = await AccountServices.LogIn(account);
+
+				Console.WriteLine(token);
+
+				if(!string.IsNullOrEmpty(token)) {
+					await AuthStateProvider.MarkUserAsAuthenticated(token);
+					Navigation.NavigateTo("/");
+				}
 			}
 		}
 
+		private void LogOffEvent() {
+			AuthStateProvider.MarkUserAsLoggedOut();
+
+			token="";
+
+			Navigation.NavigateTo("/");
+		}
+
 		private async void SignUpEvent() {
-			if(newAccountName==null||newAccountSurname==null||newAccountUsername==null||newAccountPassword==null) {
+			if(newAccountName==""||newAccountSurname==""||newAccountUsername==""||newAccountPassword=="") {
 				isNewFieldsFilled=false;
 			} else if(isUsernameNew) {
 				User newAccount = new User();
@@ -62,6 +79,21 @@ namespace Projektas.Client.Pages {
 			}
 
 			StateHasChanged();
+		}
+
+		protected override async Task OnInitializedAsync() {
+			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+
+			await LoadUsernameAsync();
+		}
+
+		private async Task LoadUsernameAsync() {
+			username = await AuthStateProvider.GetUsernameAsync();
+			StateHasChanged();
+		}
+
+		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+			await InvokeAsync(LoadUsernameAsync);
 		}
 	}
 }

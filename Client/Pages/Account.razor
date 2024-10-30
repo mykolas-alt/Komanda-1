@@ -1,56 +1,62 @@
 ﻿@page "/account"
 @inject Projektas.Client.Services.AccountService AccountServices
+@inject Projektas.Client.Services.AccountAuthStateProvider AuthStateProvider
+@inject NavigationManager Navigation
 
 <PageTitle>Account</PageTitle>
 
 <div class="row">
-	<div class="px-3 login col">
-		<div class="type">
-			Log In
+	@if(username!=null) {
+		<button class="submit" @onclick="LogOffEvent">Log Off</button>
+	} else {
+		<div class="px-3 login col">
+			<div class="type">
+				Log In
+			</div>
+			<label class="textbox" for="accUsername">
+				Username: <input type="text" name="accUsername" @bind="@accountUsername" />
+			</label>
+			<label class="textbox" for="accPassword">
+				Password: <input type="text" name="accPassword" @bind="@accountPassword" />
+			</label>
+			<button class="submit" @onclick="LogInEvent">Submit</button>
+			@if(isFieldsFilled==false) {
+				<div class="new-account-warning">
+					Not all fields are filled!
+				</div>
+			}
+			@if(username!=null) {
+				<div class="new-account-warning">
+					Logged In
+				</div>
+			}
 		</div>
-		<label class="textbox" for="accUsername">
-			Username: <input type="text" name="accUsername" @bind="@accountUsername" />
-		</label>
-		<label class="textbox" for="accPassword">
-			Password: <input type="text" name="accPassword" @bind="@accountPassword" />
-		</label>
-		<button class="submit" @onclick="LogInEvent">Submit</button>
-		@if(isFieldsFilled==false) {
-			<div class="new-account-warning">
-				Not all fields are filled!
+		<div class="px-3 singup col">
+			<div class="type">
+				Sign Up
 			</div>
-		}
-		@if(test) {
-			<div class="new-account-warning">
-				Logged In
-			</div>
-		}
-	</div>
-	<div class="px-3 singup col">
-		<div class="type">
-			Sign Up
+			<label class="textbox" for="accName">
+				Name: <input type="text" name="accName" @bind="@newAccountName" />
+			</label>
+			<label class="textbox" for="accSurname">
+				Surname: <input type="text" name="accSurname" @bind="@newAccountSurname" />
+			</label>
+			<label class="textbox" for="accUsername">
+				Username: <input type="text" name="accUsername" @bind="@newAccountUsername" @oninput="UsernameChange" />
+			</label>
+			<label class="textbox" for="accPassword">
+				Password: <input type="text" name="accPassword" @bind="@newAccountPassword" />
+			</label>
+			<button class="submit" @onclick="SignUpEvent">Submit</button>
+			@if(isUsernameNew==false) {
+				<div class="new-account-warning">
+					This username is in use
+				</div>
+			} else if(isNewFieldsFilled==false) {
+				<div class="new-account-warning">
+					Not all fields are filled!
+				</div>
+			}
 		</div>
-		<label class="textbox" for="accName">
-			Name: <input type="text" name="accName" @bind="@newAccountName" />
-		</label>
-		<label class="textbox" for="accSurname">
-			Surname: <input type="text" name="accSurname" @bind="@newAccountSurname" />
-		</label>
-		<label class="textbox" for="accUsername">
-			Username: <input type="text" name="accUsername" @bind="@newAccountUsername" @oninput="UsernameChange" />
-		</label>
-		<label class="textbox" for="accPassword">
-			Password: <input type="text" name="accPassword" @bind="@newAccountPassword" />
-		</label>
-		<button class="submit" @onclick="SignUpEvent">Submit</button>
-		@if(isUsernameNew==false) {
-			<div class="new-account-warning">
-				This username is in use
-			</div>
-		} else if(isNewFieldsFilled==false) {
-			<div class="new-account-warning">
-				Not all fields are filled!
-			</div>
-		}
-	</div>
+	}
 </div>

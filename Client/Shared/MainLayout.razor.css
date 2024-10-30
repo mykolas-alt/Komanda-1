@@ -15,10 +15,13 @@ main {
 }
 
 .account {
-    color: black;
-    font-size: 1rem;
     margin-left: auto;
     margin-right: 1rem;
+}
+
+.account_text {
+    color: black;
+    font-size: 1rem;
 }
 
 .sidebar {

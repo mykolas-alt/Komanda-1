@@ -1,23 +1,28 @@
 ﻿using Projektas.Shared.Models;
 using System.Net.Http.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Projektas.Client.Services
 {
     public class AccountService {
 		private readonly HttpClient _httpClient;
+		private readonly ILocalStorageService _localStorage;
 
-		public AccountService(HttpClient httpClient) {
+		public AccountService(HttpClient httpClient, ILocalStorageService localStorage) {
 			_httpClient = httpClient;
+			_localStorage = localStorage;
 		}
 
-		public async Task<bool> LogIn(User user) {
-			var response=await _httpClient.PostAsJsonAsync("api/account/log_in",user);
+		public async Task<string?> LogIn(User user) {
+			var response=await _httpClient.PostAsJsonAsync("api/account/login",user);
 
 			if(response.IsSuccessStatusCode) {
-				return true;
-			} else {
-				return false;
+				var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+				return result?.Token;
 			}
+
+			return "";
 		}
 
 		public async Task CreateAccount(User newUser) {

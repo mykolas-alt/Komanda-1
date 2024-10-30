@@ -1,11 +1,17 @@
 ﻿@inherits LayoutComponentBase
 @inject Projektas.Client.Services.AccountService AccountServices
+@inject AuthenticationStateProvider AuthStateProvider
+@implements IDisposable
 
 <div class="page">
 	<div class="top-row px-4">
 		<a class="title" href="">Projektas</a>
 		<div class="account">
-			@test
+			@if(username==null) {
+				<a class="account_text" href="account">Log In/Sign Up</a>
+			} else {
+				<a class="account_text" href="account">@username</a>
+			}
 		</div>
 	</div>
 	<div class="page middle">
@@ -20,7 +26,3 @@
 	</div>
 	<div class="bottom-row px-4"></div>
 </div>
-
-@code {
-	private string? test = "";
-}
