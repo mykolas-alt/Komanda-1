@@ -17,6 +17,7 @@ namespace Projektas.Client.Shared {
 
 		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
 			await InvokeAsync(LoadUsernameAsync);
+			StateHasChanged();
 		}
 
 		public void Dispose() {
