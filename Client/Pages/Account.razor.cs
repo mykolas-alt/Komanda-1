@@ -1,5 +1,4 @@
-﻿namespace Projektas.Client.Pages {
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Projektas.Shared.Models;
 
 namespace Projektas.Client.Pages {

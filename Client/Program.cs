@@ -18,7 +18,5 @@ builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<MathGameService>();
 builder.Services.AddScoped<MathGameStateService>();
 builder.Services.AddScoped<TimerService>();
-builder.Services.AddScoped<DataService>();
-builder.Services.AddScoped<ScoreboardService>();
 
 await builder.Build().RunAsync();
