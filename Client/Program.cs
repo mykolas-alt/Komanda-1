@@ -4,20 +4,21 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Projektas.Client;
 using Projektas.Client.Services;
-using Projektas.Shared.Models;
-using Blazored.LocalStorage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, AccountAuthStateProvider>();
+builder.Services.AddScoped<AccountAuthStateProvider>();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress=new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddScoped<AccountServices>();
+builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<MathGameService>();
 builder.Services.AddScoped<MathGameStateService>();
 builder.Services.AddScoped<TimerService>();
-builder.Services.AddScoped<AuthenticationStateProvider, AccountAuthStateProvider>();
-builder.Services.AddAuthorizationCore();
-builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<DataService>();
+builder.Services.AddScoped<ScoreboardService>();
 
 await builder.Build().RunAsync();

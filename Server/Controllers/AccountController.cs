@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Projektas.Server.Services;
 using Projektas.Shared.Models;
 
@@ -11,13 +10,19 @@ namespace Projektas.Server.Controllers
 		private readonly UserService _userService;
 
 		public AccountController(UserService userService) {
-			_userService=userService;	
+			_userService=userService;
 		}
 
-		[HttpPost("log_in")]
+		[HttpPost("login")]
 		public IActionResult LogIn([FromBody]User user) {
 			var response=_userService.LogInToUser(user);
-			return Ok(response);
+
+			if(response) {
+				var token = _userService.GenerateJwtToken(user);
+				return Ok(new { Token = token });
+			}
+
+			return Unauthorized();
 		}
 
 		[HttpPost("create_user")]
