@@ -15,7 +15,6 @@ builder.Services.AddScoped<AccountAuthStateProvider>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress=new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<AccountService>();
-builder.Services.AddScoped<DatabaseService>();
 builder.Services.AddScoped<MathGameService>();
 builder.Services.AddScoped<MathGameStateService>();
 builder.Services.AddScoped<TimerService>();

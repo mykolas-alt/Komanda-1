@@ -22,10 +22,10 @@ namespace Projektas.Server.Controllers
 		}
 
 		[HttpPost("login")]
-		public IActionResult LogIn([FromBody]User user) {
+		public async Task<IActionResult> LogIn([FromBody]User user) {
 			var response=_userService.LogInToUser(user);
 
-			if(response) {
+			if(response.Result) {
 				var token = _userService.GenerateJwtToken(user);
 				return Ok(new { Token = token });
 			}

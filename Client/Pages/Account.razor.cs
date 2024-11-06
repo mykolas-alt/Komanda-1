@@ -13,8 +13,6 @@ namespace Projektas.Client.Pages {
 
 		private string? token = "";
 
-		private string? test = "Ok";
-
 		private bool isUsernameNew = true;
 		private bool isFieldsFilled = true;
 		private bool isNewFieldsFilled = true;
@@ -85,10 +83,6 @@ namespace Projektas.Client.Pages {
 
 		protected override async Task OnInitializedAsync() {
 			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
-
-			User user = await DatabaseService.GetUserByIdAsync(3);
-
-			test=user.Username;
 
 			await LoadUsernameAsync();
 		}

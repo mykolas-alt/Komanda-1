@@ -33,5 +33,17 @@ namespace Projektas.Server.Services {
 				return await db.QueryFirstOrDefaultAsync<User>("SELECT * FROM Users WHERE Id = @Id", new {Id=id});
 			}
 		}
+
+		public async Task<bool> ValidateUserAsync(string username, string password) {
+			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
+				var user = await db.QuerySingleOrDefaultAsync<User>("SELECT * FROM Users WHERE Username = @Username", new {Username = username});
+
+				if (user != null && password==user.Password) {
+					return true;
+				}
+
+				return false;
+			}
+		}
 	}
 }

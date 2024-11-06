@@ -19,9 +19,10 @@ namespace Projektas.Server.Services
 			_databaseService=databaseService;
 		}
 
-		public bool LogInToUser(User userInfo) {
-			string UserListSerialized;
-			bool userMached=false;/*
+		public async Task<bool> LogInToUser(User userInfo) {
+			bool userMached = await _databaseService.ValidateUserAsync(userInfo.Username, userInfo.Password);
+			return userMached;
+			/*
 			using (StreamReader reader = new StreamReader(_filepath)) {
 				UserListSerialized=reader.ReadToEnd();
 			}
@@ -33,7 +34,7 @@ namespace Projektas.Server.Services
 				}
 			}
 			*/
-			return userMached;
+
 		}
 
 		public string GenerateJwtToken(User user) {
