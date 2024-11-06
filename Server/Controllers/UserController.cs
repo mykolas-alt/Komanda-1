@@ -6,11 +6,19 @@ namespace Projektas.Server.Controllers
 {
     [ApiController]
 	[Route("api/[controller]")]
-	public class AccountController:ControllerBase {
+	public class UserController:ControllerBase {
 		private readonly UserService _userService;
+		private readonly DatabaseService _databaseService;
 
-		public AccountController(UserService userService) {
+		public UserController(UserService userService, DatabaseService databaseService) {
 			_userService=userService;
+			_databaseService=databaseService;
+		}
+		
+		[HttpPost("create_user")]
+		public async Task<IActionResult> CreateUser([FromBody] User newUser) {
+			await _databaseService.CreateUserAsync(newUser);
+			return Ok();
 		}
 
 		[HttpPost("login")]
@@ -25,15 +33,9 @@ namespace Projektas.Server.Controllers
 			return Unauthorized();
 		}
 
-		[HttpPost("create_user")]
-		public IActionResult CreateUser([FromBody] User newUser) {
-			_userService.CreateUser(newUser);
-			return Ok();
-		}
-
 		[HttpGet("get_usernames")]
-		public ActionResult <List<string>> GetUsernames() {
-			return _userService.GetUsernames();
+		public async Task<ActionResult<List<string>>> GetUsernames() {
+			return await _userService.GetUsernamesAsync();
 		}
 	}
 }

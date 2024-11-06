@@ -15,6 +15,13 @@ namespace Projektas.Server.Services {
 			_configuration = configuration;
 		}
 
+		public async Task<int> CreateUserAsync(User user) {
+			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
+				var sql = "INSERT INTO Users (Name, Surname, Username, Password) VALUES (@Name, @Surname, @Username, @Password); SELECT CAST(SCOPE_IDENTITY() as int);";
+				return await db.ExecuteScalarAsync<int>(sql, user);
+			}
+		}
+
 		public async Task<IEnumerable<User>> GetAllUsersAsync() {
 			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
 				return await db.QueryAsync<User>("SELECT * FROM Users");
@@ -24,13 +31,6 @@ namespace Projektas.Server.Services {
 		public async Task<User> GetUserByIdAsync(int id) {
 			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
 				return await db.QueryFirstOrDefaultAsync<User>("SELECT * FROM Users WHERE Id = @Id", new {Id=id});
-			}
-		}
-
-		public async Task<int> CreateUserAsync(User user) {
-			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
-				var sql = "INSERT INTO Users (Name, Surname, Username, Password) VALUES (@Name, @Surname, @Username, @Password); SELECT CAST(SCOPE_IDENTITY() as int);";
-				return await db.ExecuteScalarAsync<int>(sql, user);
 			}
 		}
 	}

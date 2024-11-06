@@ -12,16 +12,16 @@ namespace Projektas.Client.Services {
 			_httpClient = httpClient;
 		}
 
+		public async Task<HttpResponseMessage> CreateUserAsync(User user) {
+			return await _httpClient.PostAsJsonAsync("api/database/create_user",user);
+		}
+
 		public async Task<IEnumerable<User>> GetUsersAsync() {
 			return await _httpClient.GetFromJsonAsync<IEnumerable<User>>("api/database/get_users");
 		}
 
 		public async Task<User> GetUserByIdAsync(int id) {
 			return await _httpClient.GetFromJsonAsync<User>($"api/database/get_user/{id}");
-		}
-
-		public async Task<HttpResponseMessage> CreateUserAsync(User user) {
-			return await _httpClient.PostAsJsonAsync("api/database/create_user",user);
 		}
 	}
 }

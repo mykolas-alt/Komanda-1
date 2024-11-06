@@ -18,13 +18,18 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
+
 builder.Services.AddSingleton<MathGameService>();
 builder.Services.AddSingleton<MathCalculationService>();
 builder.Services.AddSingleton<MathGenerationService>();
 builder.Services.AddSingleton<MathGameDataService>(provider => new MathGameDataService(Path.Combine("Data", "MathGameData.txt")));
-builder.Services.AddSingleton<UserService>(provider => new UserService(Path.Combine("Data","UsersData.txt"), provider.GetRequiredService<IConfiguration>()));
 builder.Services.AddSingleton<MathGameScoreboardService>();
+
 builder.Services.AddScoped<IUserRepository, DatabaseService>();
+builder.Services.AddScoped<DatabaseService>();
+builder.Services.AddScoped<UserService>(provider => new UserService(
+	provider.GetRequiredService<IConfiguration>(),
+	provider.GetRequiredService<DatabaseService>()));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
 	options.TokenValidationParameters = new TokenValidationParameters {

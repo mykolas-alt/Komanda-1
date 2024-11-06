@@ -13,9 +13,13 @@ namespace Projektas.Client.Services
 			_httpClient = httpClient;
 			_localStorage = localStorage;
 		}
+		
+		public async Task<HttpResponseMessage> CreateAccountAsync(User user) {
+			return await _httpClient.PostAsJsonAsync("api/database/create_user",user);
+		}
 
 		public async Task<string?> LogIn(User user) {
-			var response=await _httpClient.PostAsJsonAsync("api/account/login",user);
+			var response=await _httpClient.PostAsJsonAsync("api/user/login",user);
 
 			if(response.IsSuccessStatusCode) {
 				var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
@@ -25,12 +29,8 @@ namespace Projektas.Client.Services
 			return "";
 		}
 
-		public async Task CreateAccount(User newUser) {
-			await _httpClient.PostAsJsonAsync("api/account/create_user",newUser);
-		}
-
 		public async Task<List<string>> GetUsernames() {
-			return await _httpClient.GetFromJsonAsync<List<string>>("api/account/get_usernames");
+			return await _httpClient.GetFromJsonAsync<List<string>>("api/user/get_usernames");
 		}
 	}
 }

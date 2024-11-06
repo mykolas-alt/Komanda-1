@@ -3,23 +3,25 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using Projektas.Server.Services;
 using Projektas.Shared.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Projektas.Server.Services
 {
     public class UserService {
-		private readonly string _filepath;
 		private readonly IConfiguration _configuration;
-		private List<User>? UserList=new List<User>();
+		private readonly DatabaseService _databaseService;
+		private IEnumerable<User> users;
 
-		public UserService(string filepath, IConfiguration configuration) {
-			_filepath=filepath;
+		public UserService(IConfiguration configuration,DatabaseService databaseService) {
 			_configuration=configuration;
+			_databaseService=databaseService;
 		}
 
 		public bool LogInToUser(User userInfo) {
 			string UserListSerialized;
-			bool userMached=false;
+			bool userMached=false;/*
 			using (StreamReader reader = new StreamReader(_filepath)) {
 				UserListSerialized=reader.ReadToEnd();
 			}
@@ -30,7 +32,7 @@ namespace Projektas.Server.Services
 					userMached=true;
 				}
 			}
-
+			*/
 			return userMached;
 		}
 
@@ -54,27 +56,20 @@ namespace Projektas.Server.Services
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 		
-		public void CreateUser(User newUser) {
-			string UserListSerialized;
-			using (StreamReader reader = new StreamReader(_filepath)) {
-				UserListSerialized=reader.ReadToEnd();
-			}
-			UserList=JsonSerializer.Deserialize<List<User>>(UserListSerialized);
-			
-			UserList.Add(new User(){Name=newUser.Name,Surname=newUser.Surname,Username=newUser.Username,Password=newUser.Password});
-			
-			UserListSerialized=JsonSerializer.Serialize(UserList);
-
-			using (StreamWriter writer = new StreamWriter(_filepath, append: false)) {
-				writer.Write(UserListSerialized);
-			}
-		}
-
-		public List<string> GetUsernames() {
+		public async Task<List<string>> GetUsernamesAsync() {
+			users = await _databaseService.GetAllUsersAsync();
 			List<string> usernames = new List<string>();
 
+			foreach(User user in users) {
+				usernames.Add(user.Username);
+			}
+
+			return usernames;
+
+			/*List<string> usernames = new List<string>();
+			
 			string UserListSerialized;
-			using (StreamReader reader = new StreamReader(_filepath)) {
+			using (StreamReader reader = new StreamReader("Data/UsersData.txt")) {
 				UserListSerialized=reader.ReadToEnd();
 			}
 			UserList=JsonSerializer.Deserialize<List<User>>(UserListSerialized);
@@ -82,8 +77,8 @@ namespace Projektas.Server.Services
 			foreach(User user in UserList) {
 				usernames.Add(user.Username);
 			}
-
-			return usernames;
+			
+			return usernames;*/
 		}
 	}
 }
