@@ -3,12 +3,17 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
+using Projektas.Server.Database;
+using Microsoft.EntityFrameworkCore;
+using Projektas.Server.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 // Add services to the container.
 
 builder.Services.AddHttpClient();
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -19,6 +24,7 @@ builder.Services.AddSingleton<MathGenerationService>();
 builder.Services.AddSingleton<MathGameDataService>(provider => new MathGameDataService(Path.Combine("Data", "MathGameData.txt")));
 builder.Services.AddSingleton<UserService>(provider => new UserService(Path.Combine("Data","UsersData.txt"), provider.GetRequiredService<IConfiguration>()));
 builder.Services.AddSingleton<MathGameScoreboardService>();
+builder.Services.AddScoped<IUserRepository, DatabaseService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
 	options.TokenValidationParameters = new TokenValidationParameters {

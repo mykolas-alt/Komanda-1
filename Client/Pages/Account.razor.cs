@@ -13,10 +13,11 @@ namespace Projektas.Client.Pages {
 
 		private string? token = "";
 
+		private string? test = "Ok";
+
 		private bool isUsernameNew = true;
 		private bool isFieldsFilled = true;
 		private bool isNewFieldsFilled = true;
-		private bool test = false;
 
 		private async void LogInEvent() {
 			if(accountUsername==""||accountPassword=="") {
@@ -29,7 +30,7 @@ namespace Projektas.Client.Pages {
 				account.Username=accountUsername;
 				account.Password=accountPassword;
 
-				token = await AccountServices.LogIn(account);
+				token = await AccountService.LogIn(account);
 
 				Console.WriteLine(token);
 
@@ -61,13 +62,13 @@ namespace Projektas.Client.Pages {
 				newAccount.Username=newAccountUsername;
 				newAccount.Password=newAccountPassword;
 
-				await AccountServices.CreateAccount(newAccount);
+				await DatabaseService.CreateUserAsync(newAccount);
 			}
 			StateHasChanged();
 		}
 
 		private async void UsernameChange(ChangeEventArgs changeEvent) {
-			List<string> usernames = await AccountServices.GetUsernames();
+			List<string> usernames = await AccountService.GetUsernames();
 
 			newAccountUsername=(string)changeEvent.Value;
 
@@ -84,6 +85,10 @@ namespace Projektas.Client.Pages {
 
 		protected override async Task OnInitializedAsync() {
 			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+
+			User user = await DatabaseService.GetUserByIdAsync(1);
+
+			test=user.Username;
 
 			await LoadUsernameAsync();
 		}

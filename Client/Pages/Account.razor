@@ -1,5 +1,6 @@
 ﻿@page "/account"
-@inject Projektas.Client.Services.AccountService AccountServices
+@inject Projektas.Client.Services.DatabaseService DatabaseService
+@inject Projektas.Client.Services.AccountService AccountService
 @inject Projektas.Client.Services.AccountAuthStateProvider AuthStateProvider
 @inject NavigationManager Navigation
 
@@ -60,3 +61,5 @@
 		</div>
 	}
 </div>
+
+@test
