@@ -15,7 +15,7 @@ namespace Projektas.Client.Services
 		}
 		
 		public async Task<HttpResponseMessage> CreateAccountAsync(User user) {
-			return await _httpClient.PostAsJsonAsync("api/database/create_user",user);
+			return await _httpClient.PostAsJsonAsync("api/user/create_user",user);
 		}
 
 		public async Task<string?> LogIn(User user) {
@@ -30,7 +30,7 @@ namespace Projektas.Client.Services
 		}
 
 		public async Task<List<string>> GetUsernames() {
-			return await _httpClient.GetFromJsonAsync<List<string>>("api/user/get_usernames");
+			return await _httpClient.GetFromJsonAsync<List<string>>("api/user/usernames");
 		}
 	}
 }

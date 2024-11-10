@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services {
-	public class DatabaseService : IUserRepository {
+	public class UserRepository : IUserRepository {
 		private readonly IConfiguration _configuration;
 
-		public DatabaseService(IConfiguration configuration) {
+		public UserRepository(IConfiguration configuration) {
 			_configuration = configuration;
 		}
 

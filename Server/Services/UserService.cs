@@ -11,30 +11,21 @@ namespace Projektas.Server.Services
 {
     public class UserService {
 		private readonly IConfiguration _configuration;
-		private readonly DatabaseService _databaseService;
+		private readonly UserRepository _userRepository;
 		private IEnumerable<User> users;
 
-		public UserService(IConfiguration configuration,DatabaseService databaseService) {
+		public UserService(IConfiguration configuration,UserRepository userRepository) {
 			_configuration=configuration;
-			_databaseService=databaseService;
+			_userRepository=userRepository;
+		}
+
+		public async Task<int> CreateUser(User newUser) {
+			return await _userRepository.CreateUserAsync(newUser);
 		}
 
 		public async Task<bool> LogInToUser(User userInfo) {
-			bool userMached = await _databaseService.ValidateUserAsync(userInfo.Username, userInfo.Password);
+			bool userMached = await _userRepository.ValidateUserAsync(userInfo.Username, userInfo.Password);
 			return userMached;
-			/*
-			using (StreamReader reader = new StreamReader(_filepath)) {
-				UserListSerialized=reader.ReadToEnd();
-			}
-			UserList=JsonSerializer.Deserialize<List<User>>(UserListSerialized);
-
-			foreach(User user in UserList) {
-				if(user.Username==userInfo.Username && user.Password==userInfo.Password) {
-					userMached=true;
-				}
-			}
-			*/
-
 		}
 
 		public string GenerateJwtToken(User user) {
@@ -58,7 +49,7 @@ namespace Projektas.Server.Services
 		}
 		
 		public async Task<List<string>> GetUsernamesAsync() {
-			users = await _databaseService.GetAllUsersAsync();
+			users = await _userRepository.GetAllUsersAsync();
 			List<string> usernames = new List<string>();
 
 			foreach(User user in users) {
@@ -66,20 +57,6 @@ namespace Projektas.Server.Services
 			}
 
 			return usernames;
-
-			/*List<string> usernames = new List<string>();
-			
-			string UserListSerialized;
-			using (StreamReader reader = new StreamReader("Data/UsersData.txt")) {
-				UserListSerialized=reader.ReadToEnd();
-			}
-			UserList=JsonSerializer.Deserialize<List<User>>(UserListSerialized);
-
-			foreach(User user in UserList) {
-				usernames.Add(user.Username);
-			}
-			
-			return usernames;*/
 		}
 	}
 }
