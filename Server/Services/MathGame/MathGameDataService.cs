@@ -1,6 +1,8 @@
-﻿namespace Projektas.Server.Services.MathGame
+﻿using Projektas.Server.Interfaces.MathGame;
+
+namespace Projektas.Server.Services.MathGame
 {
-    public class MathGameDataService
+    public class MathGameDataService : IMathGameDataService
     {
         private readonly string _filepath;
 

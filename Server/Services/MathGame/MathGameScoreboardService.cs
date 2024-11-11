@@ -1,10 +1,12 @@
-﻿namespace Projektas.Server.Services.MathGame
-{
-    public class MathGameScoreboardService : IComparer<int>
-    {
-        private readonly MathGameDataService _dataService;
+﻿using Projektas.Server.Interfaces.MathGame;
 
-        public MathGameScoreboardService(MathGameDataService dataService)
+namespace Projektas.Server.Services.MathGame
+{
+    public class MathGameScoreboardService : IComparer<int>, IMathGameScoreboardService
+    {
+        private readonly IMathGameDataService _dataService;
+
+        public MathGameScoreboardService(IMathGameDataService dataService)
         {
             _dataService = dataService;
         }

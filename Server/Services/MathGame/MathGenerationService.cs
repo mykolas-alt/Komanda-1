@@ -1,11 +1,12 @@
 ﻿using Projektas.Server.Enums;
+using Projektas.Server.Interfaces.MathGame;
 using System.Text;
 using System;
 
 namespace Projektas.Server.Services.MathGame
 {
 
-    public class MathGenerationService
+    public class MathGenerationService : IMathGenerationService
     {
         private readonly Random _random = new();
 
@@ -51,15 +52,17 @@ namespace Projektas.Server.Services.MathGame
         {
             for (int i = 1; i < numbers.Count; i++)
             {
-                if (operations[i - 1] == Operation.Division)
+                if (operations[i - 1] == Operation.Division && numbers[i - 1] % numbers[i] != 0)
                 {
                     AdjustForDivision(i, numbers);
                 }
                 else if (operations[i - 1] == Operation.Multiplication)
                 {
                     int limit = Math.Max(2, score / 2);
-                    numbers[i] = _random.Next(2, limit);
-
+                    if (numbers[i] > limit)
+                    {
+                        numbers[i] = _random.Next(2, limit);
+                    }
                 }
             }
         }
