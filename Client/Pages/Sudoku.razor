@@ -1,5 +1,26 @@
 ﻿@page "/sudoku"
 
 <PageTitle>Sudoku</PageTitle>
-
-<h3>Sudoku</h3>
+<div style="text-align: center;">
+    <h1>Sudoku</h1>
+    <div class="grid">
+        @foreach (int row in Enumerable.Range(0, GridSize))
+        {
+            <div class="grid-row">
+                @foreach (int col in Enumerable.Range(0, GridSize))
+                {
+                    <div @onclick="@(() => HandleCellClicked(row, col))" class="cell @(row == SelectedRow && col == SelectedCol ? "selected" : "")">
+                        <select @onchange="@((ChangeEventArgs args) => HandleValueSelected(args, row, col))" value="@GridValues[row, col]">
+                            <option value="0"> </option>
+                            @foreach (int value in PossibleValues)
+                            {
+                                <option value="@value">@value</option>
+                            }
+                        </select>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <button class="btn btn-primary mt-3" @onclick="GenerateSudoku">Generate Sudoku</button>
+</div>
