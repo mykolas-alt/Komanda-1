@@ -6,44 +6,40 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Projektas.Shared.Models;
+using Projektas.Server.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Projektas.Server.Services {
 	public class UserRepository : IUserRepository {
 		private readonly IConfiguration _configuration;
+		private readonly UserDbContext _userDbContext;
 
-		public UserRepository(IConfiguration configuration) {
+		public UserRepository(IConfiguration configuration, UserDbContext userDbContext) {
 			_configuration = configuration;
+			_userDbContext = userDbContext;
 		}
 
-		public async Task<int> CreateUserAsync(User user) {
-			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
-				var sql = "INSERT INTO Users (Name, Surname, Username, Password) VALUES (@Name, @Surname, @Username, @Password); SELECT CAST(SCOPE_IDENTITY() as int);";
-				return await db.ExecuteScalarAsync<int>(sql, user);
-			}
+		public async Task CreateUserAsync(User user) {
+			_userDbContext.Users.Add(user);
+			await _userDbContext.SaveChangesAsync();
 		}
 
-		public async Task<IEnumerable<User>> GetAllUsersAsync() {
-			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
-				return await db.QueryAsync<User>("SELECT * FROM Users");
-			}
+		public async Task<List<User>> GetAllUsersAsync() {
+			return await _userDbContext.Users.ToListAsync();
 		}
 
 		public async Task<User> GetUserByIdAsync(int id) {
-			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
-				return await db.QueryFirstOrDefaultAsync<User>("SELECT * FROM Users WHERE Id = @Id", new {Id=id});
-			}
+			return await _userDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
 		}
 
 		public async Task<bool> ValidateUserAsync(string username, string password) {
-			using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"))) {
-				var user = await db.QuerySingleOrDefaultAsync<User>("SELECT * FROM Users WHERE Username = @Username", new {Username = username});
+			var user = await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
-				if (user != null && password==user.Password) {
-					return true;
-				}
-
-				return false;
+			if (user != null && password==user.Password) {
+				return true;
 			}
+
+			return false;
 		}
 	}
 }

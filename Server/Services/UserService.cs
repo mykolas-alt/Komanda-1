@@ -19,8 +19,8 @@ namespace Projektas.Server.Services
 			_userRepository=userRepository;
 		}
 
-		public async Task<int> CreateUser(User newUser) {
-			return await _userRepository.CreateUserAsync(newUser);
+		public async Task CreateUser(User newUser) {
+			await _userRepository.CreateUserAsync(newUser);
 		}
 
 		public async Task<bool> LogInToUser(User userInfo) {
