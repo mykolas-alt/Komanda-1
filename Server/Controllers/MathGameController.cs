@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Projektas.Server.Services.MathGame;
+using Projektas.Shared.Models;
 
 namespace Projektas.Server.Controllers
 {
@@ -52,9 +53,9 @@ namespace Projektas.Server.Controllers
         }
 
         [HttpGet("top")]
-        public ActionResult<List<int>> GetTopScores([FromQuery] int topCount)
+        public async Task<ActionResult<List<UserScoreDto>>> GetTopScores([FromQuery] int topCount)
         {
-            return _scoreboardService.GetTopScores(topCount);
+            return await _scoreboardService.GetTopScores(topCount);
         }
 
     }

@@ -10,7 +10,7 @@
         private List<int>? options;
         private GameState gameState;
         private bool? isCorrect = null;
-        private List<int>? topScores;
+        private List<UserScoreDto>? topScores;
 
         protected override async void OnInitialized()
         {

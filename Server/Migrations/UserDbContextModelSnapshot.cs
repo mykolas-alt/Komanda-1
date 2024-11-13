@@ -21,6 +21,28 @@ namespace Projektas.Server.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Projektas.Shared.Models.Score", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserScores")
+                        .HasColumnType("int")
+                        .HasColumnName("userScore");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("userScores", (string)null);
+                });
+
             modelBuilder.Entity("Projektas.Shared.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -52,6 +74,22 @@ namespace Projektas.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("Projektas.Shared.Models.Score", b =>
+                {
+                    b.HasOne("Projektas.Shared.Models.User", "User")
+                        .WithMany("MathGameScores")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Projektas.Shared.Models.User", b =>
+                {
+                    b.Navigation("MathGameScores");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using Projektas.Shared.Models;
+using System.Net.Http.Json;
 
 namespace Projektas.Client.Services
 {
@@ -39,10 +40,10 @@ namespace Projektas.Client.Services
             return await _httpClient.GetFromJsonAsync<List<int>>("api/mathgame/load");
         }
 
-        public async Task<List<int>> GetTopScoresAsync(int topCount = 10)
+        public async Task<List<UserScoreDto>> GetTopScoresAsync(int topCount = 10)
         {
             var url = $"api/mathgame/top?topCount={topCount}";
-            return await _httpClient.GetFromJsonAsync<List<int>>(url);
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto>>(url);
         }
     }
 }

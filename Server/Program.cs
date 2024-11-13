@@ -23,7 +23,7 @@ builder.Services.AddSingleton<MathGameService>();
 builder.Services.AddSingleton<MathCalculationService>();
 builder.Services.AddSingleton<MathGenerationService>();
 builder.Services.AddSingleton<MathGameDataService>(provider => new MathGameDataService(Path.Combine("Data", "MathGameData.txt")));
-builder.Services.AddSingleton<MathGameScoreboardService>();
+builder.Services.AddScoped<MathGameScoreboardService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserRepository>();

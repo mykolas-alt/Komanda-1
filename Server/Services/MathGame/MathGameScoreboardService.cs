@@ -1,27 +1,29 @@
-﻿namespace Projektas.Server.Services.MathGame
+﻿using Projektas.Shared.Models;
+
+namespace Projektas.Server.Services.MathGame
 {
     public class MathGameScoreboardService : IComparer<int>
     {
         private readonly MathGameDataService _dataService;
+        private readonly UserRepository _userRepository;
 
-        public MathGameScoreboardService(MathGameDataService dataService)
+        public MathGameScoreboardService(MathGameDataService dataService, UserRepository userRepository)
         {
             _dataService = dataService;
+            _userRepository = userRepository;
         }
 
-        public List<int> GetTopScores(int topCount)
+        public async Task<List<UserScoreDto>> GetTopScores(int topCount)
         {
-            List<int> scores = _dataService.LoadData();
+            List<UserScoreDto> userScores = await _userRepository.GetAllScoresAsync();
 
-            scores.Sort(this);
-
-            List<int> topScores = new List<int>();
-
-            for (int i = 0; i < topCount && i < scores.Count; i++)
+            List<UserScoreDto> topScores = new List<UserScoreDto>();
+            
+            for (int i = 0; i < topCount && i < userScores.Count; i++)
             {
-                topScores.Add(scores[i]);
+                topScores.Add(userScores[i]);
             }
-
+            
             return topScores;
         }
 

@@ -11,8 +11,8 @@ using Projektas.Server.Database;
 namespace Projektas.Server.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20241110213939_UsersDatabase")]
-    partial class UsersDatabase
+    [Migration("20241113135129_AddMathGameScoresTable")]
+    partial class AddMathGameScoresTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,28 @@ namespace Projektas.Server.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Projektas.Shared.Models.Score", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserScores")
+                        .HasColumnType("int")
+                        .HasColumnName("userScore");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("userScores", (string)null);
+                });
 
             modelBuilder.Entity("Projektas.Shared.Models.User", b =>
                 {
@@ -55,6 +77,22 @@ namespace Projektas.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("Projektas.Shared.Models.Score", b =>
+                {
+                    b.HasOne("Projektas.Shared.Models.User", "User")
+                        .WithMany("MathGameScores")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Projektas.Shared.Models.User", b =>
+                {
+                    b.Navigation("MathGameScores");
                 });
 #pragma warning restore 612, 618
         }
