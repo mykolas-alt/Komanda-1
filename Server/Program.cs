@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Projektas.Server.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile("appsettings.json",optional:false,reloadOnChange:true);
 // Add services to the container.
 
 builder.Services.AddHttpClient();
@@ -22,24 +22,24 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<MathGameService>();
 builder.Services.AddSingleton<MathCalculationService>();
 builder.Services.AddSingleton<MathGenerationService>();
-builder.Services.AddSingleton<MathGameDataService>(provider => new MathGameDataService(Path.Combine("Data", "MathGameData.txt")));
 builder.Services.AddScoped<MathGameScoreboardService>();
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>(provider => new UserService(
 	provider.GetRequiredService<IConfiguration>(),
-	provider.GetRequiredService<UserRepository>()));
+	provider.GetRequiredService<UserRepository>()
+));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
-	options.TokenValidationParameters = new TokenValidationParameters {
-		ValidateIssuer = true,
-		ValidateAudience = true,
-		ValidateLifetime = true,
-		ValidateIssuerSigningKey = true,
-		ValidIssuer = builder.Configuration["Jwt:Issuer"],
-		ValidAudience = builder.Configuration["Jwt:Audience"],
-		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+	options.TokenValidationParameters=new TokenValidationParameters {
+		ValidateIssuer=true,
+		ValidateAudience=true,
+		ValidateLifetime=true,
+		ValidateIssuerSigningKey=true,
+		ValidIssuer=builder.Configuration["Jwt:Issuer"],
+		ValidAudience=builder.Configuration["Jwt:Audience"],
+		IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
 	};
 });
 

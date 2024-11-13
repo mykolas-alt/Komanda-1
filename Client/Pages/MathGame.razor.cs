@@ -12,6 +12,24 @@
         private bool? isCorrect = null;
         private List<UserScoreDto>? topScores;
 
+        public string? username=null;
+
+		protected override async Task OnInitializedAsync() {
+			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+
+			await LoadUsernameAsync();
+		}
+
+		private async Task LoadUsernameAsync() {
+			username = await ((AccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
+			StateHasChanged();
+		}
+
+		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+			await InvokeAsync(LoadUsernameAsync);
+			StateHasChanged();
+		}
+
         protected override async void OnInitialized()
         {
             TimerService.OnTick += OnTimerTick;
@@ -70,7 +88,11 @@
                 {
                     isTimesUp = true;
                     TimerService.Stop();
-                    await MathGameService.SaveDataAsync(gameState.Score);
+
+                    if(username!=null) {
+                        await MathGameService.SaveScoreAsync(username,gameState.Score);
+                    }
+                    
                     topScores = await MathGameService.GetTopScoresAsync(topCount:5);
                 }
                 StateHasChanged();
@@ -79,6 +101,7 @@
 
         public void Dispose()
         {
+            AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
             TimerService.OnTick -= OnTimerTick;
         }
     }

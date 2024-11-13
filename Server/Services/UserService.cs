@@ -2,10 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
-using Projektas.Server.Services;
 using Projektas.Shared.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Projektas.Server.Services
 {
@@ -24,20 +21,20 @@ namespace Projektas.Server.Services
 		}
 
 		public async Task<bool> LogInToUser(User userInfo) {
-			bool userMached = await _userRepository.ValidateUserAsync(userInfo.Username, userInfo.Password);
+			bool userMached=await _userRepository.ValidateUserAsync(userInfo.Username,userInfo.Password);
 			return userMached;
 		}
 
 		public string GenerateJwtToken(User user) {
-			var claims = new[] {
-				new Claim(ClaimTypes.Name, user.Username),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+			var claims=new[] {
+				new Claim(ClaimTypes.Name,user.Username),
+				new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
 			};
 
-			var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-			var creds = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
+			var key=Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+			var creds=new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256);
 
-			var token = new JwtSecurityToken(
+			var token=new JwtSecurityToken(
 				issuer: _configuration["Jwt:Issuer"],
 				audience: _configuration["Jwt:Audience"],
 				claims: claims,
@@ -49,8 +46,8 @@ namespace Projektas.Server.Services
 		}
 		
 		public async Task<List<string>> GetUsernamesAsync() {
-			users = await _userRepository.GetAllUsersAsync();
-			List<string> usernames = new List<string>();
+			users=await _userRepository.GetAllUsersAsync();
+			List<string> usernames=new List<string>();
 
 			foreach(User user in users) {
 				usernames.Add(user.Username);

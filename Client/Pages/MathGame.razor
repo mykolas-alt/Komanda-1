@@ -2,6 +2,7 @@
 @inject Projektas.Client.Services.MathGameService MathGameService
 @inject Projektas.Client.Services.TimerService TimerService
 @inject Projektas.Client.Services.MathGameStateService GameStateService
+@inject Projektas.Client.Services.AccountAuthStateProvider AuthStateProvider
 @using Projektas.Client.Components
 
 <PageTitle>Math Game</PageTitle>
@@ -52,9 +53,11 @@
                 <div class="score-after-game">
                     <b>You scored @gameState.Score points!</b>
                 </div>
-                <div class="highscore-after-game">
-                    <b>Your highscore: @gameState.Highscore</b>
-                </div>
+                @if(username!=null) {
+                    <div class="highscore-after-game">
+                        <b>Your highscore: @gameState.Highscore</b>
+                    </div>
+                }
             </div>
             <div class="math-game-footer">
                 <button class="play-btn" @onclick="StartGame">Play again</button>

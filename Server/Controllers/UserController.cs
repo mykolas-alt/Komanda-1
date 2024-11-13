@@ -2,8 +2,7 @@
 using Projektas.Server.Services;
 using Projektas.Shared.Models;
 
-namespace Projektas.Server.Controllers
-{
+namespace Projektas.Server.Controllers {
     [ApiController]
 	[Route("api/[controller]")]
 	public class UserController:ControllerBase {
@@ -24,8 +23,8 @@ namespace Projektas.Server.Controllers
 			var response=_userService.LogInToUser(user);
 
 			if(response.Result) {
-				var token = _userService.GenerateJwtToken(user);
-				return Ok(new { Token = token });
+				var token=_userService.GenerateJwtToken(user);
+				return Ok(new {Token=token});
 			}
 
 			return Unauthorized();

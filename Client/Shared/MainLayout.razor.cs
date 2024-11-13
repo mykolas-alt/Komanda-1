@@ -2,7 +2,7 @@
 
 namespace Projektas.Client.Shared {
 	public partial class MainLayout {
-		public string? username="";
+		public string? username=null;
 
 		protected override async Task OnInitializedAsync() {
 			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;

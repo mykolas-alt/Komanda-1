@@ -1,10 +1,5 @@
-﻿using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Projektas.Server.Interface;
-using System.Collections.Generic;
+﻿using Projektas.Server.Interface;
 using System.Data;
-using System.Threading.Tasks;
 using Projektas.Shared.Models;
 using Projektas.Server.Database;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +9,7 @@ namespace Projektas.Server.Services {
 		private readonly UserDbContext _userDbContext;
 
 		public UserRepository(UserDbContext userDbContext) {
-			_userDbContext = userDbContext;
+			_userDbContext=userDbContext;
 		}
 
 		public async Task CreateUserAsync(User user) {
@@ -27,18 +22,18 @@ namespace Projektas.Server.Services {
 		}
 
 		public async Task<User> GetUserByIdAsync(int id) {
-			return await _userDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+			return await _userDbContext.Users.FirstOrDefaultAsync(u => u.Id==id);
 		}
 
-		public async Task AddScoreToUserAsync(string username, int userScore) {
-			var user = await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
-			if (user == null) {
+		public async Task AddScoreToUserAsync(string username,int userScore) {
+			var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
+			if (user==null) {
 				return;
 			}
 
-			var score = new Score {
+			var score=new Score {
 				UserScores=userScore,
-				UserId = user.Id
+				UserId=user.Id
 			};
 
 			_userDbContext.MathGameScores.Add(score);
@@ -57,10 +52,10 @@ namespace Projektas.Server.Services {
 
 		}
 
-		public async Task<bool> ValidateUserAsync(string username, string password) {
-			var user = await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+		public async Task<bool> ValidateUserAsync(string username,string password) {
+			var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
 
-			if (user != null && password==user.Password) {
+			if (user!=null && password==user.Password) {
 				return true;
 			}
 

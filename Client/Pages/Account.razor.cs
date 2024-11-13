@@ -30,8 +30,6 @@ namespace Projektas.Client.Pages {
 
 				token = await AccountService.LogIn(account);
 
-				Console.WriteLine(token);
-
 				if(!string.IsNullOrEmpty(token)) {
 					await AuthStateProvider.MarkUserAsAuthenticated(token);
 					Navigation.NavigateTo("/");

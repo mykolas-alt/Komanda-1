@@ -30,14 +30,13 @@ namespace Projektas.Client.Services
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task SaveDataAsync(int data)
+        public async Task SaveScoreAsync(string username,int score)
         {
-            await _httpClient.PostAsJsonAsync("api/mathgame/save", data);
-        }
-
-        public async Task<List<int>> LoadDataAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<List<int>>("api/mathgame/load");
+            var data = new UserScoreDto {
+                Username = username,
+                Score = score
+            };
+            await _httpClient.PostAsJsonAsync("api/mathgame/save-score", data);
         }
 
         public async Task<List<UserScoreDto>> GetTopScoresAsync(int topCount = 10)

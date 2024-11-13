@@ -5,8 +5,8 @@ namespace Projektas.Server.Database {
 	public class UserDbContext : DbContext {
 		public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) {}
 
-		public DbSet<User> Users { get; set; }
-		public DbSet<Score> MathGameScores { get; set; }
+		public DbSet<User> Users {get;set;}
+		public DbSet<Score> MathGameScores {get;set;}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			var userConfig=modelBuilder.Entity<User>();
