@@ -4,10 +4,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Projektas.Shared.Models;
+using Projektas.Server.Interfaces;
 
 namespace Projektas.Server.Services
 {
-    public class UserService {
+    public class UserService : IUserService
+	{
 		private readonly string _filepath;
 		private readonly IConfiguration _configuration;
 		private List<User>? UserList=new List<User>();

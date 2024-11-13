@@ -4,6 +4,7 @@ using System.Text;
 using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
 using Projektas.Server.Interfaces.MathGame;
+using Projektas.Server.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
@@ -18,7 +19,7 @@ builder.Services.AddSingleton<IMathGameService, MathGameService>();
 builder.Services.AddSingleton<IMathCalculationService, MathCalculationService>();
 builder.Services.AddSingleton<IMathGenerationService, MathGenerationService>();
 builder.Services.AddSingleton<IMathGameDataService, MathGameDataService>(provider => new MathGameDataService(Path.Combine("Data", "MathGameData.txt")));
-builder.Services.AddSingleton<UserService>(provider => new UserService(Path.Combine("Data","UsersData.txt"), provider.GetRequiredService<IConfiguration>()));
+builder.Services.AddSingleton<IUserService, UserService>(provider => new UserService(Path.Combine("Data","UsersData.txt"), provider.GetRequiredService<IConfiguration>()));
 builder.Services.AddSingleton<IMathGameScoreboardService, MathGameScoreboardService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
