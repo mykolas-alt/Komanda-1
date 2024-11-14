@@ -7,6 +7,9 @@
         public string Username {get;set;}="";
         public string Password {get;set;}="";
 
-        public List<Score> MathGameScores {get;set;}=new List<Score>();
+        public List<MathGameScore> MathGameScores {get;set;}=new List<MathGameScore>();
+        public List<SudokuScore> SudokuScores {get;set;}=new List<SudokuScore>();
+        public List<AimTrainerScore> AimTrainerScores {get;set;}=new List<AimTrainerScore>();
+        public List<PairUpScore> PairUpScores {get;set;}=new List<PairUpScore>();
     }
 }

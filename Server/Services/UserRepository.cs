@@ -31,7 +31,7 @@ namespace Projektas.Server.Services {
 				return;
 			}
 
-			var score=new Score {
+			var score=new MathGameScore {
 				UserScores=userScore,
 				UserId=user.Id
 			};

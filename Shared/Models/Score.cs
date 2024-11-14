@@ -7,4 +7,9 @@
 
 		public User User {get;set;}
 	}
+
+	public class MathGameScore : Score { }
+    public class SudokuScore : Score { }
+    public class AimTrainerScore : Score { }
+    public class PairUpScore : Score { }
 }
