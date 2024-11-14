@@ -29,8 +29,6 @@ namespace Projektas.Tests.Services.MathGameTests
         [InlineData(3, 0, 1, 10)]
         [InlineData(5, 2, 3, 14)]
         [InlineData(10, 15, 16, 40)]
-        // [InlineData(0, 0, 0, 0)] // Edge case: no operands
-        // [InlineData(1, 0, 0, 2)] // Edge case: single operand
         public void GenerateNumbers_ShouldReturnNumbersWithinRange(int numberOfOperands, int score, int min, int max)
         {
             List<int> result = _mathGenerationService.GenerateNumbers(numberOfOperands, score);

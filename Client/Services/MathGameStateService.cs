@@ -1,9 +1,10 @@
 ﻿using Blazored.LocalStorage;
+using Projektas.Client.Interfaces;
 using Projektas.Shared.Models;
 
 namespace Projektas.Client.Services
 {
-    public class MathGameStateService
+    public class MathGameStateService : IMathGameStateService
     {
         private readonly ILocalStorageService _localStorage;
 

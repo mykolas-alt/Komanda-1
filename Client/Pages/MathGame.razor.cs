@@ -1,41 +1,52 @@
 ﻿namespace Projektas.Client.Pages
 {
-    using Projektas.Client.Services;
+    using Microsoft.AspNetCore.Components;
+    using Projektas.Client.Interfaces;
     using Projektas.Shared.Models;
+
 
     public partial class MathGame
     {
-        private string? question = null;
-        private bool isTimesUp = false;
-        private List<int>? options;
-        private GameState gameState;
-        private bool? isCorrect = null;
-        private List<int>? topScores;
+        public string? question { get; private set; } = null;
+        public bool isTimesUp { get; private set; } = false;
+        public List<int>? options { get; private set; }
+        public GameState gameState { get; private set; } = new GameState();
+        public bool? isCorrect { get; private set; } = null;
+        public List<int>? topScores { get; private set; }
+
+        [Inject]
+        public IMathGameStateService MathGameStateService { get; set; }
+
+        [Inject]
+        public IMathGameService MathGameService { get; set; }
+
+        [Inject]
+        public ITimerService TimerService { get; set; }
 
         protected override async void OnInitialized()
         {
             TimerService.OnTick += OnTimerTick;
-            gameState = await GameStateService.GetGameState();
+            gameState = await MathGameStateService.GetGameState();
         }
 
 
-        private async Task StartGame()
+        public async Task StartGame()
         {
             TimerService.Start(60);
             isTimesUp = false;
             gameState.Score = 0;
             await GenerateQuestion();
-            await GameStateService.UpdateGameState(gameState);
+            await MathGameStateService.UpdateGameState(gameState);
         }
 
-        private async Task GenerateQuestion()
+        public async Task GenerateQuestion()
         {
             isCorrect = null;
             question = await MathGameService.GetQuestionAsync(gameState.Score);
             options = await MathGameService.GetOptionsAsync();
         }
 
-        private async Task CheckAnswer(int option)
+        public async Task CheckAnswer(int option)
         {
             if (question != null)
             {
@@ -55,14 +66,17 @@
                 }
                 else
                 {
-                    await GameStateService.IncrementScore(gameState);
+                    await MathGameStateService.IncrementScore(gameState);
                 }
                 await GenerateQuestion();
-                StateHasChanged();
+                await InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
             }
         }
 
-        private async void OnTimerTick()
+        public async void OnTimerTick()
         {
             await InvokeAsync(async () =>
             {
@@ -71,7 +85,7 @@
                     isTimesUp = true;
                     TimerService.Stop();
                     await MathGameService.SaveDataAsync(gameState.Score);
-                    topScores = await MathGameService.GetTopScoresAsync(topCount:5);
+                    topScores = await MathGameService.GetTopScoresAsync(topCount: 5);
                 }
                 StateHasChanged();
             });

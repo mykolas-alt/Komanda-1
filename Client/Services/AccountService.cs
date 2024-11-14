@@ -2,10 +2,11 @@
 using System.Net.Http.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Projektas.Client.Interfaces;
 
 namespace Projektas.Client.Services
 {
-    public class AccountService {
+    public class AccountService : IAccountService {
 		private readonly HttpClient _httpClient;
 		private readonly ILocalStorageService _localStorage;
 

@@ -1,6 +1,8 @@
-﻿namespace Projektas.Client.Services
+﻿using Projektas.Client.Interfaces;
+
+namespace Projektas.Client.Services
 {
-    public class TimerService
+    public class TimerService : ITimerService
     {
         private Timer? _timer;
         public int RemainingTime { get; set; }

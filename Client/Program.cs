@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Projektas.Client;
 using Projektas.Client.Services;
+using Projektas.Client.Interfaces;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -15,8 +16,8 @@ builder.Services.AddScoped<AccountAuthStateProvider>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress=new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<AccountService>();
-builder.Services.AddScoped<MathGameService>();
-builder.Services.AddScoped<MathGameStateService>();
-builder.Services.AddScoped<TimerService>();
+builder.Services.AddScoped<IMathGameService,MathGameService>();
+builder.Services.AddScoped<IMathGameStateService, MathGameStateService>();
+builder.Services.AddScoped<ITimerService, TimerService>();
 
 await builder.Build().RunAsync();
