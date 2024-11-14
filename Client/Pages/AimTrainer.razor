@@ -8,40 +8,34 @@
     <h1>Aim Trainer</h1>
     <div>
         <label>
-            <input type="radio" name="difficulty" value="Normal" checked @onchange="OnDifficultyChanged" disabled="@isGameActive" /> Normal
+            <input type="radio" name="difficulty" value="Normal" checked @onchange="OnDifficultyChanged" disabled="@isGameActive"/> Normal
         </label>
         <label>
-            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" disabled="@isGameActive" /> Hard
+            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" disabled="@isGameActive"/> Hard
         </label>
     </div>
 </div>
 
 <div class="game-container">
     <div class="game-area">
-        @if (!isGameActive)
-        {
-            @if (!isGameOver)
-            {
+        @if (!isGameActive) {
+            @if (!isGameOver) {
                 <div class="start-button">
                     <button class="btn btn-primary" @onclick="StartGame">Start Game</button>
                 </div>
-            }
-            else
-            {
+            } else {
                 <div>
                     <h2>Game Over!</h2>
                     <h3>Your Final Score: @Score</h3>
                     <button class="btn btn-primary" @onclick="TryAgain">Replay</button>
                 </div>
             }
-        }
-        else
-        {
+        } else {
             <div class="target-area">
                 <button @onclick="OnTargetClicked"
                         class="target-button"
                         style="left:@(TargetPosition.x)px; top:@(TargetPosition.y)px;
-                        width: @(isHardMode ? 30 : 50)px; height: @(isHardMode ? 30 : 50)px;
+                        width: @(isHardMode?30 : 50)px; height: @(isHardMode?30 : 50)px;
                         background-color: @(GetTargetColor());">
                 </button>
             </div>
@@ -49,8 +43,7 @@
     </div>
 
     <div class="score-timer">
-        @if (isGameActive)
-        {
+        @if (isGameActive) {
             <h4 class="score-text">Score: @Score</h4>
             <h4 class="timer-text">Time Remaining: @TimerService.RemainingTime seconds</h4>
         }

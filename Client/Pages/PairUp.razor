@@ -4,50 +4,40 @@
 <div style="text-align: center;">
     <h1>Pair Up</h1>
     <div>
-        @if (isGameActive)
-        {
+        @if (isGameActive) {
             <h2>Attempts: @attempts</h2>
-        }
-        else
-        {
+        } else {
             <h2>Score: @attempts</h2> 
         }
     </div>
     <div>
         <label>
-            <input type="radio" name="difficulty" value="Normal" checked @onchange="OnDifficultyChanged" /> Normal
+            <input type="radio" name="difficulty" value="Normal" checked @onchange="OnDifficultyChanged"/> Normal
         </label>
         <label>
-            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" /> Hard
+            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged"/> Hard
         </label>
     </div>
 
     <div class="cards-container" style="@gridStyle">
-        @foreach (var card in cards)
-        {
+        @foreach (var card in cards) {
             <button @onclick="() => OnCardSelected(card)"
                     disabled="@(card.IsMatched || !isGameActive)"
                     class="card">
-                @if (card.IsSelected || card.IsMatched)
-                {
-                    @if (changeIcon)
-                    {
+                @if (card.IsSelected || card.IsMatched) {
+                    @if (changeIcon) {
                         <span class="card-value">@cardIcons[(int)card.Value-1]</span>
-                    }
-                    else
-                    {
+                    } else {
                         <span class="card-value">@card.Value</span>
                     }
 
                         
-                }
-                else
-                {
+                } else {
                     <span class="card-value">?</span>
                 }
             </button>
         }
     </div>
 
-    <button @onclick="ResetGame" class="btn btn-primary" style="margin-top: 20px;">@(isGameActive ? "Reset Cards" : "Replay")</button>
+    <button @onclick="ResetGame" class="btn btn-primary" style="margin-top: 20px;">@(isGameActive?"Reset Cards" : "Replay")</button>
 </div>
