@@ -4,31 +4,31 @@ using Projektas.Shared.Models;
 namespace Projektas.Client.Pages {
 	public partial class Account {
 		private string? username=null;
-		private string accountUsername = "";
-		private string accountPassword = "";
-		private string newAccountName = "";
-		private string newAccountSurname = "";
-		private string newAccountUsername = "";
-		private string newAccountPassword = "";
+		private string accountUsername="";
+		private string accountPassword="";
+		private string newAccountName="";
+		private string newAccountSurname="";
+		private string newAccountUsername="";
+		private string newAccountPassword="";
 
-		private string? token = "";
+		private string? token="";
 
-		private bool isUsernameNew = true;
-		private bool isFieldsFilled = true;
-		private bool isNewFieldsFilled = true;
+		private bool isUsernameNew=true;
+		private bool isFieldsFilled=true;
+		private bool isNewFieldsFilled=true;
 
 		private async void LogInEvent() {
-			if(accountUsername==""||accountPassword=="") {
-				isFieldsFilled = false;
+			if(accountUsername=="" || accountPassword=="") {
+				isFieldsFilled=false;
 			} else {
-				User account = new User();
+				User account=new User();
 	
 				isFieldsFilled=true;
 	
 				account.Username=accountUsername;
 				account.Password=accountPassword;
 
-				token = await AccountService.LogIn(account);
+				token=await AccountService.LogIn(account);
 
 				if(!string.IsNullOrEmpty(token)) {
 					await AuthStateProvider.MarkUserAsAuthenticated(token);
@@ -46,10 +46,10 @@ namespace Projektas.Client.Pages {
 		}
 
 		private async void SignUpEvent() {
-			if(newAccountName==""||newAccountSurname==""||newAccountUsername==""||newAccountPassword=="") {
+			if(newAccountName=="" || newAccountSurname=="" || newAccountUsername=="" || newAccountPassword=="") {
 				isNewFieldsFilled=false;
 			} else if(isUsernameNew) {
-				User newAccount = new User();
+				User newAccount=new User();
 
 				isNewFieldsFilled=true;
 
@@ -64,7 +64,7 @@ namespace Projektas.Client.Pages {
 		}
 
 		private async void UsernameChange(ChangeEventArgs changeEvent) {
-			List<string> usernames = await AccountService.GetUsernames();
+			List<string> usernames=await AccountService.GetUsernames();
 
 			newAccountUsername=(string)changeEvent.Value;
 
@@ -80,13 +80,13 @@ namespace Projektas.Client.Pages {
 		}
 
 		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
 
 			await LoadUsernameAsync();
 		}
 
 		private async Task LoadUsernameAsync() {
-			username = await AuthStateProvider.GetUsernameAsync();
+			username=await AuthStateProvider.GetUsernameAsync();
 			StateHasChanged();
 		}
 
