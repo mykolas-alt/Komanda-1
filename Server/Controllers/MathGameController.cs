@@ -34,7 +34,12 @@ namespace Projektas.Server.Controllers {
             await _scoreboardService.AddScoreToDb(data);
         }
 
-        [HttpGet("top")]
+        [HttpGet("highscore")]
+        public async Task<ActionResult<int>> GetUserHighscore([FromQuery] string username) {
+            return await _scoreboardService.GetUserHighscore(username);
+        }
+
+        [HttpGet("top-score")]
         public async Task<ActionResult<List<UserScoreDto>>> GetTopScores([FromQuery] int topCount) {
             return await _scoreboardService.GetTopScores(topCount);
         }

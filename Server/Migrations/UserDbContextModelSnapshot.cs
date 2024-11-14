@@ -33,7 +33,7 @@ namespace Projektas.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("userScores", (string)null);
+                    b.ToTable("mathGameScores", (string)null);
                 });
 
             modelBuilder.Entity("Projektas.Shared.Models.User", b =>

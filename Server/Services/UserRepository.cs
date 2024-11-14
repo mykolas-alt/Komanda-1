@@ -25,7 +25,7 @@ namespace Projektas.Server.Services {
 			return await _userDbContext.Users.FirstOrDefaultAsync(u => u.Id==id);
 		}
 
-		public async Task AddScoreToUserAsync(string username,int userScore) {
+		public async Task AddMathGameScoreToUserAsync(string username,int userScore) {
 			var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
 			if (user==null) {
 				return;
@@ -40,7 +40,15 @@ namespace Projektas.Server.Services {
 			await _userDbContext.SaveChangesAsync();
 		}
 
-		public async Task<List<UserScoreDto>> GetAllScoresAsync() {
+		public async Task<int?> GetMathGameHighscoreFromUserAsync(string username) {
+			var user=await _userDbContext.Users
+				.Include(u => u.MathGameScores)
+				.FirstOrDefaultAsync(u => u.Username==username);
+
+			return user?.MathGameScores.Max(s => s.UserScores);
+		}
+
+		public async Task<List<UserScoreDto>> GetAllMathGameScoresAsync() {
 			return await _userDbContext.MathGameScores
 				.Include(s => s.User)
 				.OrderByDescending(s => s.UserScores)

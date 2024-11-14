@@ -2,16 +2,16 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Projektas.Server.Interface;
 using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services
 {
     public class UserService {
 		private readonly IConfiguration _configuration;
-		private readonly UserRepository _userRepository;
-		private IEnumerable<User> users;
+		private readonly IUserRepository _userRepository;
 
-		public UserService(IConfiguration configuration,UserRepository userRepository) {
+		public UserService(IConfiguration configuration,IUserRepository userRepository) {
 			_configuration=configuration;
 			_userRepository=userRepository;
 		}
@@ -46,7 +46,7 @@ namespace Projektas.Server.Services
 		}
 		
 		public async Task<List<string>> GetUsernamesAsync() {
-			users=await _userRepository.GetAllUsersAsync();
+			IEnumerable<User> users=await _userRepository.GetAllUsersAsync();
 			List<string> usernames=new List<string>();
 
 			foreach(User user in users) {

@@ -7,7 +7,8 @@ namespace Projektas.Client.Pages {
         public string? username=null;
         private bool isTimesUp=false;
         private List<int>? options;
-        private GameState gameState;
+        private int score=0;
+        private int highscore=0;
         private bool? isCorrect=null;
         private List<UserScoreDto>? topScores;
 
@@ -29,21 +30,19 @@ namespace Projektas.Client.Pages {
 
         protected override async void OnInitialized() {
             TimerService.OnTick+=OnTimerTick;
-            gameState=await GameStateService.GetGameState();
         }
 
 
         private async Task StartGame() {
             TimerService.Start(60);
             isTimesUp=false;
-            gameState.Score=0;
+            score=0;
             await GenerateQuestion();
-            await GameStateService.UpdateGameState(gameState);
         }
 
         private async Task GenerateQuestion() {
             isCorrect=null;
-            question=await MathGameService.GetQuestionAsync(gameState.Score);
+            question=await MathGameService.GetQuestionAsync(score);
             options=await MathGameService.GetOptionsAsync();
         }
 
@@ -59,7 +58,7 @@ namespace Projektas.Client.Pages {
                         return;
                     }
                 } else {
-                    await GameStateService.IncrementScore(gameState);
+                    score++;
                 }
                 await GenerateQuestion();
                 StateHasChanged();
@@ -73,7 +72,11 @@ namespace Projektas.Client.Pages {
                     TimerService.Stop();
 
                     if(username!=null) {
-                        await MathGameService.SaveScoreAsync(username,gameState.Score);
+                        await MathGameService.SaveScoreAsync(username,score);
+                    }
+
+                    if(username!=null) {
+                        highscore=await MathGameService.GetUserHighscore(username);
                     }
                     
                     topScores=await MathGameService.GetTopScoresAsync(topCount:5);

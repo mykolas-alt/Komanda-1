@@ -18,7 +18,7 @@ namespace Projektas.Server.Database {
 			userConfig.Property(c => c.Password).HasColumnName("password").IsRequired();
 
 			var mgScoresConfig=modelBuilder.Entity<Score>();
-			mgScoresConfig.ToTable("userScores");
+			mgScoresConfig.ToTable("mathGameScores");
 			mgScoresConfig.HasKey(c => c.Id);
 			mgScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
 

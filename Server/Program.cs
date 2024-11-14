@@ -28,7 +28,7 @@ builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>(provider => new UserService(
 	provider.GetRequiredService<IConfiguration>(),
-	provider.GetRequiredService<UserRepository>()
+	provider.GetRequiredService<IUserRepository>()
 ));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {

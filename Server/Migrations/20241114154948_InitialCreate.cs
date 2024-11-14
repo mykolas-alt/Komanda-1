@@ -27,7 +27,7 @@ namespace Projektas.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "userScores",
+                name: "mathGameScores",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -37,9 +37,9 @@ namespace Projektas.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_userScores", x => x.Id);
+                    table.PrimaryKey("PK_mathGameScores", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_userScores_users_UserId",
+                        name: "FK_mathGameScores_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "Id",
@@ -47,8 +47,8 @@ namespace Projektas.Server.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_userScores_UserId",
-                table: "userScores",
+                name: "IX_mathGameScores_UserId",
+                table: "mathGameScores",
                 column: "UserId");
         }
 
@@ -56,7 +56,7 @@ namespace Projektas.Server.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "userScores");
+                name: "mathGameScores");
 
             migrationBuilder.DropTable(
                 name: "users");
