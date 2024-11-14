@@ -13,7 +13,7 @@ builder.Configuration.AddJsonFile("appsettings.json",optional:false,reloadOnChan
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlite("Data source=Database/usersdb.db"));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
