@@ -2,6 +2,7 @@
 using System.Data;
 using Projektas.Shared.Models;
 using Projektas.Server.Database;
+using Projektas.Server.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Projektas.Server.Services {
@@ -13,16 +14,47 @@ namespace Projektas.Server.Services {
 		}
 
 		public async Task CreateUserAsync(User user) {
-			_userDbContext.Users.Add(user);
-			await _userDbContext.SaveChangesAsync();
+			try {
+				if(user==null) {
+                    throw new DatabaseOperationException($"User data is null.", "USER_IS_NULL");
+                }
+				_userDbContext.Users.Add(user);
+				await _userDbContext.SaveChangesAsync();
+			} catch (DbUpdateException dbEx) {
+				throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
+			} catch (Exception ex) {
+				throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+			}
 		}
 
 		public async Task<List<User>> GetAllUsersAsync() {
-			return await _userDbContext.Users.ToListAsync();
+			try {
+				List<User> users=await _userDbContext.Users.ToListAsync();
+				if(users==null || users.Count==0) {
+					throw new DatabaseOperationException($"Users data is null.", "USERS_IS_NULL");
+				}
+				return users;
+			} catch (DbUpdateException dbEx) {
+				throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
+			} catch (Exception ex) {
+				throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+			}
 		}
 
 		public async Task<User> GetUserByIdAsync(int id) {
-			return await _userDbContext.Users.FirstOrDefaultAsync(u => u.Id==id);
+			try {
+                var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Id==id);
+                if (user==null) {
+                    throw new DatabaseOperationException($"User with ID '{id}' not found in the database.", "USER_NOT_FOUND");
+                }
+                return user;
+            }
+            catch (DbUpdateException dbEx) {
+                throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
+            }
+            catch (Exception ex) {
+                throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+            }
 		}
 
 		public async Task AddMathGameScoreToUserAsync(string username,int userScore) {

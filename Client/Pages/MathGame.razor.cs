@@ -47,9 +47,9 @@ namespace Projektas.Client.Pages {
         }
 
         private async Task CheckAnswer(int option) {
-            if (question!=null) {
+            if(question!=null) {
                 isCorrect=await MathGameService.CheckAnswerAsync(option);
-                if (isCorrect==false) {
+                if(isCorrect==false) {
                     if (TimerService.RemainingTime>5) {
                         TimerService.RemainingTime=TimerService.RemainingTime-5;
                     } else {
@@ -67,7 +67,7 @@ namespace Projektas.Client.Pages {
 
         private async void OnTimerTick() {
             await InvokeAsync(async () => {
-                if (TimerService.RemainingTime==0) {
+                if(TimerService.RemainingTime==0) {
                     isTimesUp=true;
                     TimerService.Stop();
 
