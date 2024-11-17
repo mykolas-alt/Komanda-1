@@ -2,6 +2,7 @@
 
 namespace Projektas.Client.Shared {
 	public partial class MainLayout {
+
 		public string? username="";
 
 		protected override async Task OnInitializedAsync() {

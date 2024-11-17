@@ -1,23 +1,29 @@
 ﻿namespace Projektas.Client.Pages
 {
     using Microsoft.AspNetCore.Components;
+    using Projektas.Client.Interfaces;
     using System;
     using System.Threading.Tasks;
 
     public partial class AimTrainer : IDisposable
     {
-        private bool isGameActive = false;
-        private bool isGameOver = false;
-        private bool isHardMode = false;
+        public bool isGameActive { get; private set; } = false;
+        public bool isGameOver { get; private set; } = false;
+        public bool isHardMode { get; private set; } = false;
         private System.Timers.Timer? moveDotTimer;
-        private readonly Random _random = new Random();
 
-        public (int x, int y) TargetPosition { get; private set; }
+        public (int x, int y) TargetPosition { get; set; }
         public int Score { get; private set; }
-        private int moveCounter;
-        private int moveDirection; // 0 = left, 1 = right, 2 = up, 3 = down
+        public int moveCounter { get; private set; }
+        public int moveDirection { get; set; } // 0 = left, 1 = right, 2 = up, 3 = down
 
-        private void OnDifficultyChanged(ChangeEventArgs e)
+        [Inject]
+        public Random _random { get; set; }
+
+        [Inject]
+        public ITimerService TimerService { get; set; }
+
+        public void OnDifficultyChanged(ChangeEventArgs e)
         {
             if (!isGameActive)
             {
@@ -25,7 +31,7 @@
             }
         }
 
-        private void StartGame()
+        public void StartGame()
         {
             isGameActive = true;
             isGameOver = false;
@@ -37,8 +43,7 @@
             {
                 StartMovingDotTimer();
             }
-
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void StartMovingDotTimer()
@@ -52,7 +57,7 @@
             moveDotTimer.Start();
         }
 
-        private void TimerTick()
+        public void TimerTick()
         {
             if (TimerService.RemainingTime == 0)
             {
@@ -64,13 +69,13 @@
             }
         }
 
-        private void OnTargetClicked()
+        public void OnTargetClicked()
         {
             if (TimerService.RemainingTime > 0)
             {
                 Score++;
                 SetRandomTargetPosition(1000, 400);
-                StateHasChanged();
+                InvokeAsync(StateHasChanged);
             }
         }
 
@@ -84,7 +89,7 @@
             await InvokeAsync(StateHasChanged);
         }
 
-        private void TryAgain()
+        public void TryAgain()
         {
             isGameOver = false;
             StartGame();
@@ -123,7 +128,7 @@
             TargetPosition = (x, y);
         }
 
-        private void MoveTarget(int boxWidth, int boxHeight)
+        public void MoveTarget(int boxWidth, int boxHeight)
         {
             moveCounter++;
 

@@ -1,9 +1,10 @@
 ﻿using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
+using Projektas.Client.Interfaces;
 
 namespace Projektas.Client.Services {
-	public class AccountAuthStateProvider:AuthenticationStateProvider {
+	public class AccountAuthStateProvider:AuthenticationStateProvider, IAccountAuthStateProvider {
 		private readonly ILocalStorageService _localStorage;
 		private readonly HttpClient _httpClient;
 		public string? Username { get; private set; } = null;
