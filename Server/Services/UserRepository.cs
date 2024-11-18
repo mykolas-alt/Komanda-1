@@ -1,13 +1,12 @@
-﻿using Projektas.Server.Interfaces;
-using System.Data;
+﻿using System.Data;
 using Projektas.Shared.Models;
 using Projektas.Server.Database;
 using Projektas.Server.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Projektas.Server.Interfaces;
 
-namespace Projektas.Server.Services
-{
-    public class UserRepository : IUserRepository {
+namespace Projektas.Server.Services {
+	public class UserRepository : IUserRepository {
 		private readonly UserDbContext _userDbContext;
 
 		public UserRepository(UserDbContext userDbContext) {

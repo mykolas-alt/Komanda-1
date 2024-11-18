@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Projektas.Server.Interfaces.MathGame;
 using Projektas.Server.Services.MathGame;
 using Projektas.Shared.Models;
 
@@ -6,10 +7,10 @@ namespace Projektas.Server.Controllers {
     [ApiController]
     [Route("api/[controller]")]
     public class MathGameController : ControllerBase {
-        private readonly MathGameService _mathGameService;
-        private readonly MathGameScoreboardService _scoreboardService;
+        private readonly IMathGameService _mathGameService;
+        private readonly IMathGameScoreboardService _scoreboardService;
 
-        public MathGameController(MathGameService mathGameService,MathGameScoreboardService mathGameScoreboardService) {
+        public MathGameController(IMathGameService mathGameService,IMathGameScoreboardService mathGameScoreboardService) {
             _mathGameService = mathGameService;
             _scoreboardService = mathGameScoreboardService;
         }

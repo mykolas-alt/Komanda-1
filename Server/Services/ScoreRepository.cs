@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Projektas.Shared.Interfaces;
 
 namespace Projektas.Server.Services {
-    public class ScoreRepository<T> where T : IGame {
+    public class ScoreRepository<T> : IScoreRepository<T> where T : IGame {
         private readonly UserDbContext _userDbContext;
 
 		public ScoreRepository(UserDbContext userDbContext) {

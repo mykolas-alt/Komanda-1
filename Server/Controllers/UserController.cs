@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Projektas.Server.Services;
+using Projektas.Server.Interfaces;
 using Projektas.Shared.Models;
 
 namespace Projektas.Server.Controllers {
     [ApiController]
 	[Route("api/[controller]")]
 	public class UserController:ControllerBase {
-		private readonly UserService _userService;
+		private readonly IUserService _userService;
 
-		public UserController(UserService userService) {
+		public UserController(IUserService userService) {
 			_userService=userService;
 		}
 		

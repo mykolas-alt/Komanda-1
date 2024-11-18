@@ -7,7 +7,7 @@ using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services
 {
-    public class UserService {
+    public class UserService : IUserService{
 		private readonly IConfiguration _configuration;
 		private readonly IUserRepository _userRepository;
 

@@ -1,9 +1,13 @@
 ﻿using Projektas.Server.Enums;
+using Projektas.Server.Interfaces.MathGame;
+using System.Text;
+using System;
 
 namespace Projektas.Server.Services.MathGame {
 
-    public class MathGenerationService {
-        private readonly Random _random=new();
+    public class MathGenerationService : IMathGenerationService
+    {
+        private readonly Random _random = new();
 
         private static int MaxNumber(int score) => 10+score*2; // increases the range of numbers as the score increases
         private static int MinNumber(int score) => 1+score;
@@ -37,14 +41,16 @@ namespace Projektas.Server.Services.MathGame {
         }
 
         // adjusts numbers by operations
-        public void AdjustNumbersForOperations(int score,List<int> numbers,List<Operation> operations) {
+        public void AdjustNumbersForOperations(int score, List<int> numbers, List<Operation> operations) {
             for (int i=1;i<numbers.Count;i++) {
-                if (operations[i-1]==Operation.Division) {
+                if (operations[i-1]==Operation.Division && numbers[i-1] % numbers[i]!=0) {
                     AdjustForDivision(i, numbers);
                 }
-                else if (operations[i-1]==Operation.Multiplication) {
+                else if (operations[i-1] == Operation.Multiplication) {
                     int limit=Math.Max(2,score/2);
-                    numbers[i]=_random.Next(2,limit);
+                    if (numbers[i]>limit){
+                        numbers[i]=_random.Next(2,limit);
+                    }
                 }
             }
         }

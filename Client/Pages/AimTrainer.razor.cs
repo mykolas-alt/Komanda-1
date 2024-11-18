@@ -1,26 +1,38 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿namespace Projektas.Client.Pages
+{
+    using Microsoft.AspNetCore.Components;
+    using Projektas.Client.Interfaces;
+    using System;
+    using System.Threading.Tasks;
 
-namespace Projektas.Client.Pages {    
     public partial class AimTrainer : IDisposable
     {
-        private bool isGameActive=false;
-        private bool isGameOver=false;
-        private bool isHardMode=false;
+        public bool isGameActive { get; private set; } = false;
+        public bool isGameOver { get; private set; } = false;
+        public bool isHardMode { get; private set; } = false;
         private System.Timers.Timer? moveDotTimer;
-        private readonly Random _random=new Random();
 
-        public (int x,int y) TargetPosition {get;private set;}
-        public int Score {get;private set;}
-        private int moveCounter;
-        private int moveDirection; // 0 = left, 1 = right, 2 = up, 3 = down
+        public (int x, int y) TargetPosition { get; set; }
+        public int Score { get; private set; }
+        public int moveCounter { get; private set; }
+        public int moveDirection { get; set; } // 0 = left, 1 = right, 2 = up, 3 = down
 
-        private void OnDifficultyChanged(ChangeEventArgs e) {
-            if (!isGameActive) {
-                isHardMode=e.Value?.ToString()=="Hard";
+        [Inject]
+        public Random _random { get; set; }
+
+        [Inject]
+        public ITimerService TimerService { get; set; }
+
+        public void OnDifficultyChanged(ChangeEventArgs e)
+        {
+            if (!isGameActive)
+            {
+                isHardMode = e.Value?.ToString() == "Hard";
             }
         }
 
-        private void StartGame() {
+        public void StartGame()
+        {
             isGameActive=true;
             isGameOver=false;
             ResetGame(1000,400);
@@ -30,8 +42,7 @@ namespace Projektas.Client.Pages {
             if (isHardMode) {
                 StartMovingDotTimer();
             }
-
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void StartMovingDotTimer() {
@@ -43,19 +54,25 @@ namespace Projektas.Client.Pages {
             moveDotTimer.Start();
         }
 
-        private void TimerTick() {
-            if (TimerService.RemainingTime==0) {
-                _=EndGame();
-            } else {
+        public void TimerTick()
+        {
+            if (TimerService.RemainingTime==0)
+            {
+                EndGame();
+            }
+            else
+            {
                 InvokeAsync(StateHasChanged);
             }
         }
 
-        private void OnTargetClicked() {
-            if (TimerService.RemainingTime>0) {
+        public void OnTargetClicked()
+        {
+            if (TimerService.RemainingTime>0)
+            {
                 Score++;
                 SetRandomTargetPosition(1000,400);
-                StateHasChanged();
+                InvokeAsync(StateHasChanged);
             }
         }
 
@@ -68,8 +85,9 @@ namespace Projektas.Client.Pages {
             await InvokeAsync(StateHasChanged);
         }
 
-        private void TryAgain() {
-            isGameOver=false;
+        public void TryAgain()
+        {
+            isGameOver = false;
             StartGame();
         }
 
@@ -101,7 +119,8 @@ namespace Projektas.Client.Pages {
             TargetPosition=(x,y);
         }
 
-        private void MoveTarget(int boxWidth,int boxHeight) {
+        public void MoveTarget(int boxWidth, int boxHeight)
+        {
             moveCounter++;
 
             if (moveCounter%50==0) {

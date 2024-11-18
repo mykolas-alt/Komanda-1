@@ -1,8 +1,10 @@
 ﻿using Projektas.Shared.Models;
 using System.Net.Http.Json;
+using Projektas.Client.Interfaces;
 
-namespace Projektas.Client.Services {
-    public class AccountService {
+namespace Projektas.Client.Services
+{
+    public class AccountService : IAccountService {
 		private readonly HttpClient _httpClient;
 		private readonly ILocalStorageService _localStorage;
 

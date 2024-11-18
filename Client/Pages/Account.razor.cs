@@ -1,25 +1,32 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Projektas.Client.Interfaces;
 using Projektas.Shared.Models;
 
 namespace Projektas.Client.Pages {
 	public partial class Account {
 		private string? username=null;
-		private string accountUsername="";
-		private string accountPassword="";
-		private string newAccountName="";
-		private string newAccountSurname="";
-		private string newAccountUsername="";
-		private string newAccountPassword="";
+		public string accountUsername { get; set; } = "";
+		public string accountPassword { get; set; } = "";
+		public string newAccountName { get; set; } = "";
+		public string newAccountSurname { get; set; } = "";
+		public string newAccountUsername { get; set; } = "";
+		public string newAccountPassword { get; set; } = "";
 
-		private string? token="";
+		public string? token { get; private set; } = "";
 
-		private bool isUsernameNew=true;
-		private bool isFieldsFilled=true;
-		private bool isNewFieldsFilled=true;
+		public bool isUsernameNew { get; private set; } = true;
+		public bool isFieldsFilled { get; private set; } = true;
+		public bool isNewFieldsFilled { get; private set; } = true;
+		private bool test = false;
 
-		private async void LogInEvent() {
-			if(accountUsername=="" || accountPassword=="") {
-				isFieldsFilled=false;
+        [Inject]
+        public IAccountAuthStateProvider AuthStateProvider { get; set; }
+        [Inject]
+        public IAccountService AccountService { get; set; }
+
+        public async void LogInEvent() {
+			if(accountUsername==""||accountPassword=="") {
+				isFieldsFilled = false;
 			} else {
 				User account=new User();
 	
@@ -37,7 +44,7 @@ namespace Projektas.Client.Pages {
 			}
 		}
 
-		private void LogOffEvent() {
+		public void LogOffEvent() {
 			AuthStateProvider.MarkUserAsLoggedOut();
 
 			token="";
@@ -45,8 +52,8 @@ namespace Projektas.Client.Pages {
 			Navigation.NavigateTo("/");
 		}
 
-		private async void SignUpEvent() {
-			if(newAccountName=="" || newAccountSurname=="" || newAccountUsername=="" || newAccountPassword=="") {
+		public async void SignUpEvent() {
+			if(newAccountName==""||newAccountSurname==""||newAccountUsername==""||newAccountPassword=="") {
 				isNewFieldsFilled=false;
 			} else if(isUsernameNew) {
 				User newAccount=new User();
@@ -63,8 +70,8 @@ namespace Projektas.Client.Pages {
 			StateHasChanged();
 		}
 
-		private async void UsernameChange(ChangeEventArgs changeEvent) {
-			List<string> usernames=await AccountService.GetUsernames();
+		public async void UsernameChange(ChangeEventArgs changeEvent) {
+			List<string> usernames = await AccountService.GetUsernames();
 
 			newAccountUsername=(string)changeEvent.Value;
 

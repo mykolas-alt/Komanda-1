@@ -5,6 +5,7 @@ using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
 using Projektas.Server.Database;
 using Microsoft.EntityFrameworkCore;
+using Projektas.Server.Interfaces.MathGame;
 using Projektas.Server.Interfaces;
 using Projektas.Shared.Models;
 
@@ -20,18 +21,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
+builder.Services.AddSingleton<IMathGameService, MathGameService>();
+builder.Services.AddSingleton<IMathCalculationService, MathCalculationService>();
+builder.Services.AddSingleton<IMathGenerationService, MathGenerationService>();
+builder.Services.AddScoped<IMathGameScoreboardService, MathGameScoreboardService>();
+
 builder.Services.AddScoped<IUserRepository,UserRepository>();
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped(typeof(ScoreRepository<>));
-builder.Services.AddScoped<UserService>(provider => new UserService(
+builder.Services.AddScoped(typeof(IScoreRepository<>), typeof(ScoreRepository<>));
+builder.Services.AddScoped<IUserService, UserService>(provider => new UserService(
 	provider.GetRequiredService<IConfiguration>(),
 	provider.GetRequiredService<IUserRepository>()
 ));
-
-builder.Services.AddSingleton<MathGameService>();
-builder.Services.AddSingleton<MathCalculationService>();
-builder.Services.AddSingleton<MathGenerationService>();
-builder.Services.AddScoped<MathGameScoreboardService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
 	options.TokenValidationParameters=new TokenValidationParameters {
@@ -74,3 +74,5 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
+
+public partial class Program { }

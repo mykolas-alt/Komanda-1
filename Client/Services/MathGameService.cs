@@ -1,8 +1,11 @@
 ﻿using Projektas.Shared.Models;
 using System.Net.Http.Json;
+using Projektas.Client.Interfaces;
 
-namespace Projektas.Client.Services {
-    public class MathGameService {
+namespace Projektas.Client.Services
+{
+    public class MathGameService : IMathGameService
+    {
         private readonly HttpClient _httpClient;
 
         public MathGameService(HttpClient httpClient) {

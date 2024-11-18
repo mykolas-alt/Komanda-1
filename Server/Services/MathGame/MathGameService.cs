@@ -1,18 +1,22 @@
 ﻿using Projektas.Server.Enums;
 using System.Text;
 using Projektas.Server.Extensions;
+using Projektas.Server.Interfaces.MathGame;
+using System;
 
-namespace Projektas.Server.Services.MathGame {
-    public class MathGameService {
-        private readonly Random _random=new();
-        private readonly MathCalculationService _mathCalculationService;
-        private readonly MathGenerationService _mathGenerationService;
+namespace Projektas.Server.Services.MathGame
+{
+    public class MathGameService : IMathGameService {
+        private readonly Random _random = new();
+        private readonly IMathCalculationService _mathCalculationService;
+        private readonly IMathGenerationService _mathGenerationService;
 
         public int Answer {get;set;}
         public List<int> numbers=new();
         public List<Operation> operations=new();
 
-        public MathGameService(MathCalculationService mathCalculationService, MathGenerationService mathGenerationService) {
+        public MathGameService(IMathCalculationService mathCalculationService, IMathGenerationService mathGenerationService)
+        {
             _mathCalculationService=mathCalculationService;
             _mathGenerationService=mathGenerationService;
         }

@@ -1,10 +1,11 @@
 ﻿using Projektas.Shared.Models;
+using Projektas.Server.Interfaces.MathGame;
 
 namespace Projektas.Server.Services.MathGame {
-    public class MathGameScoreboardService : IComparer<int> {
-        private readonly ScoreRepository<MathGameM> _scoreRepository;
+    public class MathGameScoreboardService : IComparer<int>, IMathGameScoreboardService {
+        private readonly IScoreRepository<MathGameM> _scoreRepository;
 
-        public MathGameScoreboardService(ScoreRepository<MathGameM> scoreRepository) {
+        public MathGameScoreboardService(IScoreRepository<MathGameM> scoreRepository) {
             _scoreRepository = scoreRepository;
         }
 

@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Projektas.Client.Pages {
-    public partial class PairUp : ComponentBase {
-        private List<Card> cards;
-        private Card? firstSelectedCard;
-        private Card? secondSelectedCard;
-        private bool isGameActive;
-        private bool missMatch;
-        private int matchedPairsCount;
-        private int attempts;
-        private bool isHardMode;
-        private string gridStyle;
-        private bool changeIcon;
+namespace Projektas.Client.Pages
+{
+    public partial class PairUp : ComponentBase
+    {
+        public List<Card> cards { get; set; }
+        public Card? firstSelectedCard { get; private set; }
+        public Card? secondSelectedCard { get; private set; }
+        public bool isGameActive { get; set; }
+        public bool missMatch { get; private set; }
+        public int matchedPairsCount { get; private set; }
+        public int attempts { get; private set; }
+        public bool isHardMode { get; private set; }
+        public string gridStyle { get; private set; }
+        public bool changeIcon { get; private set; }
 
         string[] cardIcons=new string[] {
             "\u2660",  // Spade: ♠
@@ -36,12 +38,12 @@ namespace Projektas.Client.Pages {
             ResetGame();
         }
 
-        private void OnDifficultyChanged(ChangeEventArgs e) {
+        public void OnDifficultyChanged(ChangeEventArgs e) {
             isHardMode=e.Value?.ToString()=="Hard";
             Console.WriteLine(isHardMode);
         }
 
-        private void ResetGame() {
+        public void ResetGame() {
             attempts=0;
             matchedPairsCount=0;
             firstSelectedCard=null;
@@ -71,7 +73,7 @@ namespace Projektas.Client.Pages {
             return allCards;
         }
 
-        private void OnCardSelected(Card selectedCard) {
+        public void OnCardSelected(Card selectedCard) {
             if (!isGameActive || selectedCard.IsMatched || selectedCard==firstSelectedCard || missMatch)
                 return;
 
@@ -103,12 +105,12 @@ namespace Projektas.Client.Pages {
                         firstSelectedCard=null;
                         secondSelectedCard=null;
                         missMatch=false;
-                        StateHasChanged();
-                    });
+						InvokeAsync(StateHasChanged);
+					});
                 }
             }
 
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
         public class Card {
             public required object Value {get;set;}
