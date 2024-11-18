@@ -2,22 +2,22 @@
 
 namespace Projektas.Server.Services.MathGame {
     public class MathGameScoreboardService : IComparer<int> {
-        private readonly UserRepository _userRepository;
+        private readonly ScoreRepository<MathGameM> _scoreRepository;
 
-        public MathGameScoreboardService(UserRepository userRepository) {
-            _userRepository = userRepository;
+        public MathGameScoreboardService(ScoreRepository<MathGameM> scoreRepository) {
+            _scoreRepository = scoreRepository;
         }
 
         public async Task AddScoreToDb(UserScoreDto data) {
-            await _userRepository.AddMathGameScoreToUserAsync(data.Username,data.Score);
+            await _scoreRepository.AddScoreToUserAsync(data.Username,data.Score);
         }
 
         public async Task<int?> GetUserHighscore(string username) {
-            return await _userRepository.GetMathGameHighscoreFromUserAsync(username);
+            return await _scoreRepository.GetHighscoreFromUserAsync(username);
         }
 
         public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
-            List<UserScoreDto> userScores=await _userRepository.GetAllMathGameScoresAsync();
+            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync();
             List<UserScoreDto> topScores=new List<UserScoreDto>();
             
             for (int i=0;i<topCount && i<userScores.Count;i++) {

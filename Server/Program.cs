@@ -5,7 +5,8 @@ using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
 using Projektas.Server.Database;
 using Microsoft.EntityFrameworkCore;
-using Projektas.Server.Interface;
+using Projektas.Server.Interfaces;
+using Projektas.Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json",optional:false,reloadOnChange:true);
@@ -19,17 +20,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton<MathGameService>();
-builder.Services.AddSingleton<MathCalculationService>();
-builder.Services.AddSingleton<MathGenerationService>();
-builder.Services.AddScoped<MathGameScoreboardService>();
-
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped(typeof(ScoreRepository<>));
 builder.Services.AddScoped<UserService>(provider => new UserService(
 	provider.GetRequiredService<IConfiguration>(),
 	provider.GetRequiredService<IUserRepository>()
 ));
+
+builder.Services.AddSingleton<MathGameService>();
+builder.Services.AddSingleton<MathCalculationService>();
+builder.Services.AddSingleton<MathGenerationService>();
+builder.Services.AddScoped<MathGameScoreboardService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
 	options.TokenValidationParameters=new TokenValidationParameters {

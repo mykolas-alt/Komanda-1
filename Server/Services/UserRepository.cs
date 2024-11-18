@@ -1,12 +1,13 @@
-﻿using Projektas.Server.Interface;
+﻿using Projektas.Server.Interfaces;
 using System.Data;
 using Projektas.Shared.Models;
 using Projektas.Server.Database;
 using Projektas.Server.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Projektas.Server.Services {
-	public class UserRepository : IUserRepository {
+namespace Projektas.Server.Services
+{
+    public class UserRepository : IUserRepository {
 		private readonly UserDbContext _userDbContext;
 
 		public UserRepository(UserDbContext userDbContext) {
@@ -55,41 +56,6 @@ namespace Projektas.Server.Services {
             catch (Exception ex) {
                 throw new DatabaseOperationException("An error occurred during the database operation.", ex);
             }
-		}
-
-		public async Task AddMathGameScoreToUserAsync(string username,int userScore) {
-			var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
-			if (user==null) {
-				return;
-			}
-
-			var score=new MathGameScore {
-				UserScores=userScore,
-				UserId=user.Id
-			};
-
-			_userDbContext.MathGameScores.Add(score);
-			await _userDbContext.SaveChangesAsync();
-		}
-
-		public async Task<int?> GetMathGameHighscoreFromUserAsync(string username) {
-			var user=await _userDbContext.Users
-				.Include(u => u.MathGameScores)
-				.FirstOrDefaultAsync(u => u.Username==username);
-
-			return user?.MathGameScores.Max(s => s.UserScores);
-		}
-
-		public async Task<List<UserScoreDto>> GetAllMathGameScoresAsync() {
-			return await _userDbContext.MathGameScores
-				.Include(s => s.User)
-				.OrderByDescending(s => s.UserScores)
-				.Select(s => new UserScoreDto {
-					Username=s.User.Username,
-					Score=s.UserScores
-				})
-				.ToListAsync();
-
 		}
 
 		public async Task<bool> ValidateUserAsync(string username,string password) {

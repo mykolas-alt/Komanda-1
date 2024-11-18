@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Projektas.Server.Interface;
+using Projektas.Server.Interfaces;
 using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services
