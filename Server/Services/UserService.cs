@@ -2,7 +2,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using Projektas.Shared.Models;
 using Projektas.Server.Interfaces;
 
@@ -10,42 +9,33 @@ namespace Projektas.Server.Services
 {
     public class UserService : IUserService
 	{
-		private readonly string _filepath;
 		private readonly IConfiguration _configuration;
-		private List<User>? UserList=new List<User>();
+		private readonly IUserRepository _userRepository;
 
-		public UserService(string filepath, IConfiguration configuration) {
-			_filepath=filepath;
+		public UserService(IConfiguration configuration,IUserRepository userRepository) {
 			_configuration=configuration;
+			_userRepository=userRepository;
 		}
 
-		public bool LogInToUser(User userInfo) {
-			string UserListSerialized;
-			bool userMached=false;
-			using (StreamReader reader = new StreamReader(_filepath)) {
-				UserListSerialized=reader.ReadToEnd();
-			}
-			UserList=JsonSerializer.Deserialize<List<User>>(UserListSerialized);
+		public async Task CreateUser(User newUser) {
+			await _userRepository.CreateUserAsync(newUser);
+		}
 
-			foreach(User user in UserList) {
-				if(user.Username==userInfo.Username && user.Password==userInfo.Password) {
-					userMached=true;
-				}
-			}
-
+		public async Task<bool> LogInToUser(User userInfo) {
+			bool userMached=await _userRepository.ValidateUserAsync(userInfo.Username,userInfo.Password);
 			return userMached;
 		}
 
 		public string GenerateJwtToken(User user) {
-			var claims = new[] {
-				new Claim(ClaimTypes.Name, user.Username),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+			var claims=new[] {
+				new Claim(ClaimTypes.Name,user.Username),
+				new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
 			};
 
-			var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-			var creds = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
+			var key=Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+			var creds=new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256);
 
-			var token = new JwtSecurityToken(
+			var token=new JwtSecurityToken(
 				issuer: _configuration["Jwt:Issuer"],
 				audience: _configuration["Jwt:Audience"],
 				claims: claims,
@@ -56,32 +46,11 @@ namespace Projektas.Server.Services
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 		
-		public void CreateUser(User newUser) {
-			string UserListSerialized;
-			using (StreamReader reader = new StreamReader(_filepath)) {
-				UserListSerialized=reader.ReadToEnd();
-			}
-			UserList=JsonSerializer.Deserialize<List<User>>(UserListSerialized);
-			
-			UserList.Add(new User(){Name=newUser.Name,Surname=newUser.Surname,Username=newUser.Username,Password=newUser.Password});
-			
-			UserListSerialized=JsonSerializer.Serialize(UserList);
+		public async Task<List<string>> GetUsernamesAsync() {
+			IEnumerable<User> users=await _userRepository.GetAllUsersAsync();
+			List<string> usernames=new List<string>();
 
-			using (StreamWriter writer = new StreamWriter(_filepath, append: false)) {
-				writer.Write(UserListSerialized);
-			}
-		}
-
-		public List<string> GetUsernames() {
-			List<string> usernames = new List<string>();
-
-			string UserListSerialized;
-			using (StreamReader reader = new StreamReader(_filepath)) {
-				UserListSerialized=reader.ReadToEnd();
-			}
-			UserList=JsonSerializer.Deserialize<List<User>>(UserListSerialized);
-
-			foreach(User user in UserList) {
+			foreach(User user in users) {
 				usernames.Add(user.Username);
 			}
 

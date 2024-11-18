@@ -1,60 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Projektas.Server.Interfaces.MathGame;
+using Projektas.Server.Services.MathGame;
+using Projektas.Shared.Models;
 
-namespace Projektas.Server.Controllers
-{
+namespace Projektas.Server.Controllers {
     [ApiController]
     [Route("api/[controller]")]
-    public class MathGameController : ControllerBase
-    {
+    public class MathGameController : ControllerBase {
         private readonly IMathGameService _mathGameService;
-        private readonly IMathGameDataService _dataService;
         private readonly IMathGameScoreboardService _scoreboardService;
 
-        public MathGameController(IMathGameService mathGameService, IMathGameDataService mathGameDataService,
-               IMathGameScoreboardService mathGameScoreboardService)
-        {
+        public MathGameController(IMathGameService mathGameService,IMathGameScoreboardService mathGameScoreboardService) {
             _mathGameService = mathGameService;
-            _dataService = mathGameDataService;
             _scoreboardService = mathGameScoreboardService;
         }
 
         [HttpGet("question")]
-        public ActionResult<string> GetQuestion([FromQuery] int score)
-        {
+        public ActionResult<string> GetQuestion([FromQuery] int score) {
             return _mathGameService.GenerateQuestion(score);
         }
 
         [HttpGet("options")]
-        public ActionResult<List<int>> GetOptions()
-        {
+        public ActionResult<List<int>> GetOptions() {
             return _mathGameService.GenerateOptions();
         }
 
         [HttpPost("check-answer")]
-        public ActionResult<bool> CheckAnswer([FromBody] int answer)
-        {
+        public ActionResult<bool> CheckAnswer([FromBody] int answer) {
             return _mathGameService.CheckAnswer(answer);
         }
 
-        [HttpPost("save")]
-        public IActionResult SaveData([FromBody] int data)
-        {
-            _dataService.SaveData(data);
-            return Ok();
+        [HttpPost("save-score")]
+        public async Task SaveScore([FromBody] UserScoreDto data) {
+            await _scoreboardService.AddScoreToDb(data);
         }
 
-        [HttpGet("load")]
-        public ActionResult<List<int>> LoadData()
-        {
-
-            return _dataService.LoadData();
+        [HttpGet("highscore")]
+        public async Task<ActionResult<int>> GetUserHighscore([FromQuery] string username) {
+            return await _scoreboardService.GetUserHighscore(username);
         }
 
-        [HttpGet("top")]
-        public ActionResult<List<int>> GetTopScores([FromQuery] int topCount)
-        {
-            return _scoreboardService.GetTopScores(topCount);
+        [HttpGet("top-score")]
+        public async Task<ActionResult<List<UserScoreDto>>> GetTopScores([FromQuery] int topCount) {
+            return await _scoreboardService.GetTopScores(topCount);
         }
 
     }

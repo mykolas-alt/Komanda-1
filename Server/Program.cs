@@ -3,34 +3,44 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
+using Projektas.Server.Database;
+using Microsoft.EntityFrameworkCore;
 using Projektas.Server.Interfaces.MathGame;
 using Projektas.Server.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile("appsettings.json",optional:false,reloadOnChange:true);
 // Add services to the container.
 
 builder.Services.AddHttpClient();
 
+builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlite("Data source=Database/usersdb.db"));
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
+
 builder.Services.AddSingleton<IMathGameService, MathGameService>();
 builder.Services.AddSingleton<IMathCalculationService, MathCalculationService>();
 builder.Services.AddSingleton<IMathGenerationService, MathGenerationService>();
-builder.Services.AddSingleton<IMathGameDataService, MathGameDataService>(provider => new MathGameDataService(Path.Combine("Data", "MathGameData.txt")));
-builder.Services.AddSingleton<IUserService, UserService>(provider => new UserService(Path.Combine("Data","UsersData.txt"), provider.GetRequiredService<IConfiguration>()));
-builder.Services.AddSingleton<IMathGameScoreboardService, MathGameScoreboardService>();
+builder.Services.AddScoped<IMathGameScoreboardService, MathGameScoreboardService>();
+
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>(provider => new UserService(
+	provider.GetRequiredService<IConfiguration>(),
+	provider.GetRequiredService<IUserRepository>()
+));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
-	options.TokenValidationParameters = new TokenValidationParameters {
-		ValidateIssuer = true,
-		ValidateAudience = true,
-		ValidateLifetime = true,
-		ValidateIssuerSigningKey = true,
-		ValidIssuer = builder.Configuration["Jwt:Issuer"],
-		ValidAudience = builder.Configuration["Jwt:Audience"],
-		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+	options.TokenValidationParameters=new TokenValidationParameters {
+		ValidateIssuer=true,
+		ValidateAudience=true,
+		ValidateLifetime=true,
+		ValidateIssuerSigningKey=true,
+		ValidIssuer=builder.Configuration["Jwt:Issuer"],
+		ValidAudience=builder.Configuration["Jwt:Audience"],
+		IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
 	};
 });
 

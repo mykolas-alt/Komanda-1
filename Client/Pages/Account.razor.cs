@@ -22,22 +22,20 @@ namespace Projektas.Client.Pages {
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider { get; set; }
         [Inject]
-        public IAccountService AccountServices { get; set; }
+        public IAccountService AccountService { get; set; }
 
         public async void LogInEvent() {
 			if(accountUsername==""||accountPassword=="") {
 				isFieldsFilled = false;
 			} else {
-				User account = new User();
+				User account=new User();
 	
 				isFieldsFilled=true;
 	
 				account.Username=accountUsername;
 				account.Password=accountPassword;
 
-				token = await AccountServices.LogIn(account);
-
-				Console.WriteLine(token);
+				token=await AccountService.LogIn(account);
 
 				if(!string.IsNullOrEmpty(token)) {
 					await AuthStateProvider.MarkUserAsAuthenticated(token);
@@ -58,7 +56,7 @@ namespace Projektas.Client.Pages {
 			if(newAccountName==""||newAccountSurname==""||newAccountUsername==""||newAccountPassword=="") {
 				isNewFieldsFilled=false;
 			} else if(isUsernameNew) {
-				User newAccount = new User();
+				User newAccount=new User();
 
 				isNewFieldsFilled=true;
 
@@ -67,13 +65,13 @@ namespace Projektas.Client.Pages {
 				newAccount.Username=newAccountUsername;
 				newAccount.Password=newAccountPassword;
 
-				await AccountServices.CreateAccount(newAccount);
+				await AccountService.CreateAccountAsync(newAccount);
 			}
 			StateHasChanged();
 		}
 
 		public async void UsernameChange(ChangeEventArgs changeEvent) {
-			List<string> usernames = await AccountServices.GetUsernames();
+			List<string> usernames = await AccountService.GetUsernames();
 
 			newAccountUsername=(string)changeEvent.Value;
 
@@ -89,13 +87,13 @@ namespace Projektas.Client.Pages {
 		}
 
 		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
 
 			await LoadUsernameAsync();
 		}
 
 		private async Task LoadUsernameAsync() {
-			username = await AuthStateProvider.GetUsernameAsync();
+			username=await AuthStateProvider.GetUsernameAsync();
 			StateHasChanged();
 		}
 

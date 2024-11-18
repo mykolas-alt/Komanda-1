@@ -1,7 +1,5 @@
-﻿namespace Projektas.Server.Enums
-{
-    public enum Operation
-    {
+﻿namespace Projektas.Server.Enums {
+    public enum Operation {
         Addition,
         Subtraction,
         Multiplication,

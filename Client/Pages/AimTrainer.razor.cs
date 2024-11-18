@@ -33,25 +33,22 @@
 
         public void StartGame()
         {
-            isGameActive = true;
-            isGameOver = false;
-            ResetGame(1000, 400);
+            isGameActive=true;
+            isGameOver=false;
+            ResetGame(1000,400);
             TimerService.Start(30);
-            TimerService.OnTick += TimerTick;
+            TimerService.OnTick+=TimerTick;
 
-            if (isHardMode)
-            {
+            if (isHardMode) {
                 StartMovingDotTimer();
             }
             InvokeAsync(StateHasChanged);
         }
 
-        private void StartMovingDotTimer()
-        {
-            moveDotTimer = new System.Timers.Timer(10);
-            moveDotTimer.Elapsed += (sender, e) =>
-            {
-                MoveTarget(1000, 400);
+        private void StartMovingDotTimer() {
+            moveDotTimer=new System.Timers.Timer(10);
+            moveDotTimer.Elapsed+=(sender, e) => {
+                MoveTarget(1000,400);
                 InvokeAsync(StateHasChanged);
             };
             moveDotTimer.Start();
@@ -59,7 +56,7 @@
 
         public void TimerTick()
         {
-            if (TimerService.RemainingTime == 0)
+            if (TimerService.RemainingTime==0)
             {
                 EndGame();
             }
@@ -71,19 +68,18 @@
 
         public void OnTargetClicked()
         {
-            if (TimerService.RemainingTime > 0)
+            if (TimerService.RemainingTime>0)
             {
                 Score++;
-                SetRandomTargetPosition(1000, 400);
+                SetRandomTargetPosition(1000,400);
                 InvokeAsync(StateHasChanged);
             }
         }
 
-        private async Task EndGame()
-        {
-            isGameActive = false;
-            isGameOver = true;
-            TimerService.OnTick -= TimerTick;
+        private async Task EndGame() {
+            isGameActive=false;
+            isGameOver=true;
+            TimerService.OnTick-=TimerTick;
             moveDotTimer?.Stop();
             moveDotTimer?.Dispose();
             await InvokeAsync(StateHasChanged);
@@ -95,76 +91,68 @@
             StartGame();
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                TimerService.OnTick -= TimerTick;
+        protected virtual void Dispose(bool disposing) {
+            if (disposing) {
+                TimerService.OnTick-=TimerTick;
                 moveDotTimer?.Stop();
                 moveDotTimer?.Dispose();
-                moveDotTimer = null;
+                moveDotTimer=null;
             }
         }
 
-        private void ResetGame(int boxWidth, int boxHeight)
-        {
-            Score = 0;
-            moveCounter = 0;
-            SetRandomTargetPosition(boxWidth, boxHeight);
-            moveDirection = _random.Next(4);
+        private void ResetGame(int boxWidth,int boxHeight) {
+            Score=0;
+            moveCounter=0;
+            SetRandomTargetPosition(boxWidth,boxHeight);
+            moveDirection=_random.Next(4);
         }
 
-        private void SetRandomTargetPosition(int boxWidth, int boxHeight)
-        {
-            int targetSizeOffset = isHardMode ? 34 : 54;
-            int x = _random.Next(4, boxWidth - targetSizeOffset);
-            int y = _random.Next(4, boxHeight - targetSizeOffset);
-            TargetPosition = (x, y);
+        private void SetRandomTargetPosition(int boxWidth,int boxHeight) {
+            int targetSizeOffset=isHardMode?34 : 54;
+            int x=_random.Next(4,boxWidth-targetSizeOffset);
+            int y=_random.Next(4,boxHeight-targetSizeOffset);
+            TargetPosition=(x,y);
         }
 
         public void MoveTarget(int boxWidth, int boxHeight)
         {
             moveCounter++;
 
-            if (moveCounter % 50 == 0)
-            {
-                moveDirection = _random.Next(4);
+            if (moveCounter%50==0) {
+                moveDirection=_random.Next(4);
             }
 
-            switch (moveDirection)
-            {
+            switch (moveDirection) {
                 case 0: // left
-                    TargetPosition = (TargetPosition.x - 1, TargetPosition.y);
-                    if (TargetPosition.x < 4)
-                        moveDirection = 1;
+                    TargetPosition=(TargetPosition.x-1,TargetPosition.y);
+                    if (TargetPosition.x<4)
+                        moveDirection=1;
                     break;
                 case 1: // right
-                    TargetPosition = (TargetPosition.x + 1, TargetPosition.y);
-                    if (TargetPosition.x > boxWidth - 34)
-                        moveDirection = 0;
+                    TargetPosition=(TargetPosition.x+1,TargetPosition.y);
+                    if (TargetPosition.x>boxWidth-34)
+                        moveDirection=0;
                     break;
                 case 2: // up
-                    TargetPosition = (TargetPosition.x, TargetPosition.y - 1);
-                    if (TargetPosition.y < 4)
-                        moveDirection = 3;
+                    TargetPosition=(TargetPosition.x,TargetPosition.y-1);
+                    if (TargetPosition.y<4)
+                        moveDirection=3;
                     break;
                 case 3: // down
-                    TargetPosition = (TargetPosition.x, TargetPosition.y + 1);
-                    if (TargetPosition.y > boxHeight - 34)
-                        moveDirection = 2;
+                    TargetPosition=(TargetPosition.x,TargetPosition.y+1);
+                    if (TargetPosition.y>boxHeight-34)
+                        moveDirection=2;
                     break;
             }
         }
 
-        private string GetTargetColor()
-        {
-            return isHardMode ? "black" : "blue";
+        private string GetTargetColor() {
+            return isHardMode?"black" : "blue";
         }
     }
 }

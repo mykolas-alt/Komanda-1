@@ -1,7 +1,12 @@
-﻿namespace Projektas.Server.Interfaces.MathGame
+﻿using Projektas.Shared.Models;
+
+namespace Projektas.Server.Interfaces.MathGame
 {
     public interface IMathGameScoreboardService
     {
-        public List<int> GetTopScores(int topCount);
-    }
+        public Task<List<UserScoreDto>> GetTopScores(int topCount);
+        public Task AddScoreToDb(UserScoreDto data);
+        public Task<int?> GetUserHighscore(string username);
+
+	}
 }

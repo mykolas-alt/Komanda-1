@@ -1,6 +1,6 @@
 ﻿namespace Projektas.Shared.Models {
-    public class GameState {
+    public class UserScoreDto {
+        public string Username {get;set;}="";
         public int Score {get;set;}
-        public int Highscore {get;set;}
     }
 }
