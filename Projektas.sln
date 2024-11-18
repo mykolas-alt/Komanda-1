@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projektas.Client", "Client\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projektas.Shared", "Shared\Projektas.Shared.csproj", "{4DF4FBDC-CA35-41CA-861A-621378D9FCFE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projektas.Tests", "Tests\Projektas.Tests.csproj", "{47BB244F-06A9-453D-894A-6A42BBD820CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4DF4FBDC-CA35-41CA-861A-621378D9FCFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DF4FBDC-CA35-41CA-861A-621378D9FCFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DF4FBDC-CA35-41CA-861A-621378D9FCFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47BB244F-06A9-453D-894A-6A42BBD820CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47BB244F-06A9-453D-894A-6A42BBD820CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47BB244F-06A9-453D-894A-6A42BBD820CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47BB244F-06A9-453D-894A-6A42BBD820CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
-@inject Projektas.Client.Services.AccountService AccountServices
-@inject Projektas.Client.Services.AccountAuthStateProvider AuthStateProvider
+@inject Projektas.Client.Interfaces.IAccountService AccountServices
+@inject Projektas.Client.Interfaces.IAccountAuthStateProvider AuthStateProvider
 @implements IDisposable
 
 <div class="page">
@@ -16,7 +16,7 @@
 	</div>
 	<div class="page middle">
 		<div class="sidebar">
-			<NavMenu />
+			<NavMenu/>
 		</div>
 		<main>
 			<article class="content px-4">

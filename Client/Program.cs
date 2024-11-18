@@ -4,19 +4,21 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Projektas.Client;
 using Projektas.Client.Services;
+using Projektas.Client.Interfaces;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<IAccountAuthStateProvider, AccountAuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, AccountAuthStateProvider>();
-builder.Services.AddScoped<AccountAuthStateProvider>();
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress=new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped(sp => new HttpClient {BaseAddress=new Uri(builder.HostEnvironment.BaseAddress)});
 builder.Services.AddScoped<AccountService>();
-builder.Services.AddScoped<MathGameService>();
-builder.Services.AddScoped<MathGameStateService>();
-builder.Services.AddScoped<TimerService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IMathGameService, MathGameService>();
+builder.Services.AddScoped<ITimerService, TimerService>();
+builder.Services.AddSingleton<Random>();
 
 await builder.Build().RunAsync();

@@ -4,133 +4,118 @@ namespace Projektas.Client.Pages
 {
     public partial class PairUp : ComponentBase
     {
-        private List<Card> cards;
-        private Card? firstSelectedCard;
-        private Card? secondSelectedCard;
-        private bool isGameActive;
-        private bool missMatch;
-        private int matchedPairsCount;
-        private int attempts;
-        private bool isHardMode;
-        private string gridStyle;
-        private bool changeIcon;
+        public List<Card> cards { get; set; }
+        public Card? firstSelectedCard { get; private set; }
+        public Card? secondSelectedCard { get; private set; }
+        public bool isGameActive { get; set; }
+        public bool missMatch { get; private set; }
+        public int matchedPairsCount { get; private set; }
+        public int attempts { get; private set; }
+        public bool isHardMode { get; private set; }
+        public string gridStyle { get; private set; }
+        public bool changeIcon { get; private set; }
 
-        string[] cardIcons = new string[]
-        {
-        "\u2660",  // Spade: ♠
-        "\u2663",  // Club: ♣
-        "\u25A1",  // Square: □ 
-        "\u25B3",  // Triangle: △ 
-        "\u2605",  // Star: ★
-        "\u2609",  // Sun: ☉
-        "\u2602",  // Umbrella: ☂
-        "\u263A",  // Smiley Face: ☺
-        "\u260E",  // Telephone: ☎ 
-        "\u2708",  // Airplane: ✈
-        "\u2709",  // Envelope: ✉
-        "\u266B",  // Music Note: ♫
-        "\u25CB",  // Circle: ○ 
-        "\u263D",  // Crescent Moon: ☽
-        "\u2714",  // Checkmark: ✔ 
-        "\u273F"   // Flower: ✿
+        string[] cardIcons=new string[] {
+            "\u2660",  // Spade: ♠
+            "\u2663",  // Club: ♣
+            "\u25A1",  // Square: □ 
+            "\u25B3",  // Triangle: △ 
+            "\u2605",  // Star: ★
+            "\u2609",  // Sun: ☉
+            "\u2602",  // Umbrella: ☂
+            "\u263A",  // Smiley Face: ☺
+            "\u260E",  // Telephone: ☎ 
+            "\u2708",  // Airplane: ✈
+            "\u2709",  // Envelope: ✉
+            "\u266B",  // Music Note: ♫
+            "\u25CB",  // Circle: ○ 
+            "\u263D",  // Crescent Moon: ☽
+            "\u2714",  // Checkmark: ✔ 
+            "\u273F"   // Flower: ✿
         };
 
-        public PairUp()
-        {
+        public PairUp() {
             ResetGame();
         }
-        private void OnDifficultyChanged(ChangeEventArgs e)
-        {
-            isHardMode = e.Value?.ToString() == "Hard";
+
+        public void OnDifficultyChanged(ChangeEventArgs e) {
+            isHardMode=e.Value?.ToString()=="Hard";
             Console.WriteLine(isHardMode);
         }
 
-        private void ResetGame()
-        {
-            attempts = 0;
-            matchedPairsCount = 0;
-            firstSelectedCard = null;
-            secondSelectedCard = null;
-            missMatch = false;
-            isGameActive = true;
+        public void ResetGame() {
+            attempts=0;
+            matchedPairsCount=0;
+            firstSelectedCard=null;
+            secondSelectedCard=null;
+            missMatch=false;
+            isGameActive=true;
             int count;
 
-            if (isHardMode)
-            {
-                gridStyle = "grid-template-columns: repeat(8, 81px);";
-                changeIcon = true;
-                count = 16;
-            }
-            else
-            {
-                gridStyle = "grid-template-columns: repeat(4, 81px);";
-                changeIcon = false;
-                count = 8;
+            if (isHardMode) {
+                gridStyle="grid-template-columns: repeat(8, 81px);";
+                changeIcon=true;
+                count=16;
+            } else {
+                gridStyle="grid-template-columns: repeat(4, 81px);";
+                changeIcon=false;
+                count=8;
             }
             
-            cards = GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
+            cards=GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
         }
-        private List<Card> GenerateCardDeck(int count)
-        {
-            var cardValues = Enumerable.Range(1, count).ToList(); 
-            var allCards = cardValues.Concat(cardValues)
-                                     .Select(value => new Card { Value = (object)value, IsMatched = false, IsSelected = false })
-                                     .ToList();
+
+        private List<Card> GenerateCardDeck(int count) {
+            var cardValues=Enumerable.Range(1, count).ToList(); 
+            var allCards=cardValues.Concat(cardValues)
+                .Select(value => new Card {Value=(object)value,IsMatched=false,IsSelected=false})
+                .ToList();
             return allCards;
         }
-        private void OnCardSelected(Card selectedCard)
-        {
-            if (!isGameActive || selectedCard.IsMatched || selectedCard == firstSelectedCard || missMatch)
+
+        public void OnCardSelected(Card selectedCard) {
+            if (!isGameActive || selectedCard.IsMatched || selectedCard==firstSelectedCard || missMatch)
                 return;
 
-            selectedCard.IsSelected = true;
+            selectedCard.IsSelected=true;
 
-            if (firstSelectedCard == null)
-            {
-                firstSelectedCard = selectedCard;
-            }
-            else if (secondSelectedCard == null)
-            {
-                secondSelectedCard = selectedCard;
+            if (firstSelectedCard==null) {
+                firstSelectedCard=selectedCard;
+            } else if (secondSelectedCard==null) {
+                secondSelectedCard=selectedCard;
                 attempts++;
 
-                if ((int)firstSelectedCard.Value == (int)secondSelectedCard.Value) // unboxing
-                {
-                    firstSelectedCard.IsMatched = true;
-                    secondSelectedCard.IsMatched = true;
+                if ((int)firstSelectedCard.Value==(int)secondSelectedCard.Value) {
+                    firstSelectedCard.IsMatched=true;
+                    secondSelectedCard.IsMatched=true;
                     matchedPairsCount++;
-                    firstSelectedCard = null;
-                    secondSelectedCard = null;
+                    firstSelectedCard=null;
+                    secondSelectedCard=null;
 
-                    if (cards.All(c => c.IsMatched))
-                    {
-                       isGameActive = false;
+                    if (cards.All(c => c.IsMatched)) {
+                       isGameActive=false;
                     }
-                }
-                else
-                {
-                    var first = firstSelectedCard;
-                    var second = secondSelectedCard;
-                    missMatch = true;
-                    Task.Delay(1000).ContinueWith(_ =>
-                    {
-                        first.IsSelected = false;
-                        second.IsSelected = false;
-                        firstSelectedCard = null;
-                        secondSelectedCard = null;
-                        missMatch = false;
-                        StateHasChanged();
-                    });
+                } else {
+                    var first=firstSelectedCard;
+                    var second=secondSelectedCard;
+                    missMatch=true;
+                    Task.Delay(1000).ContinueWith(_ => {
+                        first.IsSelected=false;
+                        second.IsSelected=false;
+                        firstSelectedCard=null;
+                        secondSelectedCard=null;
+                        missMatch=false;
+						InvokeAsync(StateHasChanged);
+					});
                 }
             }
 
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
-        public class Card
-        {
-            public required object Value { get; set; } //boxing
-            public bool IsMatched { get; set; }
-            public bool IsSelected { get; set; }
+        public class Card {
+            public required object Value {get;set;}
+            public bool IsMatched {get;set;}
+            public bool IsSelected {get;set;}
         }
     }
 }

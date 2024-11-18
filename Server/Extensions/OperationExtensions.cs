@@ -1,13 +1,9 @@
 ﻿using Projektas.Server.Enums;
 
-namespace Projektas.Server.Extensions
-{
-    public static class OperationExtensions
-    {
-        public static string GetOperationSymbol(this Operation operation)
-        {
-            switch (operation)
-            {
+namespace Projektas.Server.Extensions {
+    public static class OperationExtensions {
+        public static string GetOperationSymbol(this Operation operation) {
+            switch (operation) {
                 case Operation.Addition:
                     return "+";
                 case Operation.Subtraction:
