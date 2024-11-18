@@ -3,115 +3,123 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Projektas.Server.Interfaces.MathGame;
+using Projektas.Shared.Models;
 using System.Net.Http.Json;
 
 namespace Projektas.Tests.Controllers
 {
-    public class MathGameControllerTests : IClassFixture<WebApplicationFactory<Program>>
-    {
-        private readonly HttpClient _client;
-        private readonly WebApplicationFactory<Program> _factory;
-        private readonly Mock<IMathGameDataService> _mockMathGameDataService;
-        public MathGameControllerTests(WebApplicationFactory<Program> factory)
-        {
-            _factory = factory;
+	public class MathGameControllerTests : IClassFixture<WebApplicationFactory<Program>>
+	{
+		private readonly HttpClient _client;
+		private readonly WebApplicationFactory<Program> _factory;
+		private readonly Mock<IMathGameService> _mockMathGameService;
+		private readonly Mock<IMathGameScoreboardService> _mockMathGameScoreboardService;
 
-            // creating mock services
-            _mockMathGameDataService = new Mock<IMathGameDataService>();
-            _mockMathGameDataService.Setup(m => m.SaveData(It.IsAny<int>()));
-            _mockMathGameDataService.Setup(m => m.LoadData()).Returns(new List<int> { 1, 2, 3 });
+		public MathGameControllerTests(WebApplicationFactory<Program> factory)
+		{
+			_factory = factory;
 
-            var _mockMathGameService = new Mock<IMathGameService>();
-            _mockMathGameService.Setup(m => m.GenerateQuestion(It.IsAny<int>())).Returns("2 + 2");
-            _mockMathGameService.Setup(m => m.CheckAnswer(4)).Returns(true);
-            _mockMathGameService.Setup(m => m.GenerateOptions()).Returns(new List<int> { 1, 2, 3, 4 });
+			// creating mock services
+			_mockMathGameService = new Mock<IMathGameService>();
+			_mockMathGameService.Setup(m => m.GenerateQuestion(It.IsAny<int>())).Returns("2 + 2");
+			_mockMathGameService.Setup(m => m.CheckAnswer(4)).Returns(true);
+			_mockMathGameService.Setup(m => m.GenerateOptions()).Returns(new List<int> { 1, 2, 3, 4 });
 
-            var _mockMathGameScoreboardService = new Mock<IMathGameScoreboardService>();
-            _mockMathGameScoreboardService.Setup(m => m.GetTopScores(3)).Returns(new List<int> { 3, 2, 1 });
+			_mockMathGameScoreboardService = new Mock<IMathGameScoreboardService>();
+			_mockMathGameScoreboardService.Setup(m => m.GetTopScores(3)).ReturnsAsync(new List<UserScoreDto>
+			{
+				new UserScoreDto { Username = "User1", Score = 3 },
+				new UserScoreDto { Username = "User2", Score = 2 },
+				new UserScoreDto { Username = "User3", Score = 1 }
+			});
+			_mockMathGameScoreboardService.Setup(m => m.GetUserHighscore("testuser")).ReturnsAsync(10);
+			_mockMathGameScoreboardService.Setup(m => m.AddScoreToDb(It.IsAny<UserScoreDto>())).Returns(Task.CompletedTask);
 
-            _client = _factory.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    services.AddSingleton(_mockMathGameService.Object);
-                    services.AddSingleton(_mockMathGameScoreboardService.Object);
-                    services.AddSingleton(_mockMathGameDataService.Object);
-                });
-            })
-            .CreateClient();
-        }
+			_client = _factory.WithWebHostBuilder(builder =>
+			{
+				builder.ConfigureTestServices(services =>
+				{
+					services.AddSingleton(_mockMathGameService.Object);
+					services.AddSingleton(_mockMathGameScoreboardService.Object);
+				});
+			})
+			.CreateClient();
+		}
 
-        [Fact]
-        public async Task GetQuestion_ReturnsQuestion()
-        {
-            int score = 10;
+		[Fact]
+		public async Task GetQuestion_ReturnsQuestion()
+		{
+			int score = 10;
 
-            var response = await _client.GetAsync($"/api/mathgame/question?score={score}");
-            response.EnsureSuccessStatusCode();
-            string question = await response.Content.ReadAsStringAsync();
+			var response = await _client.GetAsync($"/api/mathgame/question?score={score}");
+			response.EnsureSuccessStatusCode();
+			string question = await response.Content.ReadAsStringAsync();
 
-            Assert.False(string.IsNullOrEmpty(question));
-            Assert.Equal("2 + 2", question);
-        }
+			Assert.False(string.IsNullOrEmpty(question));
+			Assert.Equal("2 + 2", question);
+		}
 
-        [Fact]
-        public async Task GetOptions_ReturnsAlistOfFourIntegers()
-        {
-            var response = await _client.GetAsync("/api/mathgame/options");
-            response.EnsureSuccessStatusCode();
-            List<int>? options = await response.Content.ReadFromJsonAsync<List<int>>();
+		[Fact]
+		public async Task GetOptions_ReturnsAlistOfFourIntegers()
+		{
+			var response = await _client.GetAsync("/api/mathgame/options");
+			response.EnsureSuccessStatusCode();
+			List<int>? options = await response.Content.ReadFromJsonAsync<List<int>>();
 
-            Assert.NotNull(options);
-            Assert.Equal(4, options.Count);
-            Assert.Equal(new List<int> { 1, 2, 3, 4 }, options);
-        }
+			Assert.NotNull(options);
+			Assert.Equal(4, options.Count);
+			Assert.Equal(new List<int> { 1, 2, 3, 4 }, options);
+		}
 
-        [Fact]
-        public async Task CheckAnswer_ReturnsTrue()
-        {
-            int answer = 4;
+		[Fact]
+		public async Task CheckAnswer_ReturnsTrue()
+		{
+			int answer = 4;
 
-            var response = await _client.PostAsJsonAsync("/api/mathgame/check-answer", answer);
-            response.EnsureSuccessStatusCode();
-            bool result = await response.Content.ReadFromJsonAsync<bool>();
+			var response = await _client.PostAsJsonAsync("/api/mathgame/check-answer", answer);
+			response.EnsureSuccessStatusCode();
+			bool result = await response.Content.ReadFromJsonAsync<bool>();
 
-            Assert.True(result);
-        }
+			Assert.True(result);
+		}
 
-        [Fact]
-        public async Task GetTopScores_ReturnsTopList()
-        {
-            int topCount = 3;
+		[Fact]
+		public async Task SaveScore_SavesScoreSuccessfully()
+		{
+			var data = new UserScoreDto { Username = "testuser", Score = 5 };
 
-            var response = await _client.GetAsync($"/api/mathgame/top?topcount={topCount}");
-            response.EnsureSuccessStatusCode();
-            List<int>? topScores = await response.Content.ReadFromJsonAsync<List<int>>();
+			var response = await _client.PostAsJsonAsync("/api/mathgame/save-score", data);
 
-            Assert.NotNull(topScores);
-            Assert.Equal(topCount, topScores.Count);
-            Assert.Equal(new List<int> { 3, 2, 1 }, topScores);
-        }
+			response.EnsureSuccessStatusCode();
+			_mockMathGameScoreboardService.Verify(m => m.AddScoreToDb(It.Is<UserScoreDto>(d => d.Username == "testuser" && d.Score == 5)), Times.Once);
+		}
 
-        [Fact]
-        public async Task SaveData_SavesDataSuccessfully()
-        {
-            int data = 5;
+		[Fact]
+		public async Task GetUserHighscore_ReturnsHighscore()
+		{
+			string username = "testuser";
 
-            var response = await _client.PostAsJsonAsync("/api/mathgame/save", data);
+			var response = await _client.GetAsync($"/api/mathgame/highscore?username={username}");
+			response.EnsureSuccessStatusCode();
+			int highscore = await response.Content.ReadFromJsonAsync<int>();
 
-            response.EnsureSuccessStatusCode();
-            _mockMathGameDataService.Verify(m => m.SaveData(data), Times.Once);
-        }
+			Assert.Equal(10, highscore);
+		}
 
-        [Fact]
-        public async Task LoadData_ReturnsListOfIntegers()
-        {
-            var response = await _client.GetAsync("/api/mathgame/load");
-            response.EnsureSuccessStatusCode();
-            List<int>? data = await response.Content.ReadFromJsonAsync<List<int>>();
+		[Fact]
+		public async Task GetTopScores_ReturnsTopList()
+		{
+			int topCount = 3;
 
-            Assert.NotNull(data);
-            Assert.Equal(new List<int> { 1, 2, 3 }, data);
-        }
-    }
+			var response = await _client.GetAsync($"/api/mathgame/top-score?topCount={topCount}");
+			response.EnsureSuccessStatusCode();
+			List<UserScoreDto>? topScores = await response.Content.ReadFromJsonAsync<List<UserScoreDto>>();
+
+			Assert.NotNull(topScores);
+			Assert.Equal(topCount, topScores.Count);
+			Assert.Equal(3, topScores[0].Score);
+			Assert.Equal(2, topScores[1].Score);
+			Assert.Equal(1, topScores[2].Score);
+		}
+	}
 }

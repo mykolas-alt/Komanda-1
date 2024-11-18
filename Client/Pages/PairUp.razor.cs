@@ -38,7 +38,7 @@ namespace Projektas.Client.Pages
             ResetGame();
         }
 
-        private void OnDifficultyChanged(ChangeEventArgs e) {
+        public void OnDifficultyChanged(ChangeEventArgs e) {
             isHardMode=e.Value?.ToString()=="Hard";
             Console.WriteLine(isHardMode);
         }

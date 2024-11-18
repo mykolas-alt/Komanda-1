@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Projektas.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0cb6d74ff33f13a1d27c731b5b757c6ef048a672")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+113b50db9ecbfee48bce85222cd027d723e212d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Projektas.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Projektas.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

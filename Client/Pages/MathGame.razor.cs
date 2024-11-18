@@ -12,9 +12,9 @@
         public bool isTimesUp {get;private set;}=false;
         public List<int>? options {get; private set;}
         public bool? isCorrect {get; private set;}=null;
-		private List<UserScoreDto>? topScores;
+		public List<UserScoreDto>? topScores { get; private set; }
 		public string? username=null;
-		private int score=0;
+        public int score {get;private set;}=0;
 		private int highscore=0;
 
         [Inject]
@@ -32,7 +32,7 @@
 		}
 
 		private async Task LoadUsernameAsync() {
-			username=await ((AccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
+			username=await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
 			StateHasChanged();
 		}
 
@@ -60,7 +60,7 @@
             options = await MathGameService.GetOptionsAsync();
         }
 
-        private async Task CheckAnswer(int option) {
+        public async Task CheckAnswer(int option) {
             if(question!=null) {
                 isCorrect=await MathGameService.CheckAnswerAsync(option);
                 if(isCorrect==false) {

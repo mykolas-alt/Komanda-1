@@ -49,7 +49,6 @@ namespace Projektas.Tests.Client_Tests.Pages
 			await cut.InvokeAsync(() => cut.Instance.LogInEvent());
 			var authState = await mockAuthStateProvider.Object.GetAuthenticationStateAsync();
 
-
 			mockAccountService.Verify(s => s.LogIn(It.IsAny<User>()), Times.Once);
 			Assert.NotNull(authState.User.Identity);
 			Assert.True(authState.User.Identity.IsAuthenticated);
@@ -84,7 +83,7 @@ namespace Projektas.Tests.Client_Tests.Pages
 		}
 
 		[Fact]
-		public void SignUpEvent_ShouldCreateAccount_WhenFieldsAreValid()
+		public async Task SignUpEvent_ShouldCreateAccount_WhenFieldsAreValid()
 		{
 			var cut = RenderComponent<Account>();
 
@@ -92,14 +91,15 @@ namespace Projektas.Tests.Client_Tests.Pages
 			cut.Instance.newAccountSurname = "Doe";
 			cut.Instance.newAccountUsername = "newUser";
 			cut.Instance.newAccountPassword = "newPassword";
-			mockAccountService.Setup(s => s.CreateAccount(It.IsAny<User>())).Returns(Task.CompletedTask);
+			mockAccountService.Setup(s => s.CreateAccountAsync(It.IsAny<User>())).ReturnsAsync(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
 
-			cut.InvokeAsync(() => cut.Instance.SignUpEvent());
+			await cut.InvokeAsync(() => cut.Instance.SignUpEvent());
 
-			mockAccountService.Verify(a => a.CreateAccount(It.IsAny<User>()), Times.Once);
+			mockAccountService.Verify(a => a.CreateAccountAsync(It.IsAny<User>()), Times.Once);
 		}
 
-		[Fact] public void SignUpEvent_ShouldNotCreateAccountWhenFieldsAreEmpty()
+		[Fact]
+		public async Task SignUpEvent_ShouldNotCreateAccountWhenFieldsAreEmpty()
 		{
 			var cut = RenderComponent<Account>();
 
@@ -108,20 +108,20 @@ namespace Projektas.Tests.Client_Tests.Pages
 			cut.Instance.newAccountUsername = "";
 			cut.Instance.newAccountPassword = "";
 
-			cut.InvokeAsync(() => cut.Instance.SignUpEvent());
+			await cut.InvokeAsync(() => cut.Instance.SignUpEvent());
 
 			Assert.False(cut.Instance.isNewFieldsFilled);
 		}
 
 		[Fact]
-		public void UsernameChange_ShouldSetIsUsernameNewToFalse_WhenUsernameExists()
+		public async Task UsernameChange_ShouldSetIsUsernameNewToFalse_WhenUsernameExists()
 		{
 			var changeEvent = new ChangeEventArgs { Value = "existinguser" };
 			mockAccountService.Setup(s => s.GetUsernames()).ReturnsAsync(new List<string> { "existinguser" });
 
 			var cut = RenderComponent<Account>();
 
-			cut.InvokeAsync(() => cut.Instance.UsernameChange(changeEvent));
+			await cut.InvokeAsync(() => cut.Instance.UsernameChange(changeEvent));
 
 			Assert.False(cut.Instance.isUsernameNew);
 		}

@@ -1,34 +1,71 @@
 ﻿using Moq;
-using Projektas.Server.Interfaces.MathGame;
+using Projektas.Server.Interfaces;
 using Projektas.Server.Services.MathGame;
+using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Services.MathGameTests
 {
     public class MathGameScoreboardServiceTests
     {
-        private readonly Mock<IMathGameDataService> _mockMathDataService;
+        private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly MathGameScoreboardService _mathGameScoreBoardService;
 
         public MathGameScoreboardServiceTests()
         {
-            _mockMathDataService = new Mock<IMathGameDataService>();
-            _mathGameScoreBoardService = new MathGameScoreboardService(_mockMathDataService.Object);
+            _mockUserRepository = new Mock<IUserRepository>();
+            _mathGameScoreBoardService = new MathGameScoreboardService(_mockUserRepository.Object);
         }
 
-        [Theory]
-        [InlineData(4, new int[] { }, new int[] { })]
-        [InlineData(3, new int[] { 20, 7, 12, 18, 3}, new int[] {20, 18, 12})]
-        [InlineData(5, new int[] { 2, 7, 4, 18, 3, 1, 6, 7 }, new int[] { 18, 7, 7, 6, 4 })]
-        [InlineData(5, new int[] { 9, 9, 9, 9, 9, 9, 9, 9 }, new int[] { 9, 9, 9, 9, 9 })]
-        [InlineData(10, new int[] { 16, 21, 4, 6, 9 }, new int[] { 21, 16, 9, 6, 4 })]
-        public void GetTopScores_Returns_TopCountDescendingOrderedlistOfScores(int topCount, int[] numbers, int[] expectedResults)
-        {
-            List<int> expectedResultList = new List<int>(expectedResults);
-            _mockMathDataService.Setup(m => m.LoadData()).Returns(new List<int>(numbers));
+		[Fact]
+		public async Task AddScoreToDb_ShouldCallAddMathGameScoreToUserAsync()
+		{
+			// Arrange
+			var userScore = new UserScoreDto { Username = "testuser", Score = 100 };
 
-            List<int> result = _mathGameScoreBoardService.GetTopScores(topCount);
+			// Act
+			await _mathGameScoreBoardService.AddScoreToDb(userScore);
 
-            Assert.Equal(expectedResultList, result);
-        }
-    }
+			// Assert
+			_mockUserRepository.Verify(repo => repo.AddMathGameScoreToUserAsync(userScore.Username, userScore.Score), Times.Once);
+		}
+
+		[Fact]
+		public async Task GetUserHighscore_ShouldReturnHighscore()
+		{
+			// Arrange
+			var username = "testuser";
+			var expectedHighscore = 200;
+			_mockUserRepository.Setup(repo => repo.GetMathGameHighscoreFromUserAsync(username)).ReturnsAsync(expectedHighscore);
+
+			// Act
+			var result = await _mathGameScoreBoardService.GetUserHighscore(username);
+
+			// Assert
+			Assert.Equal(expectedHighscore, result);
+		}
+
+		[Fact]
+		public async Task GetTopScores_ShouldReturnTopScores()
+		{
+			// Arrange
+			var topCount = 3;
+			var userScores = new List<UserScoreDto>
+			{
+				new UserScoreDto { Username = "user1", Score = 300 },
+				new UserScoreDto { Username = "user2", Score = 250 },
+				new UserScoreDto { Username = "user3", Score = 200 },
+				new UserScoreDto { Username = "user4", Score = 150 }
+			};
+			_mockUserRepository.Setup(repo => repo.GetAllMathGameScoresAsync()).ReturnsAsync(userScores);
+
+			// Act
+			var result = await _mathGameScoreBoardService.GetTopScores(topCount);
+
+			// Assert
+			Assert.Equal(topCount, result.Count);
+			Assert.Equal(userScores[0], result[0]);
+			Assert.Equal(userScores[1], result[1]);
+			Assert.Equal(userScores[2], result[2]);
+		}
+	}
 }
