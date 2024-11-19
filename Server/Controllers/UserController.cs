@@ -30,6 +30,11 @@ namespace Projektas.Server.Controllers {
 			return Unauthorized();
 		}
 
+		[HttpDelete("logoff")]
+		public void LogOff([FromQuery]string username) {
+			_userService.LogOffFromUser(username);
+		}
+
 		[HttpGet("usernames")]
 		public async Task<ActionResult<List<string>>> GetUsernames() {
 			return await _userService.GetUsernamesAsync();

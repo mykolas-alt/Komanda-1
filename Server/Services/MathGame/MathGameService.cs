@@ -2,10 +2,8 @@
 using System.Text;
 using Projektas.Server.Extensions;
 using Projektas.Server.Interfaces.MathGame;
-using System;
 
-namespace Projektas.Server.Services.MathGame
-{
+namespace Projektas.Server.Services.MathGame {
     public class MathGameService : IMathGameService {
         private readonly Random _random = new();
         private readonly IMathCalculationService _mathCalculationService;
@@ -15,8 +13,7 @@ namespace Projektas.Server.Services.MathGame
         public List<int> numbers=new();
         public List<Operation> operations=new();
 
-        public MathGameService(IMathCalculationService mathCalculationService, IMathGenerationService mathGenerationService)
-        {
+        public MathGameService(IMathCalculationService mathCalculationService,IMathGenerationService mathGenerationService) {
             _mathCalculationService=mathCalculationService;
             _mathGenerationService=mathGenerationService;
         }
@@ -45,7 +42,7 @@ namespace Projektas.Server.Services.MathGame
             int limit=Math.Max(2,Answer/10); // adjusts the limit to be a smaller range
             HashSet<int> options=new();
             options.Add(Answer);
-            while (options.Count<4) {
+            while(options.Count<4) {
                 int option=_random.Next(Answer-limit,Answer+limit+1);
                 options.Add(option);
             }
@@ -55,7 +52,7 @@ namespace Projektas.Server.Services.MathGame
         private string BuildQuestionToString() {
             StringBuilder questionBuilder=new();
             questionBuilder.Append(numbers[0]);
-            for (int i=0;i<operations.Count;i++) {
+            for(int i=0;i<operations.Count;i++) {
                 questionBuilder.Append($" {operations[i].GetOperationSymbol()} {numbers[i+1]}");
             }
             return questionBuilder.ToString();

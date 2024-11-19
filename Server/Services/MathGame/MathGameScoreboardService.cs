@@ -21,7 +21,7 @@ namespace Projektas.Server.Services.MathGame {
             List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync();
             List<UserScoreDto> topScores=new List<UserScoreDto>();
             
-            for (int i=0;i<topCount && i<userScores.Count;i++) {
+            for(int i=0;i<topCount && i<userScores.Count;i++) {
                 topScores.Add(userScores[i]);
             }
             

@@ -2,8 +2,7 @@
 using System.Net.Http.Json;
 using Projektas.Client.Interfaces;
 
-namespace Projektas.Client.Services
-{
+namespace Projektas.Client.Services {
     public class AccountService : IAccountService {
 		private readonly HttpClient _httpClient;
 		private readonly ILocalStorageService _localStorage;
@@ -26,6 +25,10 @@ namespace Projektas.Client.Services
 			}
 
 			return "";
+		}
+
+		public async void LogOff(string username) {
+			await _httpClient.DeleteAsync($"api/user/logoff?username={username}");
 		}
 
 		public async Task<List<string>> GetUsernames() {

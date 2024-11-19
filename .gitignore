@@ -6,5 +6,15 @@
 /Shared/bin
 /Shared/obj
 /obj
-/Tests/obj
 /Tests/bin
+/Tests/obj
+/Tests/bin/Debug/net8.0/CoverletSourceRootsMapping_Projektas.Tests
+/Tests/obj/Debug/net8.0/Projektas.Tests.AssemblyInfo.cs
+/Tests/obj/Debug/net8.0/Projektas.Tests.AssemblyInfoInputs.cache
+/Tests/obj/Debug/net8.0/Projektas.Tests.assets.cache
+/Tests/obj/Debug/net8.0/Projektas.Tests.csproj.AssemblyReference.cache
+/Tests/obj/Debug/net8.0/Projektas.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/Tests/obj/project.nuget.cache
+/Tests/obj/Projektas.Tests.csproj.nuget.dgspec.json
+/Tests/obj/project.assets.json
+/Tests/obj/Projektas.Tests.csproj.nuget.g.props

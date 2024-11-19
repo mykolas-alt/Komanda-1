@@ -1,18 +1,14 @@
-﻿namespace Projektas.Client.Pages
-{
-    using Microsoft.AspNetCore.Components;
-    using Projektas.Client.Interfaces;
-    using Projektas.Shared.Models;
-	using Projektas.Client.Services;
+﻿using Microsoft.AspNetCore.Components;
+using Projektas.Client.Interfaces;
+using Projektas.Shared.Models;
 
-
-	public partial class MathGame
-    {
+namespace Projektas.Client.Pages {
+	public partial class MathGame {
         public string? question {get;private set;}=null;
         public bool isTimesUp {get;private set;}=false;
-        public List<int>? options {get; private set;}
-        public bool? isCorrect {get; private set;}=null;
-		public List<UserScoreDto>? topScores { get; private set; }
+        public List<int>? options {get;private set;}
+        public bool? isCorrect {get;private set;}=null;
+		public List<UserScoreDto>? topScores {get;private set;}
 		public string? username=null;
         public int score {get;private set;}=0;
 		private int highscore=0;
@@ -53,18 +49,17 @@
             await GenerateQuestion();
         }
 
-        public async Task GenerateQuestion()
-        {
-            isCorrect = null;
-            question = await MathGameService.GetQuestionAsync(score);
-            options = await MathGameService.GetOptionsAsync();
+        public async Task GenerateQuestion() {
+            isCorrect=null;
+            question=await MathGameService.GetQuestionAsync(score);
+            options=await MathGameService.GetOptionsAsync();
         }
 
         public async Task CheckAnswer(int option) {
             if(question!=null) {
                 isCorrect=await MathGameService.CheckAnswerAsync(option);
                 if(isCorrect==false) {
-                    if (TimerService.RemainingTime>5) {
+                    if(TimerService.RemainingTime>5) {
                         TimerService.RemainingTime=TimerService.RemainingTime-5;
                     } else {
                         TimerService.RemainingTime=0;
@@ -75,8 +70,7 @@
                     score++;
                 }
                 await GenerateQuestion();
-                await InvokeAsync(() =>
-                {
+                await InvokeAsync(() => {
                     StateHasChanged();
                 });
             }

@@ -1,11 +1,9 @@
 ﻿using Projektas.Server.Enums;
 using Projektas.Server.Interfaces.MathGame;
 
-namespace Projektas.Server.Services.MathGame
-{
+namespace Projektas.Server.Services.MathGame {
     public class MathCalculationService : IMathCalculationService{
-        public int CalculateAnswer(List<int> numbers, List<Operation> operations)
-        {
+        public int CalculateAnswer(List<int> numbers, List<Operation> operations) {
             // handles multiplication and division
             List<int> processedNumbers=new(numbers);
             List<Operation> processedOperations=new(operations);
@@ -20,8 +18,8 @@ namespace Projektas.Server.Services.MathGame
 
         // handles multiplication and division
         private static void HandleMultiplicationAndDivision(List<int> processedNumbers,List<Operation> processedOperations) {
-            for (int i=0;i<processedOperations.Count;i++) {
-                if (processedOperations[i]==Operation.Multiplication || processedOperations[i]==Operation.Division) {
+            for(int i=0;i<processedOperations.Count;i++) {
+                if(processedOperations[i]==Operation.Multiplication || processedOperations[i]==Operation.Division) {
                     int left=processedNumbers[i];
                     int right=processedNumbers[i+1];
                     int result=PerformOperation(left,right,processedOperations[i]);
@@ -38,7 +36,7 @@ namespace Projektas.Server.Services.MathGame
         // handles addition and subtraction
         private static int HandleAdditionAndSubtraction(List<int> processedNumbers,List<Operation> processedOperations) {
             int result=processedNumbers[0];
-            for (int i=0;i<processedOperations.Count;i++) {
+            for(int i=0;i<processedOperations.Count;i++) {
                 int right=processedNumbers[i+1];
                 result=PerformOperation(left: result,right,processedOperations[i]);
             }
@@ -47,7 +45,7 @@ namespace Projektas.Server.Services.MathGame
 
         // performs calculations by operation
         private static int PerformOperation(int left,int right,Operation operation) {
-            switch (operation) {
+            switch(operation) {
                 case Operation.Multiplication:
                     return left*right;
                 case Operation.Division:

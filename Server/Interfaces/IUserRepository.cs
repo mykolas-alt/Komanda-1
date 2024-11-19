@@ -5,6 +5,6 @@ namespace Projektas.Server.Interfaces {
         Task CreateUserAsync(User user);
         Task<List<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(int id);
-        Task<bool> ValidateUserAsync(string username, string password);
+        Task<bool> ValidateUserAsync(string username,string password);
     }
 }

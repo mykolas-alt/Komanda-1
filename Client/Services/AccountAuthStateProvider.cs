@@ -4,7 +4,7 @@ using System.Text.Json;
 using Projektas.Client.Interfaces;
 
 namespace Projektas.Client.Services {
-	public class AccountAuthStateProvider:AuthenticationStateProvider, IAccountAuthStateProvider {
+	public class AccountAuthStateProvider : AuthenticationStateProvider,IAccountAuthStateProvider {
 		private readonly ILocalStorageService _localStorage;
 		private readonly HttpClient _httpClient;
 		public string? Username {get;private set;}=null;

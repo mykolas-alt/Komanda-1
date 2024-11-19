@@ -1,9 +1,7 @@
 ﻿using Projektas.Client.Interfaces;
 
-namespace Projektas.Client.Services
-{
-    public class TimerService : ITimerService
-    {
+namespace Projektas.Client.Services {
+    public class TimerService : ITimerService {
         private Timer? _timer;
         public int RemainingTime {get;set;}
         public event Action? OnTick;

@@ -1,45 +1,40 @@
-﻿namespace Projektas.Client.Pages
-{
+﻿namespace Projektas.Client.Pages {
     using Microsoft.AspNetCore.Components;
     using Projektas.Client.Interfaces;
     using System;
     using System.Threading.Tasks;
 
-    public partial class AimTrainer : IDisposable
-    {
-        public bool isGameActive { get; private set; } = false;
-        public bool isGameOver { get; private set; } = false;
-        public bool isHardMode { get; private set; } = false;
+    public partial class AimTrainer : IDisposable {
+        public bool isGameActive {get;private set;}=false;
+        public bool isGameOver {get;private set;}=false;
+        public bool isHardMode {get;private set;}=false;
         private System.Timers.Timer? moveDotTimer;
 
-        public (int x, int y) TargetPosition { get; set; }
-        public int Score { get; private set; }
-        public int moveCounter { get; private set; }
-        public int moveDirection { get; set; } // 0 = left, 1 = right, 2 = up, 3 = down
+        public (int x,int y) TargetPosition {get;set;}
+        public int Score {get;private set;}
+        public int moveCounter {get;private set;}
+        public int moveDirection {get;set;} // 0 = left, 1 = right, 2 = up, 3 = down
 
         [Inject]
-        public Random _random { get; set; }
+        public Random _random {get;set;}
 
         [Inject]
-        public ITimerService TimerService { get; set; }
+        public ITimerService TimerService {get;set;}
 
-        public void OnDifficultyChanged(ChangeEventArgs e)
-        {
-            if (!isGameActive)
-            {
-                isHardMode = e.Value?.ToString() == "Hard";
+        public void OnDifficultyChanged(ChangeEventArgs e) {
+            if(!isGameActive) {
+                isHardMode=e.Value?.ToString()=="Hard";
             }
         }
 
-        public void StartGame()
-        {
+        public void StartGame() {
             isGameActive=true;
             isGameOver=false;
             ResetGame(1000,400);
             TimerService.Start(30);
             TimerService.OnTick+=TimerTick;
 
-            if (isHardMode) {
+            if(isHardMode) {
                 StartMovingDotTimer();
             }
             InvokeAsync(StateHasChanged);
@@ -54,22 +49,16 @@
             moveDotTimer.Start();
         }
 
-        public void TimerTick()
-        {
-            if (TimerService.RemainingTime==0)
-            {
+        public void TimerTick() {
+            if(TimerService.RemainingTime==0) {
                 EndGame();
-            }
-            else
-            {
+            } else {
                 InvokeAsync(StateHasChanged);
             }
         }
 
-        public void OnTargetClicked()
-        {
-            if (TimerService.RemainingTime>0)
-            {
+        public void OnTargetClicked() {
+            if(TimerService.RemainingTime>0) {
                 Score++;
                 SetRandomTargetPosition(1000,400);
                 InvokeAsync(StateHasChanged);
@@ -85,9 +74,8 @@
             await InvokeAsync(StateHasChanged);
         }
 
-        public void TryAgain()
-        {
-            isGameOver = false;
+        public void TryAgain() {
+            isGameOver=false;
             StartGame();
         }
 
@@ -97,7 +85,7 @@
         }
 
         protected virtual void Dispose(bool disposing) {
-            if (disposing) {
+            if(disposing) {
                 TimerService.OnTick-=TimerTick;
                 moveDotTimer?.Stop();
                 moveDotTimer?.Dispose();
@@ -119,33 +107,32 @@
             TargetPosition=(x,y);
         }
 
-        public void MoveTarget(int boxWidth, int boxHeight)
-        {
+        public void MoveTarget(int boxWidth,int boxHeight) {
             moveCounter++;
 
-            if (moveCounter%50==0) {
+            if(moveCounter%50==0) {
                 moveDirection=_random.Next(4);
             }
 
-            switch (moveDirection) {
+            switch(moveDirection) {
                 case 0: // left
                     TargetPosition=(TargetPosition.x-1,TargetPosition.y);
-                    if (TargetPosition.x<4)
+                    if(TargetPosition.x<4)
                         moveDirection=1;
                     break;
                 case 1: // right
                     TargetPosition=(TargetPosition.x+1,TargetPosition.y);
-                    if (TargetPosition.x>boxWidth-34)
+                    if(TargetPosition.x>boxWidth-34)
                         moveDirection=0;
                     break;
                 case 2: // up
                     TargetPosition=(TargetPosition.x,TargetPosition.y-1);
-                    if (TargetPosition.y<4)
+                    if(TargetPosition.y<4)
                         moveDirection=3;
                     break;
                 case 3: // down
                     TargetPosition=(TargetPosition.x,TargetPosition.y+1);
-                    if (TargetPosition.y>boxHeight-34)
+                    if(TargetPosition.y>boxHeight-34)
                         moveDirection=2;
                     break;
             }

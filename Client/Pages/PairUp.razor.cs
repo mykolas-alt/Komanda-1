@@ -4,16 +4,16 @@ namespace Projektas.Client.Pages
 {
     public partial class PairUp : ComponentBase
     {
-        public List<Card> cards { get; set; }
-        public Card? firstSelectedCard { get; private set; }
-        public Card? secondSelectedCard { get; private set; }
-        public bool isGameActive { get; set; }
-        public bool missMatch { get; private set; }
-        public int matchedPairsCount { get; private set; }
-        public int attempts { get; private set; }
-        public bool isHardMode { get; private set; }
-        public string gridStyle { get; private set; }
-        public bool changeIcon { get; private set; }
+        public List<Card> cards {get;set;}
+        public Card? firstSelectedCard {get;private set;}
+        public Card? secondSelectedCard {get;private set;}
+        public bool isGameActive {get;set;}
+        public bool missMatch {get;private set;}
+        public int matchedPairsCount {get;private set;}
+        public int attempts {get;private set;}
+        public bool isHardMode {get;private set;}
+        public string gridStyle {get;private set;}
+        public bool changeIcon {get;private set;}
 
         string[] cardIcons=new string[] {
             "\u2660",  // Spade: ♠
@@ -52,7 +52,7 @@ namespace Projektas.Client.Pages
             isGameActive=true;
             int count;
 
-            if (isHardMode) {
+            if(isHardMode) {
                 gridStyle="grid-template-columns: repeat(8, 81px);";
                 changeIcon=true;
                 count=16;
@@ -74,25 +74,25 @@ namespace Projektas.Client.Pages
         }
 
         public void OnCardSelected(Card selectedCard) {
-            if (!isGameActive || selectedCard.IsMatched || selectedCard==firstSelectedCard || missMatch)
+            if(!isGameActive || selectedCard.IsMatched || selectedCard==firstSelectedCard || missMatch)
                 return;
 
             selectedCard.IsSelected=true;
 
-            if (firstSelectedCard==null) {
+            if(firstSelectedCard==null) {
                 firstSelectedCard=selectedCard;
-            } else if (secondSelectedCard==null) {
+            } else if(secondSelectedCard==null) {
                 secondSelectedCard=selectedCard;
                 attempts++;
 
-                if ((int)firstSelectedCard.Value==(int)secondSelectedCard.Value) {
+                if((int)firstSelectedCard.Value==(int)secondSelectedCard.Value) {
                     firstSelectedCard.IsMatched=true;
                     secondSelectedCard.IsMatched=true;
                     matchedPairsCount++;
                     firstSelectedCard=null;
                     secondSelectedCard=null;
 
-                    if (cards.All(c => c.IsMatched)) {
+                    if(cards.All(c => c.IsMatched)) {
                        isGameActive=false;
                     }
                 } else {

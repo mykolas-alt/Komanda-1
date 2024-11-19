@@ -5,15 +5,16 @@ using System.Text;
 using Projektas.Server.Interfaces;
 using Projektas.Shared.Models;
 
-namespace Projektas.Server.Services
-{
-    public class UserService : IUserService{
+namespace Projektas.Server.Services {
+    public class UserService : IUserService {
 		private readonly IConfiguration _configuration;
 		private readonly IUserRepository _userRepository;
+		private readonly UserTrackingService _userTrackingService;
 
-		public UserService(IConfiguration configuration,IUserRepository userRepository) {
+		public UserService(IConfiguration configuration,IUserRepository userRepository,UserTrackingService userTrackingService) {
 			_configuration=configuration;
 			_userRepository=userRepository;
+			_userTrackingService=userTrackingService;
 		}
 
 		public async Task CreateUser(User newUser) {
@@ -22,7 +23,14 @@ namespace Projektas.Server.Services
 
 		public async Task<bool> LogInToUser(User userInfo) {
 			bool userMached=await _userRepository.ValidateUserAsync(userInfo.Username,userInfo.Password);
+			if(userMached) {
+				_userTrackingService.AddOrUpdateUser(userInfo.Username);
+			}
 			return userMached;
+		}
+
+		public void LogOffFromUser(string username) {
+			_userTrackingService.AddOrUpdateUser(username);
 		}
 
 		public string GenerateJwtToken(User user) {

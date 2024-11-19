@@ -1,5 +1,4 @@
-﻿using System.Data;
-using Projektas.Shared.Models;
+﻿using Projektas.Shared.Models;
 using Projektas.Server.Database;
 using Projektas.Server.Exceptions;
 using Microsoft.EntityFrameworkCore;

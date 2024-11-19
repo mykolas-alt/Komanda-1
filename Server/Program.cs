@@ -21,16 +21,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton<IMathGameService, MathGameService>();
-builder.Services.AddSingleton<IMathCalculationService, MathCalculationService>();
-builder.Services.AddSingleton<IMathGenerationService, MathGenerationService>();
-builder.Services.AddScoped<IMathGameScoreboardService, MathGameScoreboardService>();
+builder.Services.AddSingleton<IMathGameService,MathGameService>();
+builder.Services.AddSingleton<IMathCalculationService,MathCalculationService>();
+builder.Services.AddSingleton<IMathGenerationService,MathGenerationService>();
+builder.Services.AddScoped<IMathGameScoreboardService,MathGameScoreboardService>();
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped(typeof(IScoreRepository<>), typeof(ScoreRepository<>));
-builder.Services.AddScoped<IUserService, UserService>(provider => new UserService(
+builder.Services.AddSingleton<UserTrackingService>();
+builder.Services.AddScoped<IUserService,UserService>(provider => new UserService(
 	provider.GetRequiredService<IConfiguration>(),
-	provider.GetRequiredService<IUserRepository>()
+	provider.GetRequiredService<IUserRepository>(),
+	provider.GetRequiredService<UserTrackingService>()
 ));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
