@@ -1,65 +1,120 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.TestHost;
-using Moq;
-using Projektas.Server.Interfaces;
 using Projektas.Shared.Models;
 using System.Net.Http.Json;
+using Projektas.Tests.Server_Tests;
+using Projektas.Server.Database;
+using Microsoft.EntityFrameworkCore;
 
-namespace Projektas.Tests.Controllers {
-	public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>> {
+namespace Projektas.Tests.Controllers
+{
+	public class UserControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
+	{
 		private readonly HttpClient _client;
-		private readonly WebApplicationFactory<Program> _factory;
-		private readonly Mock<IUserService> _mockUserService;
+		private readonly CustomWebApplicationFactory<Program> _factory;
 
-		public UserControllerTests(WebApplicationFactory<Program> factory) {
-			_factory=factory;
+		public UserControllerTests(CustomWebApplicationFactory<Program> factory)
+		{
+			_factory = factory;
 
-			_mockUserService=new Mock<IUserService>();
-			_mockUserService.Setup(m => m.LogInToUser(It.IsAny<User>())).ReturnsAsync(true);
-			_mockUserService.Setup(m => m.GenerateJwtToken(It.IsAny<User>())).Returns("fake-jwt-token");
-			_mockUserService.Setup(m => m.GetUsernamesAsync()).ReturnsAsync(new List<string> { "user1", "user2" });
-
-			_client = _factory.WithWebHostBuilder(builder => {
-				builder.ConfigureTestServices(services => {
-					services.AddSingleton(_mockUserService.Object);
-				});
-			})
-			.CreateClient();
+			_client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+			{
+				AllowAutoRedirect = false
+			});
 		}
 
 		[Fact]
-		public async Task LogIn_ReturnsToken_WhenCredentialsAreValid() {
-			var user=new User {Username="test",Password="password"};
+		public async Task LogIn_ReturnsToken_WhenCredentialsAreValid()
+		{
+			using (var scope = _factory.Services.CreateScope())
+			{
+				var scopedServices = scope.ServiceProvider;
+				var db = scopedServices.GetRequiredService<UserDbContext>();
 
-			var response=await _client.PostAsJsonAsync("api/user/login",user);
+				
+				db.Database.EnsureCreated();
+				Seeding.InitializeTestDB(db);
+			
+			}
+
+			var user = new User { Username = "johndoe", Password = "password123" };
+
+			var response = await _client.PostAsJsonAsync("api/user/login", user);
 			response.EnsureSuccessStatusCode();
-			var result=await response.Content.ReadFromJsonAsync<LoginResponse>();
+
+			Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
+
+			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
 
 			Assert.NotNull(result);
-			Assert.Equal("fake-jwt-token",result.Token);
+			Assert.NotNull(result.Token);
 		}
 
 		[Fact]
-		public async Task CreateUser_ReturnsOk() {
-			var newUser=new User{Username="newuser",Password="password"};
+		public async Task CreateUser_ReturnsOk_AddsNewUserToTheDatabase()
+		{
+			using (var scope = _factory.Services.CreateScope())
+			{
+				var scopedServices = scope.ServiceProvider;
+				var db = scopedServices.GetRequiredService<UserDbContext>();
+
+				db.Database.EnsureCreated();
+				Seeding.InitializeTestDB(db);
+
+			}
+
+			var newUser = new User { Username = "newuser", Password = "password" };
 
 			var response=await _client.PostAsJsonAsync("api/user/create_user",newUser);
 			response.EnsureSuccessStatusCode();
 
-			_mockUserService.Verify(m => m.CreateUser(It.Is<User>(u => u.Username==newUser.Username && u.Password==newUser.Password)),Times.Once);
+			Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
+
+			using (var scope = _factory.Services.CreateScope())
+			{
+				var scopedServices = scope.ServiceProvider;
+				var db = scopedServices.GetRequiredService<UserDbContext>();
+				var createdUser = await db.Users.FirstOrDefaultAsync(u => u.Username == newUser.Username);
+
+				Assert.NotNull(createdUser);
+				Assert.Equal(newUser.Username, createdUser.Username);
+				Assert.Equal(newUser.Password, createdUser.Password);
+			}
 		}
 
 		[Fact]
-		public async Task GetUsernames_ReturnsListOfUsernames() {
-			var response=await _client.GetAsync("api/user/usernames");
+		public async Task GetUsernames_ReturnsListOfUsernamesFromTheDatabase()
+		{
+			using (var scope = _factory.Services.CreateScope())
+			{
+				var scopedServices = scope.ServiceProvider;
+				var db = scopedServices.GetRequiredService<UserDbContext>();
+
+				db.Database.EnsureCreated();
+				Seeding.InitializeTestDB(db);
+			}
+
+			var response = await _client.GetAsync("api/user/usernames");
 			response.EnsureSuccessStatusCode();
 			var usernames=await response.Content.ReadFromJsonAsync<List<string>>();
 
-			Assert.NotNull(usernames);
-			Assert.Equal(2,usernames.Count);
-			Assert.Contains("user1",usernames);
-			Assert.Contains("user2",usernames);
+			Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
+
+			using (var scope = _factory.Services.CreateScope())
+			{
+				var scopedServices = scope.ServiceProvider;
+				var db = scopedServices.GetRequiredService<UserDbContext>();
+
+				List<string> actualUsernames = await db.Users.Select(u => u.Username).ToListAsync();
+				Assert.NotNull(usernames);
+				Assert.NotEmpty(usernames);
+				Assert.NotEmpty(actualUsernames);
+				Assert.Equal(actualUsernames.Count, usernames.Count);
+				foreach (var username in actualUsernames)
+				{
+					Assert.Contains(username, usernames);
+				}
+			}
 		}
 	}
 }
