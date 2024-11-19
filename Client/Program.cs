@@ -20,5 +20,6 @@ builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IMathGameService,MathGameService>();
 builder.Services.AddScoped<ITimerService,TimerService>();
 builder.Services.AddSingleton<Random>();
+builder.Services.AddScoped<SudokuService>();
 
 await builder.Build().RunAsync();

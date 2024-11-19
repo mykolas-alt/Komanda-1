@@ -25,6 +25,7 @@ builder.Services.AddSingleton<IMathGameService,MathGameService>();
 builder.Services.AddSingleton<IMathCalculationService,MathCalculationService>();
 builder.Services.AddSingleton<IMathGenerationService,MathGenerationService>();
 builder.Services.AddScoped<IMathGameScoreboardService,MathGameScoreboardService>();
+builder.Services.AddScoped<SudokuService>();
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped(typeof(IScoreRepository<>), typeof(ScoreRepository<>));
