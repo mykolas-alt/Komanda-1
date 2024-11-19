@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Tests\\Projektas.Tests.csproj": {}
+    "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Tests\\Projektas.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj": {
+    "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj",
         "projectName": "Projektas.Client",
-        "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj",
-        "packagesPath": "C:\\Users\\Tomas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\obj\\",
+        "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Tomas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,15 +22,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Shared\\Projektas.Shared.csproj": {
-                "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Shared\\Projektas.Shared.csproj"
+              "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Shared\\Projektas.Shared.csproj": {
+                "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Shared\\Projektas.Shared.csproj"
               }
             }
           }
@@ -58,6 +53,10 @@
               "target": "Package",
               "version": "[4.5.0, )"
             },
+            "Google.OrTools": {
+              "target": "Package",
+              "version": "[9.11.4210, )"
+            },
             "Microsoft.AspNetCore.Components.Authorization": {
               "target": "Package",
               "version": "[7.0.20, )"
@@ -74,19 +73,19 @@
             "Microsoft.NET.ILLink.Analyzers": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[7.0.100-1.23401.1, )",
+              "version": "[7.0.100-1.23211.1, )",
               "autoReferenced": true
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[7.0.100-1.23401.1, )",
+              "version": "[7.0.100-1.23211.1, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.8, )",
+              "version": "[8.0.4, )",
               "autoReferenced": true
             },
             "System.IdentityModel.Tokens.Jwt": {
@@ -108,7 +107,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[7.0.20, 7.0.20]"
+              "version": "[7.0.18, 7.0.18]"
             }
           ],
           "frameworkReferences": {
@@ -116,7 +115,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
@@ -125,21 +124,17 @@
         }
       }
     },
-    "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Server\\Projektas.Server.csproj": {
+    "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Server\\Projektas.Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Server\\Projektas.Server.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Server\\Projektas.Server.csproj",
         "projectName": "Projektas.Server",
-        "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Server\\Projektas.Server.csproj",
-        "packagesPath": "C:\\Users\\Tomas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Server\\obj\\",
+        "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Server\\Projektas.Server.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Server\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Tomas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -147,18 +142,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj": {
-                "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj"
+              "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj": {
+                "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj"
               },
-              "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Shared\\Projektas.Shared.csproj": {
-                "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Shared\\Projektas.Shared.csproj"
+              "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Shared\\Projektas.Shared.csproj": {
+                "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Shared\\Projektas.Shared.csproj"
               }
             }
           }
@@ -228,25 +222,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Shared\\Projektas.Shared.csproj": {
+    "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Shared\\Projektas.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Shared\\Projektas.Shared.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Shared\\Projektas.Shared.csproj",
         "projectName": "Projektas.Shared",
-        "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Shared\\Projektas.Shared.csproj",
-        "packagesPath": "C:\\Users\\Tomas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Shared\\obj\\",
+        "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Shared\\Projektas.Shared.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Shared\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Tomas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -254,7 +244,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -293,25 +282,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Tests\\Projektas.Tests.csproj": {
+    "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Tests\\Projektas.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Tests\\Projektas.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Tests\\Projektas.Tests.csproj",
         "projectName": "Projektas.Tests",
-        "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Tests\\Projektas.Tests.csproj",
-        "packagesPath": "C:\\Users\\Tomas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Tests\\obj\\",
+        "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Tests\\Projektas.Tests.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Tests\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Tomas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -319,18 +304,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj": {
-                "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj"
+              "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj": {
+                "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj"
               },
-              "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Server\\Projektas.Server.csproj": {
-                "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Server\\Projektas.Server.csproj"
+              "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Server\\Projektas.Server.csproj": {
+                "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Server\\Projektas.Server.csproj"
               }
             }
           }
@@ -395,7 +379,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

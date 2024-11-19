@@ -183,6 +183,101 @@
           "build/netstandard1.0/coverlet.collector.targets": {}
         }
       },
+      "Google.OrTools/9.11.4210": {
+        "type": "package",
+        "dependencies": {
+          "Google.OrTools.runtime.linux-arm64": "9.11.4210",
+          "Google.OrTools.runtime.linux-x64": "9.11.4210",
+          "Google.OrTools.runtime.osx-arm64": "9.11.4210",
+          "Google.OrTools.runtime.osx-x64": "9.11.4210",
+          "Google.OrTools.runtime.win-x64": "9.11.4210",
+          "Google.Protobuf": "3.26.1"
+        },
+        "compile": {
+          "lib/net6.0/Google.OrTools.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Google.OrTools.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Google.OrTools.runtime.linux-arm64/9.11.4210": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/linux-arm64/native/google-ortools-native.so": {
+            "assetType": "native",
+            "rid": "linux-arm64"
+          },
+          "runtimes/linux-arm64/native/libortools.so.9": {
+            "assetType": "native",
+            "rid": "linux-arm64"
+          }
+        }
+      },
+      "Google.OrTools.runtime.linux-x64/9.11.4210": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/google-ortools-native.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libortools.so.9": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          }
+        }
+      },
+      "Google.OrTools.runtime.osx-arm64/9.11.4210": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/osx-arm64/native/google-ortools-native.dylib": {
+            "assetType": "native",
+            "rid": "osx-arm64"
+          },
+          "runtimes/osx-arm64/native/libortools.9.dylib": {
+            "assetType": "native",
+            "rid": "osx-arm64"
+          }
+        }
+      },
+      "Google.OrTools.runtime.osx-x64/9.11.4210": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/osx-x64/native/google-ortools-native.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/osx-x64/native/libortools.9.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          }
+        }
+      },
+      "Google.OrTools.runtime.win-x64/9.11.4210": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/win-x64/native/google-ortools-native.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          }
+        }
+      },
+      "Google.Protobuf/3.26.1": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Google.Protobuf.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Google.Protobuf.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.20": {
         "type": "package",
         "dependencies": {
@@ -3649,6 +3744,7 @@
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Blazored.LocalStorage": "4.5.0",
+          "Google.OrTools": "9.11.4210",
           "Microsoft.AspNetCore.Components.Authorization": "7.0.20",
           "Microsoft.AspNetCore.Components.WebAssembly": "7.0.8",
           "Projektas.Shared": "1.0.0",
@@ -3960,6 +4056,141 @@
         "coverlet-icon.png",
         "coverlet.collector.6.0.0.nupkg.sha512",
         "coverlet.collector.nuspec"
+      ]
+    },
+    "Google.OrTools/9.11.4210": {
+      "sha512": "iZ39D66o0lD8H4Jujf+3TRj4jdMPiYB0m0Ae+Az4rtG9llxteB5Ie/rOC0zGDd85cHrPalS7PPwD3xEP1XgZhg==",
+      "type": "package",
+      "path": "google.ortools/9.11.4210",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/README.md",
+        "content/algorithms/set_cover.proto",
+        "content/bop/bop_parameters.proto",
+        "content/constraint_solver/assignment.proto",
+        "content/constraint_solver/demon_profiler.proto",
+        "content/constraint_solver/routing_enums.proto",
+        "content/constraint_solver/routing_ils.proto",
+        "content/constraint_solver/routing_parameters.proto",
+        "content/constraint_solver/search_limit.proto",
+        "content/constraint_solver/search_stats.proto",
+        "content/constraint_solver/solver_parameters.proto",
+        "content/glop/parameters.proto",
+        "content/graph/flow_problem.proto",
+        "content/linear_solver/linear_solver.proto",
+        "content/orLogo.png",
+        "content/pdlp/solve_log.proto",
+        "content/pdlp/solvers.proto",
+        "content/sat/boolean_problem.proto",
+        "content/sat/cp_model.proto",
+        "content/sat/cp_model_service.proto",
+        "content/sat/sat_parameters.proto",
+        "content/util/int128.proto",
+        "content/util/optional_boolean.proto",
+        "google.ortools.9.11.4210.nupkg.sha512",
+        "google.ortools.nuspec",
+        "lib/net462/Google.OrTools.dll",
+        "lib/net462/Google.OrTools.xml",
+        "lib/net6.0/Google.OrTools.dll",
+        "lib/net6.0/Google.OrTools.xml"
+      ]
+    },
+    "Google.OrTools.runtime.linux-arm64/9.11.4210": {
+      "sha512": "8+4Y0EFZg1p0mI+X9dioyuNZN80OHzOUW2ZOulkfbbQsPSduT0hZGpydTBn+t9ONOznWFWSmCqhv6JxD8Qs9zw==",
+      "type": "package",
+      "path": "google.ortools.runtime.linux-arm64/9.11.4210",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/README.md",
+        "content/orLogo.png",
+        "google.ortools.runtime.linux-arm64.9.11.4210.nupkg.sha512",
+        "google.ortools.runtime.linux-arm64.nuspec",
+        "runtimes/linux-arm64/native/google-ortools-native.so",
+        "runtimes/linux-arm64/native/libortools.so.9"
+      ]
+    },
+    "Google.OrTools.runtime.linux-x64/9.11.4210": {
+      "sha512": "zfDb6GVs2OfEFoin1t0NfbPu52Sv5xFh4EEBwU+mD0OGplHIlDE2K0MK8PL8wMh4aUQz3zWcHbjFAwisX60wiw==",
+      "type": "package",
+      "path": "google.ortools.runtime.linux-x64/9.11.4210",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/README.md",
+        "content/orLogo.png",
+        "google.ortools.runtime.linux-x64.9.11.4210.nupkg.sha512",
+        "google.ortools.runtime.linux-x64.nuspec",
+        "runtimes/linux-x64/native/google-ortools-native.so",
+        "runtimes/linux-x64/native/libortools.so.9"
+      ]
+    },
+    "Google.OrTools.runtime.osx-arm64/9.11.4210": {
+      "sha512": "uIqvHvxYL3sVQWr5/N/8XMM6RMhOgWzr4z6GozJSPRbSrAE0IO5zB/inv3MPt2+U9JRQW9ogGp+5dkU0oLaU1Q==",
+      "type": "package",
+      "path": "google.ortools.runtime.osx-arm64/9.11.4210",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/README.md",
+        "content/orLogo.png",
+        "google.ortools.runtime.osx-arm64.9.11.4210.nupkg.sha512",
+        "google.ortools.runtime.osx-arm64.nuspec",
+        "runtimes/osx-arm64/native/google-ortools-native.dylib",
+        "runtimes/osx-arm64/native/libortools.9.dylib"
+      ]
+    },
+    "Google.OrTools.runtime.osx-x64/9.11.4210": {
+      "sha512": "9+Ypa2QbqcC5UU7Z8Ruh1t2i5VKayQ5e2w/jqfxSxYVkVJOrhoOaMwKHPhGstWI+CljSQKCxc0I6lEiScL3+RA==",
+      "type": "package",
+      "path": "google.ortools.runtime.osx-x64/9.11.4210",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/README.md",
+        "content/orLogo.png",
+        "google.ortools.runtime.osx-x64.9.11.4210.nupkg.sha512",
+        "google.ortools.runtime.osx-x64.nuspec",
+        "runtimes/osx-x64/native/google-ortools-native.dylib",
+        "runtimes/osx-x64/native/libortools.9.dylib"
+      ]
+    },
+    "Google.OrTools.runtime.win-x64/9.11.4210": {
+      "sha512": "gs01iumgpIqgdHiWW3H4vCsgBQF1L0U+eAAi5FNO7gtHqqVZr/23vIzXsN6UKdLbb6qnctczB2qSuWRnBTL9XQ==",
+      "type": "package",
+      "path": "google.ortools.runtime.win-x64/9.11.4210",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/README.md",
+        "content/orLogo.png",
+        "google.ortools.runtime.win-x64.9.11.4210.nupkg.sha512",
+        "google.ortools.runtime.win-x64.nuspec",
+        "runtimes/win-x64/native/google-ortools-native.dll"
+      ]
+    },
+    "Google.Protobuf/3.26.1": {
+      "sha512": "CHZX8zXqhF/fdUtd+AYzew8T2HFkAoe5c7lbGxZY/qryAlQXckDvM5BfOJjXlMS7kyICqQTMszj4w1bX5uBJ/w==",
+      "type": "package",
+      "path": "google.protobuf/3.26.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "google.protobuf.3.26.1.nupkg.sha512",
+        "google.protobuf.nuspec",
+        "lib/net45/Google.Protobuf.dll",
+        "lib/net45/Google.Protobuf.pdb",
+        "lib/net45/Google.Protobuf.xml",
+        "lib/net5.0/Google.Protobuf.dll",
+        "lib/net5.0/Google.Protobuf.pdb",
+        "lib/net5.0/Google.Protobuf.xml",
+        "lib/netstandard1.1/Google.Protobuf.dll",
+        "lib/netstandard1.1/Google.Protobuf.pdb",
+        "lib/netstandard1.1/Google.Protobuf.xml",
+        "lib/netstandard2.0/Google.Protobuf.dll",
+        "lib/netstandard2.0/Google.Protobuf.pdb",
+        "lib/netstandard2.0/Google.Protobuf.xml"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.20": {
@@ -10210,24 +10441,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Tomas\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Tests\\Projektas.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Tests\\Projektas.Tests.csproj",
       "projectName": "Projektas.Tests",
-      "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Tests\\Projektas.Tests.csproj",
-      "packagesPath": "C:\\Users\\Tomas\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Tests\\obj\\",
+      "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Tests\\Projektas.Tests.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Tests\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Tomas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -10235,18 +10461,17 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj": {
-              "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Client\\Projektas.Client.csproj"
+            "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Client\\Projektas.Client.csproj"
             },
-            "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Server\\Projektas.Server.csproj": {
-              "projectPath": "C:\\Users\\Tomas\\Desktop\\VU\\3 semestras\\Programų sistemų inžinerija\\Komanda-1\\Server\\Projektas.Server.csproj"
+            "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Server\\Projektas.Server.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\c#\\Komanda-1\\Server\\Projektas.Server.csproj"
             }
           }
         }
@@ -10311,7 +10536,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

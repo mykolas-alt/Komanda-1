@@ -3,24 +3,57 @@
 <PageTitle>Sudoku</PageTitle>
 <div style="text-align: center;">
     <h1>Sudoku</h1>
-    <div class="grid">
-        @foreach (int row in Enumerable.Range(0, GridSize))
-        {
-            <div class="grid-row">
-                @foreach (int col in Enumerable.Range(0, GridSize))
-                {
-                    <div @onclick="@(() => HandleCellClicked(row, col))" class="cell @(row == SelectedRow && col == SelectedCol ? "selected" : "")">
-                        <select @onchange="@((ChangeEventArgs args) => HandleValueSelected(args, row, col))" value="@GridValues[row, col]">
-                            <option value="0"> </option>
-                            @foreach (int value in PossibleValues)
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                    </div>
-                }
-            </div>
-        }
+    <div>
+        <h4 class="timer-text">Time: @FormatTime(TimerService.RemainingTime)</h4>
     </div>
-    <button class="btn btn-primary mt-3" @onclick="GenerateSudoku">Generate Sudoku</button>
+    <div>
+        <label>
+            <input type="radio" name="difficulty" value="Easy" checked @onchange="OnDifficultyChanged" /> Easy
+        </label>
+        <label>
+            <input type="radio" name="difficulty" value="Medium" @onchange="OnDifficultyChanged" /> Medium
+        </label>
+        <label>
+            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" /> Hard
+        </label>
+    </div>
+
+    @if (IsLoading)
+    {
+        <div class="loading">Loading Sudoku...</div> 
+    }
+    else
+    {
+
+        <div class="grid">
+            @foreach (int row in Enumerable.Range(0, GridSize))
+            {
+                <div class="grid-row">
+                    @foreach (int col in Enumerable.Range(0, GridSize))
+                    {
+                        <div @onclick="@(() => HandleCellClicked(row, col))" class="cell @(row == SelectedRow && col == SelectedCol ? "selected" : "")">
+                            <select class="select @(IsCellDisabled(row, col) ? "disabled" : "")" @onchange="@((ChangeEventArgs args) => HandleValueSelected(args, row, col))" value="@GridValues[row, col]">
+                                    <option value="0"> </option>
+                                    @foreach (int value in PossibleValues)
+                                    {
+                                        <option value="@value">@value</option>
+                                    }
+                            </select>                           
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+    }
+    <button class="btn btn-primary mt-3" @onclick="GenerateSudokuGame">Generate Sudoku</button>
+    <button class="btn btn-primary mt-3" @onclick="IsCorrect">Submit</button>
+    @if (Message != null)
+    {
+        <div>
+            <h4>@Message</h4>
+        </div>
+    }
+
+
 </div>

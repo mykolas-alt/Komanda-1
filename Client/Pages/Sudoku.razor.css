@@ -19,7 +19,7 @@
     background-color: #ccc;
 }
 
-select {
+.select {
     word-wrap: normal;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -30,7 +30,14 @@ select {
     height: 100%;
     text-align: center;
     font-size: x-large;
+    display: block;
 }
+
+.disabled {
+    pointer-events: none;
+    background-color: #e0e0e0;
+}
+
 
 .grid-row:first-child .cell {
     border-top: 1px solid black;
