@@ -1,8 +1,9 @@
-﻿using System.Net.Http.Json;
+﻿using Projektas.Client.Interfaces;
+using System.Net.Http.Json;
 
 namespace Projektas.Client.Services
 {
-    public class SudokuService
+    public class SudokuService : ISudokuService
     {
         private readonly HttpClient _httpClient;
 

@@ -9,7 +9,7 @@
     public partial class Sudoku
     {
         [Inject]
-        public required SudokuService _sudokuService { get; set; }
+        public required ISudokuService SudokuService { get; set; }
         [Inject]
         public required ITimerService TimerService { get; set; }
 
@@ -23,21 +23,21 @@
 
         private Difficulty CurrentDifficulty { get; set; }
 
-        private bool IsGameActive { get; set; }
+        public bool IsGameActive { get; set; }
         private bool IsLoading { get; set; }
 
-        private int GridSize { get; set; }
-        private int[,]? GridValues { get; set; }
-        private int[,]? Solution { get; set; }
+        public int GridSize { get; set; }
+        public int[,]? GridValues { get; set; }
+        public int[,]? Solution { get; set; }
 
         private List<(int, int)>? DisabledCells;
 
-        private List<int>? PossibleValues { get; set; }
-        private int SelectedRow { get; set; }
-        private int SelectedCol { get; set; }
+        public List<int>? PossibleValues { get; set; }
+        public int SelectedRow { get; set; }
+        public int SelectedCol { get; set; }
 
         public int ElapsedTime { get; private set; }
-        private string? Message { get; set; }
+        public string? Message { get; set; }
 
 
 
@@ -51,17 +51,17 @@
         }
 
 
-        private async Task GenerateSudokuGame()
+        public async Task GenerateSudokuGame()
         {
             IsLoading = true;
             ElapsedTime = 0;
             TimerService.Stop();
             StateHasChanged();
 
-            GridValues = await _sudokuService.GenerateSolvedSudokuAsync(GridSize);
+            GridValues = await SudokuService.GenerateSolvedSudokuAsync(GridSize);
             Solution = (int[,])GridValues.Clone();
 
-            GridValues = await _sudokuService.HideNumbersAsync(GridValues, GridSize, SudokuDifficulty());
+            GridValues = await SudokuService.HideNumbersAsync(GridValues, GridSize, SudokuDifficulty());
 
             DisabledCells = Enumerable
                .Range(0, GridSize)
@@ -76,7 +76,7 @@
             StateHasChanged();
         }
 
-        private int SudokuDifficulty()
+        public int SudokuDifficulty()
         {
             return CurrentDifficulty switch
             {
@@ -113,7 +113,7 @@
 
             InvokeAsync(StateHasChanged);
         }
-        private void IsCorrect()
+        public void IsCorrect()
         {
             if (IsGameActive)
             {
@@ -149,12 +149,12 @@
             }
             return DisabledCells!.Contains((row, col));
         }
-        protected void HandleCellClicked(int row, int col)
+        public void HandleCellClicked(int row, int col)
         {
             SelectedRow = row;
             SelectedCol = col;
         }
-        protected void HandleValueSelected(ChangeEventArgs args, int row, int col)
+        public void HandleValueSelected(ChangeEventArgs args, int row, int col)
         {
             int value = int.Parse(args.Value.ToString());
             GridValues![row, col] = value;
