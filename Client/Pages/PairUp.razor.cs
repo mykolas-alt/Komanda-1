@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Projektas.Client.Interfaces;
+using Projektas.Client.Services;
 
 namespace Projektas.Client.Pages
 {
@@ -14,6 +16,9 @@ namespace Projektas.Client.Pages
         public bool isHardMode {get;private set;}
         public string gridStyle {get;private set;}
         public bool changeIcon {get;private set;}
+
+        
+		public string? username=null;
 
         string[] cardIcons=new string[] {
             "\u2660",  // Spade: ♠
@@ -37,6 +42,25 @@ namespace Projektas.Client.Pages
         public PairUp() {
             ResetGame();
         }
+
+        [Inject]
+        public IAccountAuthStateProvider AuthStateProvider {get;set;}
+
+		protected override async Task OnInitializedAsync() {
+			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
+
+			await LoadUsernameAsync();
+		}
+
+		private async Task LoadUsernameAsync() {
+			username=await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
+			StateHasChanged();
+		}
+
+		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+			await InvokeAsync(LoadUsernameAsync);
+			StateHasChanged();
+		}
 
         public void OnDifficultyChanged(ChangeEventArgs e) {
             isHardMode=e.Value?.ToString()=="Hard";
@@ -93,7 +117,10 @@ namespace Projektas.Client.Pages
                     secondSelectedCard=null;
 
                     if(cards.All(c => c.IsMatched)) {
-                       isGameActive=false;
+                        if(username!=null) {
+                            PairUpService.SaveScoreAsync(username,attempts);
+                        }
+                        isGameActive=false;
                     }
                 } else {
                     var first=firstSelectedCard;
@@ -112,6 +139,11 @@ namespace Projektas.Client.Pages
 
             InvokeAsync(StateHasChanged);
         }
+
+        public void Dispose() {
+            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChanged;
+        }
+
         public class Card {
             public required object Value {get;set;}
             public bool IsMatched {get;set;}

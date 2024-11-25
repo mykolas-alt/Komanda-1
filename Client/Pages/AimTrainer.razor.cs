@@ -10,8 +10,10 @@
         public bool isHardMode {get;private set;}=false;
         private System.Timers.Timer? moveDotTimer;
 
+        public string? username=null;
+
         public (int x,int y) TargetPosition {get;set;}
-        public int Score {get;private set;}
+        public int score {get;private set;}
         public int moveCounter {get;private set;}
         public int moveDirection {get;set;} // 0 = left, 1 = right, 2 = up, 3 = down
 
@@ -20,6 +22,25 @@
 
         [Inject]
         public ITimerService TimerService {get;set;}
+
+        [Inject]
+        public IAccountAuthStateProvider AuthStateProvider {get;set;}
+
+		protected override async Task OnInitializedAsync() {
+			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
+
+			await LoadUsernameAsync();
+		}
+
+		private async Task LoadUsernameAsync() {
+			username=await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
+			StateHasChanged();
+		}
+
+		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+			await InvokeAsync(LoadUsernameAsync);
+			StateHasChanged();
+		}
 
         public void OnDifficultyChanged(ChangeEventArgs e) {
             if(!isGameActive) {
@@ -59,13 +80,16 @@
 
         public void OnTargetClicked() {
             if(TimerService.RemainingTime>0) {
-                Score++;
+                score++;
                 SetRandomTargetPosition(1000,400);
                 InvokeAsync(StateHasChanged);
             }
         }
 
         private async Task EndGame() {
+            if(username!=null) {
+                await AimTrainerService.SaveScoreAsync(username,score);
+            }
             isGameActive=false;
             isGameOver=true;
             TimerService.OnTick-=TimerTick;
@@ -85,6 +109,7 @@
         }
 
         protected virtual void Dispose(bool disposing) {
+            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChanged;
             if(disposing) {
                 TimerService.OnTick-=TimerTick;
                 moveDotTimer?.Stop();
@@ -94,7 +119,7 @@
         }
 
         private void ResetGame(int boxWidth,int boxHeight) {
-            Score=0;
+            score=0;
             moveCounter=0;
             SetRandomTargetPosition(boxWidth,boxHeight);
             moveDirection=_random.Next(4);

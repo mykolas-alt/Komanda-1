@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using Projektas.Shared.Models;
+using System.Net.Http.Json;
 
 namespace Projektas.Client.Services
 {
@@ -194,6 +195,24 @@ namespace Projektas.Client.Services
             }
 
             return true;
+        }
+
+        public async Task SaveScoreAsync(string username,int score) {
+            var data=new UserScoreDto {
+                Username=username,
+                Score=score
+            };
+            await _httpClient.PostAsJsonAsync("api/sudoku/save-score",data);
+        }
+
+        public async Task<int> GetUserHighscore(string username) {
+            var url=$"api/sudoku/highscore?username={username}";
+            return await _httpClient.GetFromJsonAsync<int>(url);
+        }
+
+        public async Task<List<UserScoreDto>> GetTopScoresAsync(int topCount=10)  {
+            var url=$"api/sudoku/top-score?topCount={topCount}";
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto>>(url);
         }
     }
 }

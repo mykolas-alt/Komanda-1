@@ -1,12 +1,20 @@
 ﻿namespace Projektas.Server.Services
 {
     using Google.OrTools.ConstraintSolver;
+    using Projektas.Shared.Models;
+
     public class SudokuService
     {
+        private readonly IScoreRepository<SudokuM> _scoreRepository;
+        
         private Solver? _solver = null;
         private IntVar[,]? _possibleGrid = null;
         private DecisionBuilder? _decisionBuilder = null;
         private SolutionCollector? _solutionCollector = null;
+
+        public SudokuService (IScoreRepository<SudokuM> scoreRepository) {
+            _scoreRepository=scoreRepository;
+        }
 
         public bool HasMultipleSolutions(int[,] grid,int gridSize)
         {
@@ -73,6 +81,25 @@
             _solver!.Dispose();
             if (_solutionCollector != null) _solutionCollector!.Dispose();
             _possibleGrid = null;
+        }
+
+        public async Task AddScoreToDb(UserScoreDto data) {
+            await _scoreRepository.AddScoreToUserAsync(data.Username,data.Score);
+        }
+
+        public async Task<int?> GetUserHighscore(string username) {
+            return await _scoreRepository.GetHighscoreFromUserAsync(username);
+        }
+
+        public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
+            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> topScores=new List<UserScoreDto>();
+            
+            for(int i=0;i<topCount && i<userScores.Count;i++) {
+                topScores.Add(userScores[i]);
+            }
+            
+            return topScores;
         }
     }
 }

@@ -13,13 +13,23 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAccountAuthStateProvider,AccountAuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider,AccountAuthStateProvider>();
+
 builder.Services.AddBlazoredLocalStorage();
+
 builder.Services.AddScoped(sp => new HttpClient {BaseAddress=new Uri(builder.HostEnvironment.BaseAddress)});
+
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<IAccountService,AccountService>();
+
+builder.Services.AddScoped<AimTrainerService>();
+
 builder.Services.AddScoped<IMathGameService,MathGameService>();
+
+builder.Services.AddScoped<PairUpService>();
+
+builder.Services.AddScoped<SudokuService>();
+
 builder.Services.AddScoped<ITimerService,TimerService>();
 builder.Services.AddSingleton<Random>();
-builder.Services.AddScoped<SudokuService>();
 
 await builder.Build().RunAsync();

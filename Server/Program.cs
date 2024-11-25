@@ -21,10 +21,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<AimTrainerService>();
+
 builder.Services.AddSingleton<IMathGameService,MathGameService>();
 builder.Services.AddSingleton<IMathCalculationService,MathCalculationService>();
 builder.Services.AddSingleton<IMathGenerationService,MathGenerationService>();
 builder.Services.AddScoped<IMathGameScoreboardService,MathGameScoreboardService>();
+
+builder.Services.AddScoped<PairUpService>();
+
 builder.Services.AddScoped<SudokuService>();
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Projektas.Server.Services;
+using Projektas.Shared.Models;
 
 namespace Projektas.Server.Controllers
 {
@@ -30,5 +31,19 @@ namespace Projektas.Server.Controllers
             return _sudokuService.HasMultipleSolutions(grid2D, gridSize);
         }
 
+        [HttpPost("save-score")]
+        public async Task SaveScore([FromBody] UserScoreDto data) {
+            await _sudokuService.AddScoreToDb(data);
+        }
+
+        [HttpGet("highscore")]
+        public async Task<ActionResult<int>> GetUserHighscore([FromQuery] string username) {
+            return await _sudokuService.GetUserHighscore(username);
+        }
+
+        [HttpGet("top-score")]
+        public async Task<ActionResult<List<UserScoreDto>>> GetTopScores([FromQuery] int topCount) {
+            return await _sudokuService.GetTopScores(topCount);
+        }
     }
 }
