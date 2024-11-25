@@ -58,10 +58,10 @@
             TimerService.Stop();
             StateHasChanged();
 
-            GridValues = SudokuService.GenerateSolvedSudoku(GridSize);
+            GridValues = await _sudokuService.GenerateSolvedSudokuAsync(GridSize);
             Solution = (int[,])GridValues.Clone();
 
-            GridValues = await _sudokuService.HideNumbers(GridValues, GridSize, SudokuDifficulty());
+            GridValues = await _sudokuService.HideNumbersAsync(GridValues, GridSize, SudokuDifficulty());
 
             DisabledCells = Enumerable
                .Range(0, GridSize)
