@@ -1,9 +1,35 @@
 ﻿using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Projektas.Client.Interfaces;
 using Projektas.Client.Pages;
+using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Client_Tests.Pages {
     public class PairUpTests : TestContext {
+        private readonly Mock<IPairUpService> _mockPairUpService;
+		private readonly Mock<IAccountAuthStateProvider> _mockAuthStateProvider;
+
+		public PairUpTests() {
+			_mockPairUpService=new Mock<IPairUpService>();
+			_mockAuthStateProvider=new Mock<IAccountAuthStateProvider>();
+
+			Services.AddSingleton(_mockPairUpService.Object);
+			Services.AddSingleton(_mockAuthStateProvider.Object);
+
+			// setup
+			_mockPairUpService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>())).Returns(Task.CompletedTask);
+			_mockPairUpService.Setup(s => s.GetUserHighscore(It.IsAny<string>())).ReturnsAsync(0);
+			_mockPairUpService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto> {
+				new UserScoreDto {Username="User1",Score=100},
+				new UserScoreDto {Username="User2",Score=90},
+				new UserScoreDto {Username="User3",Score=80}
+			});
+
+			_mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");
+		}
+
         [Fact]
         public void ResetGame_ShouldStartGame() {
             var cut=RenderComponent<PairUp>();

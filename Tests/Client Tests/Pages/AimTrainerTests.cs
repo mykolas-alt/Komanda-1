@@ -4,18 +4,35 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Projektas.Client.Interfaces;
 using Projektas.Client.Pages;
+using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Client_Tests.Pages {
     public class AimTrainerTests : TestContext {
+        private readonly Mock<IAimTrainerService> _mockAimTrainerService;
         private readonly Mock<ITimerService> _mockTimerService;
         private readonly Mock<Random> _mockRandom;
+		private readonly Mock<IAccountAuthStateProvider> _mockAuthStateProvider;
 
         public AimTrainerTests() {
+            _mockAimTrainerService=new Mock<IAimTrainerService>();
             _mockTimerService=new Mock<ITimerService>();
             _mockRandom=new Mock<Random>();
-
+            _mockAuthStateProvider=new Mock<IAccountAuthStateProvider>();
+            
+            Services.AddSingleton(_mockAimTrainerService.Object);
             Services.AddSingleton(_mockTimerService.Object);
             Services.AddSingleton(_mockRandom.Object);
+            Services.AddSingleton(_mockAuthStateProvider.Object);
+
+            _mockAimTrainerService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>())).Returns(Task.CompletedTask);
+			_mockAimTrainerService.Setup(s => s.GetUserHighscore(It.IsAny<string>())).ReturnsAsync(0);
+			_mockAimTrainerService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto> {
+				new UserScoreDto {Username="User1",Score=100},
+				new UserScoreDto {Username="User2",Score=90},
+				new UserScoreDto {Username="User3",Score=80}
+			});
+
+            _mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");
         }
 
         [Fact]
