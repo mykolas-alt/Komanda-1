@@ -7,44 +7,34 @@ using Microsoft.Extensions.DependencyInjection;
 using Projektas.Server.Database;
 using System.Data.Common;
 
-namespace Projektas.Tests.Server_Tests
-{
-	public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
-	{
-		protected override void ConfigureWebHost(IWebHostBuilder builder)
-		{
+namespace Projektas.Tests.Server_Tests {
+	public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class {
+		protected override void ConfigureWebHost(IWebHostBuilder builder) {
 			base.ConfigureWebHost(builder);
 
-			builder.ConfigureTestServices(services =>
-			{
-				var dbContextDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<UserDbContext>));
+			builder.ConfigureTestServices(services => {
+				var dbContextDescriptor=services.SingleOrDefault(d => d.ServiceType==typeof(DbContextOptions<UserDbContext>));
 
 				services.Remove(dbContextDescriptor);
 
-				var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
+				var dbConnectionDescriptor=services.SingleOrDefault(d => d.ServiceType==typeof(DbConnection));
 
 				services.Remove(dbConnectionDescriptor);
 
-				services.AddSingleton<DbConnection>(container =>
-				{
-					var connection = new SqliteConnection("DataSource=:memory:");
+				services.AddSingleton<DbConnection>(container => {
+					var connection=new SqliteConnection("DataSource=:memory:");
 					connection.Open();
 
 					return connection;
 				});
 
-				services.AddDbContext<UserDbContext>((container, options) =>
-				{
-					var connection = container.GetRequiredService<DbConnection>();
+				services.AddDbContext<UserDbContext>((container,options) => {
+					var connection=container.GetRequiredService<DbConnection>();
 					options.UseSqlite(connection);
 				});
-
-
 			});
 
 			builder.UseEnvironment("Development");
-
-
 		}
 	}
 }

@@ -4,14 +4,14 @@ using Projektas.Server.Interfaces.MathGame;
 namespace Projektas.Server.Services.MathGame {
 
     public class MathGenerationService : IMathGenerationService {
-        private readonly Random _random = new();
+        private readonly Random _random=new();
 
         private static int MaxNumber(int score) => 10+score*2; // increases the range of numbers as the score increases
         private static int MinNumber(int score) => 1+score;
 
         // generates numbers and adds to the list
         public List<int> GenerateNumbers(int numberOfOperands,int score) {
-            List<int> numbers = new();
+            List<int> numbers=new();
             for(int i=0;i<numberOfOperands;i++) {
                 numbers.Add(GenerateNumber(score));
             }
@@ -40,7 +40,7 @@ namespace Projektas.Server.Services.MathGame {
         public void AdjustNumbersForOperations(int score,List<int> numbers,List<Operation> operations) {
             for(int i=1;i<numbers.Count;i++) {
                 if(operations[i-1]==Operation.Division && numbers[i-1]%numbers[i]!=0) {
-                    AdjustForDivision(i, numbers);
+                    AdjustForDivision(i,numbers);
                 } else if(operations[i-1]==Operation.Multiplication) {
                     int limit=Math.Max(2,score/2);
                     if(numbers[i]>limit){

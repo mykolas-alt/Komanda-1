@@ -2,8 +2,8 @@
 using Projektas.Server.Interfaces.MathGame;
 
 namespace Projektas.Server.Services.MathGame {
-    public class MathCalculationService : IMathCalculationService{
-        public int CalculateAnswer(List<int> numbers, List<Operation> operations) {
+    public class MathCalculationService : IMathCalculationService {
+        public int CalculateAnswer(List<int> numbers,List<Operation> operations) {
             // handles multiplication and division
             List<int> processedNumbers=new(numbers);
             List<Operation> processedOperations=new(operations);

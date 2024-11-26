@@ -7,7 +7,6 @@ using Projektas.Server.Database;
 using Microsoft.EntityFrameworkCore;
 using Projektas.Server.Interfaces.MathGame;
 using Projektas.Server.Interfaces;
-using Projektas.Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json",optional:false,reloadOnChange:true);
@@ -21,15 +20,22 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<AimTrainerService>();
+
 builder.Services.AddSingleton<IMathGameService,MathGameService>();
 builder.Services.AddSingleton<IMathCalculationService,MathCalculationService>();
 builder.Services.AddSingleton<IMathGenerationService,MathGenerationService>();
 builder.Services.AddScoped<IMathGameScoreboardService,MathGameScoreboardService>();
+
+builder.Services.AddScoped<PairUpService>();
+
 builder.Services.AddScoped<SudokuService>();
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped(typeof(IScoreRepository<>), typeof(ScoreRepository<>));
+
 builder.Services.AddSingleton<UserTrackingService>();
+
 builder.Services.AddScoped<IUserService,UserService>(provider => new UserService(
 	provider.GetRequiredService<IConfiguration>(),
 	provider.GetRequiredService<IUserRepository>(),

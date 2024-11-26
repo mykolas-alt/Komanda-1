@@ -27,10 +27,10 @@ namespace Projektas.Server.Services {
 
 				_userDbContext.Set<Score<T>>().Add(score);
 				await _userDbContext.SaveChangesAsync();
-			} catch (DbUpdateException dbEx) {
-				throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
-			} catch (Exception ex) {
-				throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+			} catch(DbUpdateException dbEx) {
+				throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
+			} catch(Exception ex) {
+				throw new DatabaseOperationException("An error occurred during the database operation.",ex);
 			}
 			
         }
@@ -45,10 +45,10 @@ namespace Projektas.Server.Services {
 				var scores=_userDbContext.Set<Score<T>>().Where(s => s.UserId==user.Id);
 
 				return scores.Max(s => s.UserScores);
-			} catch (DbUpdateException dbEx) {
-				throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
-			} catch (Exception ex) {
-				throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+			} catch(DbUpdateException dbEx) {
+				throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
+			} catch(Exception ex) {
+				throw new DatabaseOperationException("An error occurred during the database operation.",ex);
 			}
         }
 
@@ -62,10 +62,10 @@ namespace Projektas.Server.Services {
 						Score=s.UserScores
 					})
 					.ToListAsync();
-			} catch (DbUpdateException dbEx) {
-				throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
-			} catch (Exception ex) {
-				throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+			} catch(DbUpdateException dbEx) {
+				throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
+			} catch(Exception ex) {
+				throw new DatabaseOperationException("An error occurred during the database operation.",ex);
 			}
 		}
     }

@@ -65,8 +65,7 @@ namespace Projektas.Tests.Services.MathGameTests {
             List<Operation> result=_mathGenerationService.GenerateOperations(numberOfOperands,score);
 
             foreach(Operation operation in result) {
-                Assert.True(operation==Operation.Addition || operation==Operation.Subtraction 
-                         || operation==Operation.Multiplication || operation==Operation.Division);
+                Assert.True(operation==Operation.Addition || operation==Operation.Subtraction || operation==Operation.Multiplication || operation==Operation.Division);
             }
         }
 

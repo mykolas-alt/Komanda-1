@@ -15,14 +15,14 @@ namespace Projektas.Server.Services {
 		public async Task CreateUserAsync(User user) {
 			try {
 				if(user==null) {
-                    throw new DatabaseOperationException($"User data is null.", "USER_IS_NULL");
+                    throw new DatabaseOperationException($"User data is null.","USER_IS_NULL");
                 }
 				_userDbContext.Users.Add(user);
 				await _userDbContext.SaveChangesAsync();
-			} catch (DbUpdateException dbEx) {
-				throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
-			} catch (Exception ex) {
-				throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+			} catch(DbUpdateException dbEx) {
+				throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
+			} catch(Exception ex) {
+				throw new DatabaseOperationException("An error occurred during the database operation.",ex);
 			}
 		}
 
@@ -30,36 +30,36 @@ namespace Projektas.Server.Services {
 			try {
 				List<User> users=await _userDbContext.Users.ToListAsync();
 				if(users==null || users.Count==0) {
-					throw new DatabaseOperationException($"Users data is null.", "USERS_IS_NULL");
+					throw new DatabaseOperationException($"Users data is null.","USERS_IS_NULL");
 				}
 				return users;
-			} catch (DbUpdateException dbEx) {
-				throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
-			} catch (Exception ex) {
-				throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+			} catch(DbUpdateException dbEx) {
+				throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
+			} catch(Exception ex) {
+				throw new DatabaseOperationException("An error occurred during the database operation.",ex);
 			}
 		}
 
 		public async Task<User> GetUserByIdAsync(int id) {
 			try {
                 var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Id==id);
-                if (user==null) {
-                    throw new DatabaseOperationException($"User with ID '{id}' not found in the database.", "USER_NOT_FOUND");
+                if(user==null) {
+                    throw new DatabaseOperationException($"User with ID '{id}' not found in the database.","USER_NOT_FOUND");
                 }
                 return user;
             }
-            catch (DbUpdateException dbEx) {
-                throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
+            catch(DbUpdateException dbEx) {
+                throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
             }
-            catch (Exception ex) {
-                throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+            catch(Exception ex) {
+                throw new DatabaseOperationException("An error occurred during the database operation.",ex);
             }
 		}
 
 		public async Task<bool> ValidateUserAsync(string username,string password) {
 			var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
 
-			if (user!=null && password==user.Password) {
+			if(user!=null && password==user.Password) {
 				return true;
 			}
 
