@@ -41,6 +41,7 @@ builder.Services.AddScoped<IUserService,UserService>(provider => new UserService
 	provider.GetRequiredService<IUserRepository>(),
 	provider.GetRequiredService<UserTrackingService>()
 ));
+builder.Services.AddScoped<AccountScoreService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
 	options.TokenValidationParameters=new TokenValidationParameters {

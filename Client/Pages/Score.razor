@@ -2,4 +2,66 @@
 
 <PageTitle>Score</PageTitle>
 
-<h3>Score</h3>
+@if (username != null)
+{
+    <h3>Math Game Scores</h3>
+    @if (MathGameScores == null)
+    {
+        <p>Loading...</p>
+    }
+    else if (MathGameScores.Count == 0)
+    {
+        <p>No scores available.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var score in MathGameScores)
+            {
+                <li>@score.Username: @score.Score</li>
+            }
+        </ul>
+    }
+
+    <h3>Aim Trainer Scores</h3>
+    @if (AimTrainerScores == null)
+    {
+        <p>Loading...</p>
+    }
+    else if (AimTrainerScores.Count == 0)
+    {
+        <p>No scores available.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var score in AimTrainerScores)
+            {
+                <li>@score.Username: @score.Score</li>
+            }
+        </ul>
+    }
+
+    <h3>Pair Up Scores</h3>
+    @if (PairUpScores == null)
+    {
+        <p>Loading...</p>
+    }
+    else if (PairUpScores.Count == 0)
+    {
+        <p>No scores available.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var score in PairUpScores)
+            {
+                <li>@score.Username: @score.Score</li>
+            }
+        </ul>
+    }
+}
+else
+{
+    <h3>Create an account to see your scores!</h3>
+}

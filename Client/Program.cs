@@ -31,5 +31,6 @@ builder.Services.AddScoped<ISudokuService,SudokuService>();
 
 builder.Services.AddScoped<ITimerService,TimerService>();
 builder.Services.AddSingleton<Random>();
+builder.Services.AddScoped<AccountScoreService>();
 
 await builder.Build().RunAsync();
