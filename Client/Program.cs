@@ -27,7 +27,7 @@ builder.Services.AddScoped<IMathGameService,MathGameService>();
 
 builder.Services.AddScoped<PairUpService>();
 
-builder.Services.AddScoped<SudokuService>();
+builder.Services.AddScoped<ISudokuService,SudokuService>();
 
 builder.Services.AddScoped<ITimerService,TimerService>();
 builder.Services.AddSingleton<Random>();
