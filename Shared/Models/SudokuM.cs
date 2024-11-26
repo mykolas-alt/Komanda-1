@@ -1,8 +1,6 @@
 ﻿using Projektas.Shared.Interfaces;
 
-namespace Projektas.Shared.Models
-{
-    public class SudokuM : IGame
-    {
+namespace Projektas.Shared.Models {
+    public class SudokuM : IGame {
     }
 }

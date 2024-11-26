@@ -7,15 +7,14 @@ namespace Projektas.Server.Services {
         public void AddOrUpdateUser(string username) {
             _activeUsers[username]=DateTime.Now;
 
-            var users = GetActiveUsers();
+            var users=GetActiveUsers();
 
-            var formattedUsers = users.Select(user => new
-            {
-                Username = user.Key,
-                LastActive = user.Value.ToString("yyyy-MM-dd HH:mm:ss")
+            var formattedUsers=users.Select(user => new {
+                Username=user.Key,
+                LastActive=user.Value.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
-            foreach ( var user in formattedUsers ) {
+            foreach( var user in formattedUsers ) {
                 Console.WriteLine(user.Username+" Last Active: "+user.LastActive);
             }
         }

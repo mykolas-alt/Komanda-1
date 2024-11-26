@@ -26,7 +26,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
             Assert.True(cut.Instance.isGameActive);
             Assert.False(cut.Instance.isGameOver);
-            Assert.Equal(0, cut.Instance.Score);
+            Assert.Equal(0, cut.Instance.score);
             _mockTimerService.Verify(t => t.Start(It.IsAny<int>()),Times.Once);
             _mockTimerService.VerifyAdd(t => t.OnTick+=It.IsAny<Action>(),Times.Once);
         }
@@ -41,7 +41,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
             Assert.True(cut.Instance.isGameActive);
             Assert.False(cut.Instance.isGameOver);
-            Assert.Equal(0, cut.Instance.Score);
+            Assert.Equal(0, cut.Instance.score);
             Assert.True(cut.Instance.isHardMode);
             _mockTimerService.Verify(t => t.Start(It.IsAny<int>()),Times.Once);
             _mockTimerService.VerifyAdd(t => t.OnTick+=It.IsAny<Action>(),Times.Once);
@@ -55,7 +55,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
             cut.Instance.OnTargetClicked();
 
-            Assert.Equal(1,cut.Instance.Score);
+            Assert.Equal(1,cut.Instance.score);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
             Assert.True(cut.Instance.isGameActive);
             Assert.False(cut.Instance.isGameOver);
-            Assert.Equal(0,cut.Instance.Score);
+            Assert.Equal(0,cut.Instance.score);
             _mockTimerService.Verify(t => t.Start(It.IsAny<int>()), Times.Exactly(2));
         }
 

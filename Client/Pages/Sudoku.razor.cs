@@ -38,8 +38,26 @@
 
         public int ElapsedTime { get; private set; }
         private string? Message { get; set; }
+		public string? username=null;
 
+        [Inject]
+        public IAccountAuthStateProvider AuthStateProvider {get;set;}
 
+		protected override async Task OnInitializedAsync() {
+			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
+
+			await LoadUsernameAsync();
+		}
+
+		private async Task LoadUsernameAsync() {
+			username=await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
+			StateHasChanged();
+		}
+
+		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+			await InvokeAsync(LoadUsernameAsync);
+			StateHasChanged();
+		}
 
         protected override void OnInitialized()
         {
@@ -158,6 +176,10 @@
         {
             int value = int.Parse(args.Value.ToString());
             GridValues![row, col] = value;
+        }
+
+        public void Dispose() {
+            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChanged;
         }
     }
 }

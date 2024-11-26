@@ -5,7 +5,7 @@ using Projektas.Server.Interfaces.MathGame;
 
 namespace Projektas.Server.Services.MathGame {
     public class MathGameService : IMathGameService {
-        private readonly Random _random = new();
+        private readonly Random _random=new();
         private readonly IMathCalculationService _mathCalculationService;
         private readonly IMathGenerationService _mathGenerationService;
 
