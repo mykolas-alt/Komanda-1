@@ -1,8 +1,9 @@
 ﻿using Projektas.Shared.Models;
 using System.Net.Http.Json;
+using Projektas.Client.Interfaces;
 
 namespace Projektas.Client.Services {
-    public class PairUpService {
+    public class PairUpService : IPairUpService {
         private readonly HttpClient _httpClient;
 
         public PairUpService(HttpClient httpClient) {

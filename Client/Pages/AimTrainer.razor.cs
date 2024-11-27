@@ -21,6 +21,9 @@
         public Random _random {get;set;}
 
         [Inject]
+        public IAimTrainerService AimTrainerService {get;set;}
+
+        [Inject]
         public ITimerService TimerService {get;set;}
 
         [Inject]

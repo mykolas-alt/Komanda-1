@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Projektas.Client.Interfaces;
 using Projektas.Client.Pages;
+using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Client_Tests.Pages
 {
@@ -12,17 +13,30 @@ namespace Projektas.Tests.Client_Tests.Pages
         private readonly Mock<ITimerService> _mockTimerService;
 
         private readonly Mock<ISudokuService> _mockSudokuService;
+		private readonly Mock<IAccountAuthStateProvider> _mockAuthStateProvider;
 
         public SudokuTests()
         {
             _mockSudokuService = new Mock<ISudokuService>();
             _mockTimerService = new Mock<ITimerService>();
+			_mockAuthStateProvider=new Mock<IAccountAuthStateProvider>();
             _mockSudokuService
                 .Setup(service => service.GenerateSolvedSudokuAsync(It.IsAny<int>()))
                 .ReturnsAsync(new int[9, 9]);
 
             Services.AddSingleton(_mockSudokuService.Object);
             Services.AddSingleton(_mockTimerService.Object);
+			Services.AddSingleton(_mockAuthStateProvider.Object);
+
+			_mockSudokuService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>())).Returns(Task.CompletedTask);
+			_mockSudokuService.Setup(s => s.GetUserHighscore(It.IsAny<string>())).ReturnsAsync(0);
+			_mockSudokuService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto> {
+				new UserScoreDto {Username="User1",Score=100},
+				new UserScoreDto {Username="User2",Score=90},
+				new UserScoreDto {Username="User3",Score=80}
+			});
+
+			_mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");
         }
 
         [Fact]

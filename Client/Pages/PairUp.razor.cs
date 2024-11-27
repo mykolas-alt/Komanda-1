@@ -44,6 +44,9 @@ namespace Projektas.Client.Pages
         }
 
         [Inject]
+        public IPairUpService PairUpService {get;set;}
+
+        [Inject]
         public IAccountAuthStateProvider AuthStateProvider {get;set;}
 
 		protected override async Task OnInitializedAsync() {

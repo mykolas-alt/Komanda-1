@@ -1,14 +1,19 @@
-﻿using Projektas.Server.Services;
+﻿using Moq;
+using Projektas.Server.Services;
+using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Server_Tests.Services
 {
     public class SudokuServiceTests
     {
+        private readonly Mock<IScoreRepository<SudokuM>> _mockScoreRepository;
         private readonly SudokuService _sudokuService;
 
         public SudokuServiceTests()
         {
-            _sudokuService = new SudokuService();
+            
+            _mockScoreRepository=new Mock<IScoreRepository<SudokuM>>();
+            _sudokuService = new SudokuService(_mockScoreRepository.Object);
         }
 
         [Fact]

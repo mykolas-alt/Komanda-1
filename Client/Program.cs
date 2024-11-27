@@ -21,11 +21,11 @@ builder.Services.AddScoped(sp => new HttpClient {BaseAddress=new Uri(builder.Hos
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 
-builder.Services.AddScoped<AimTrainerService>();
+builder.Services.AddScoped<IAimTrainerService,AimTrainerService>();
 
 builder.Services.AddScoped<IMathGameService,MathGameService>();
 
-builder.Services.AddScoped<PairUpService>();
+builder.Services.AddScoped<IPairUpService,PairUpService>();
 
 builder.Services.AddScoped<ISudokuService,SudokuService>();
 
