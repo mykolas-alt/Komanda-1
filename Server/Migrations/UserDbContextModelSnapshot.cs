@@ -16,7 +16,7 @@ namespace Projektas.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.20");
 
-            modelBuilder.Entity("Projektas.Shared.Models.AimTrainerScore", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.AimTrainerModel>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -24,10 +24,6 @@ namespace Projektas.Server.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserScores")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("userScore");
 
                     b.HasKey("Id");
 
@@ -36,7 +32,7 @@ namespace Projektas.Server.Migrations
                     b.ToTable("aimTrainerScores", (string)null);
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.MathGameScore", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.MathGameModel>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,10 +40,6 @@ namespace Projektas.Server.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserScores")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("userScore");
 
                     b.HasKey("Id");
 
@@ -56,7 +48,7 @@ namespace Projektas.Server.Migrations
                     b.ToTable("mathGameScores", (string)null);
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.PairUpScore", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.PairUpModel>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,10 +56,6 @@ namespace Projektas.Server.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserScores")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("userScore");
 
                     b.HasKey("Id");
 
@@ -76,7 +64,7 @@ namespace Projektas.Server.Migrations
                     b.ToTable("pairUpScores", (string)null);
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.SudokuScore", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.SudokuModel>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,10 +72,6 @@ namespace Projektas.Server.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserScores")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("userScore");
 
                     b.HasKey("Id");
 
@@ -127,7 +111,7 @@ namespace Projektas.Server.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.AimTrainerScore", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.AimTrainerModel>", b =>
                 {
                     b.HasOne("Projektas.Shared.Models.User", "User")
                         .WithMany("AimTrainerScores")
@@ -135,10 +119,29 @@ namespace Projektas.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Projektas.Shared.Models.AimTrainerModel", "GameInfo", b1 =>
+                        {
+                            b1.Property<int>("ScoreId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<int>("UserScores")
+                                .HasColumnType("INTEGER")
+                                .HasColumnName("userScore");
+
+                            b1.HasKey("ScoreId");
+
+                            b1.ToTable("aimTrainerScores");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ScoreId");
+                        });
+
+                    b.Navigation("GameInfo");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.MathGameScore", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.MathGameModel>", b =>
                 {
                     b.HasOne("Projektas.Shared.Models.User", "User")
                         .WithMany("MathGameScores")
@@ -146,10 +149,29 @@ namespace Projektas.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Projektas.Shared.Models.MathGameModel", "GameInfo", b1 =>
+                        {
+                            b1.Property<int>("ScoreId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<int>("UserScores")
+                                .HasColumnType("INTEGER")
+                                .HasColumnName("userScore");
+
+                            b1.HasKey("ScoreId");
+
+                            b1.ToTable("mathGameScores");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ScoreId");
+                        });
+
+                    b.Navigation("GameInfo");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.PairUpScore", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.PairUpModel>", b =>
                 {
                     b.HasOne("Projektas.Shared.Models.User", "User")
                         .WithMany("PairUpScores")
@@ -157,16 +179,62 @@ namespace Projektas.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Projektas.Shared.Models.PairUpModel", "GameInfo", b1 =>
+                        {
+                            b1.Property<int>("ScoreId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<int>("Fails")
+                                .HasColumnType("INTEGER")
+                                .HasColumnName("fails");
+
+                            b1.Property<int>("UserTimeInSeconds")
+                                .HasColumnType("INTEGER")
+                                .HasColumnName("userTimeInSeconds");
+
+                            b1.HasKey("ScoreId");
+
+                            b1.ToTable("pairUpScores");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ScoreId");
+                        });
+
+                    b.Navigation("GameInfo");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.SudokuScore", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.SudokuModel>", b =>
                 {
                     b.HasOne("Projektas.Shared.Models.User", "User")
                         .WithMany("SudokuScores")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("Projektas.Shared.Models.SudokuModel", "GameInfo", b1 =>
+                        {
+                            b1.Property<int>("ScoreId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<bool>("Solved")
+                                .HasColumnType("INTEGER")
+                                .HasColumnName("solved");
+
+                            b1.Property<int>("UserTimeInSeconds")
+                                .HasColumnType("INTEGER")
+                                .HasColumnName("userTimeInSeconds");
+
+                            b1.HasKey("ScoreId");
+
+                            b1.ToTable("sudokuScores");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ScoreId");
+                        });
+
+                    b.Navigation("GameInfo");
 
                     b.Navigation("User");
                 });

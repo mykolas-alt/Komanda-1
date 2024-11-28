@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Projektas.Shared.Interfaces;
 using Projektas.Shared.Models;
 
 namespace Projektas.Server.Database
@@ -8,10 +10,10 @@ namespace Projektas.Server.Database
 
 		public DbSet<User> Users {get;set;}
 
-		public DbSet<Score<MathGameM>> MathGameScores {get;set;}
-		public DbSet<Score<SudokuM>> SudokuScores {get;set;}
-		public DbSet<Score<AimTrainerM>> AimTrainerScores {get;set;}
-		public DbSet<Score<PairUpM>> PairUpScores {get;set;}
+		public DbSet<Score<MathGameModel>> MathGameScores {get;set;}
+		public DbSet<Score<SudokuModel>> SudokuScores {get;set;}
+		public DbSet<Score<AimTrainerModel>> AimTrainerScores {get;set;}
+		public DbSet<Score<PairUpModel>> PairUpScores {get;set;}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			var userConfig=modelBuilder.Entity<User>();
@@ -21,34 +23,56 @@ namespace Projektas.Server.Database
 			userConfig.Property(c => c.Surname).HasColumnName("surname").IsRequired();
 			userConfig.Property(c => c.Username).HasColumnName("username").IsRequired();
 			userConfig.Property(c => c.Password).HasColumnName("password").IsRequired();
-
-			var mgScoresConfig=modelBuilder.Entity<Score<MathGameM>>();
-			mgScoresConfig.ToTable("mathGameScores");
-			mgScoresConfig.HasKey(c => c.Id);
-			mgScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
-
-			mgScoresConfig.HasOne(s => s.User).WithMany(u => u.MathGameScores).HasForeignKey(s => s.UserId);
 			
-			var sudokuScoresConfig=modelBuilder.Entity<Score<SudokuM>>();
-			sudokuScoresConfig.ToTable("sudokuScores");
-			sudokuScoresConfig.HasKey(c => c.Id);
-			sudokuScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
+			ConfigureScoreTable<AimTrainerModel>(modelBuilder,"aimTrainerScores",score => {
+				score.OwnsOne(s => s.GameInfo,gameInfo => {
+					gameInfo.Property(g => g.UserScores).HasColumnName("userScore");
+				});
+				score.HasOne(s => s.User)
+					.WithMany(u => u.AimTrainerScores)
+					.HasForeignKey(s => s.UserId)
+					.OnDelete(DeleteBehavior.Cascade);
+			});
+			
+			ConfigureScoreTable<MathGameModel>(modelBuilder,"mathGameScores",score => {
+				score.OwnsOne(s => s.GameInfo,gameInfo => {
+					gameInfo.Property(g => g.UserScores).HasColumnName("userScore");
+				});
+				score.HasOne(s => s.User)
+					.WithMany(u => u.MathGameScores)
+					.HasForeignKey(s => s.UserId)
+					.OnDelete(DeleteBehavior.Cascade);
+			});
+			
+			ConfigureScoreTable<PairUpModel>(modelBuilder,"pairUpScores",score => {
+				score.OwnsOne(s => s.GameInfo,gameInfo => {
+					gameInfo.Property(g => g.UserTimeInSeconds).HasColumnName("userTimeInSeconds");
+					gameInfo.Property(g => g.Fails).HasColumnName("fails");
+				});
+				score.HasOne(s => s.User)
+					.WithMany(u => u.PairUpScores)
+					.HasForeignKey(s => s.UserId)
+					.OnDelete(DeleteBehavior.Cascade);
+			});
+			
+			ConfigureScoreTable<SudokuModel>(modelBuilder,"sudokuScores",score => {
+				score.OwnsOne(s => s.GameInfo,gameInfo => {
+					gameInfo.Property(g => g.UserTimeInSeconds).HasColumnName("userTimeInSeconds");
+					gameInfo.Property(g => g.Solved).HasColumnName("solved");
+				});
+				score.HasOne(s => s.User)
+					.WithMany(u => u.SudokuScores)
+					.HasForeignKey(s => s.UserId)
+					.OnDelete(DeleteBehavior.Cascade);
+			});
+		}
 
-			sudokuScoresConfig.HasOne(s => s.User).WithMany(u => u.SudokuScores).HasForeignKey(s => s.UserId);
+		private void ConfigureScoreTable<T>(ModelBuilder modelBuilder,string tableName,Action<EntityTypeBuilder<Score<T>>> configureGameInfo) where T : IGame {
+			var scoreConfig=modelBuilder.Entity<Score<T>>();
+			scoreConfig.ToTable(tableName);
+			scoreConfig.HasKey(s => s.Id);
 
-			var atScoresConfig=modelBuilder.Entity<Score<AimTrainerM>>();
-			atScoresConfig.ToTable("aimTrainerScores");
-			atScoresConfig.HasKey(c => c.Id);
-			atScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
-
-			atScoresConfig.HasOne(s => s.User).WithMany(u => u.AimTrainerScores).HasForeignKey(s => s.UserId);
-
-			var puScoresConfig=modelBuilder.Entity<Score<PairUpM>>();
-			puScoresConfig.ToTable("pairUpScores");
-			puScoresConfig.HasKey(c => c.Id);
-			puScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
-
-			puScoresConfig.HasOne(s => s.User).WithMany(u => u.PairUpScores).HasForeignKey(s => s.UserId);
+			configureGameInfo(scoreConfig);
 		}
 	}
 }

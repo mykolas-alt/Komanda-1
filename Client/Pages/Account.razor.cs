@@ -17,7 +17,6 @@ namespace Projektas.Client.Pages {
 		public bool isUsernameNew {get;private set;}=true;
 		public bool isFieldsFilled {get;private set;}=true;
 		public bool isNewFieldsFilled {get;private set;}=true;
-		private bool test=false;
 
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider {get;set;}

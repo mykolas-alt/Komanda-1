@@ -4,7 +4,7 @@ using System;
 
 namespace Projektas.Server.Services {
     public class SudokuService {
-        private readonly IScoreRepository<SudokuM> _scoreRepository;
+        private readonly IScoreRepository _scoreRepository;
         
         private Solver? _solver=null;
         private IntVar[,]? _possibleGrid=null;
@@ -13,7 +13,7 @@ namespace Projektas.Server.Services {
       
         private static Random _random = new Random();
 
-        public SudokuService (IScoreRepository<SudokuM> scoreRepository) {
+        public SudokuService (IScoreRepository scoreRepository) {
             _scoreRepository=scoreRepository;
         }
 
@@ -71,15 +71,15 @@ namespace Projektas.Server.Services {
         }
 
         public async Task AddScoreToDb(UserScoreDto data) {
-            await _scoreRepository.AddScoreToUserAsync(data.Username,data.Score);
+            await _scoreRepository.AddScoreToUserAsync<SudokuModel>(data.Username,new SudokuModel(),data.Data);
         }
 
         public async Task<int?> GetUserHighscore(string username) {
-            return await _scoreRepository.GetHighscoreFromUserAsync(username);
+            return await _scoreRepository.GetHighscoreFromUserAsync<SudokuModel>(username);
         }
 
         public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
-            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync<SudokuModel>();
             List<UserScoreDto> topScores=new List<UserScoreDto>();
             
             for(int i=0;i<topCount && i<userScores.Count;i++) {

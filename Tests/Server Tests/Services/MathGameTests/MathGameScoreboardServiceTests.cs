@@ -5,17 +5,17 @@ using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Services.MathGameTests {
     public class MathGameScoreboardServiceTests {
-		private readonly Mock<IScoreRepository<MathGameM>> _mockScoreRepository;
+		private readonly Mock<IScoreRepository<MathGameModel>> _mockScoreRepository;
 		private readonly MathGameScoreboardService _mathGameScoreboardService;
 
         public MathGameScoreboardServiceTests() {
-			_mockScoreRepository=new Mock<IScoreRepository<MathGameM>>();
+			_mockScoreRepository=new Mock<IScoreRepository<MathGameModel>>();
 			_mathGameScoreboardService=new MathGameScoreboardService(_mockScoreRepository.Object);
         }
 
 		[Fact]
 		public async Task AddScoreToDb_ShouldCallAddMathGameScoreToUserAsync() {
-			var userScore=new UserScoreDto {Username="testuser",Score=100};
+			var userScore=new UserScoreDto {Username="testuser",Data=100};
 
 			await _mathGameScoreboardService.AddScoreToDb(userScore);
 
@@ -37,10 +37,10 @@ namespace Projektas.Tests.Services.MathGameTests {
 		public async Task GetTopScores_ShouldReturnTopScores() {
 			var topCount=3;
 			var userScores=new List<UserScoreDto> {
-				new UserScoreDto {Username="user1",Score=300},
-				new UserScoreDto {Username="user2",Score=250},
-				new UserScoreDto {Username="user3",Score=200},
-				new UserScoreDto {Username="user4",Score=150}
+				new UserScoreDto {Username="user1",Data=300},
+				new UserScoreDto {Username="user2",Data=250},
+				new UserScoreDto {Username="user3",Data=200},
+				new UserScoreDto {Username="user4",Data=150}
 			};
 			_mockScoreRepository.Setup(repo => repo.GetAllScoresAsync()).ReturnsAsync(userScores);
 

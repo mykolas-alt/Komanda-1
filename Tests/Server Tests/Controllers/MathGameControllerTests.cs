@@ -58,7 +58,7 @@ namespace Projektas.Tests.Controllers {
 				Seeding.InitializeTestDB(db);
 			}
 
-			var userScore=new UserScoreDto {Username="johndoe",Score=19};
+			var userScore=new UserScoreDto {Username="johndoe",Data=19};
 
 			var response=await _client.PostAsJsonAsync("/api/mathgame/save-score",userScore);
 
@@ -135,7 +135,7 @@ namespace Projektas.Tests.Controllers {
 					.Include(s => s.User)
 					.OrderByDescending(s => s.UserScores)
 					.Take(topCount)
-					.Select(s => new UserScoreDto {Username=s.User.Username,Score=s.UserScores})
+					.Select(s => new UserScoreDto {Username=s.User.Username,Data=s.UserScores})
 					.ToListAsync();
 
 				for(int i=0;i<topCount;i++) {

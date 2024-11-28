@@ -5,19 +5,34 @@
 namespace Projektas.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedOtherGameTables : Migration
+    public partial class ChangedGameTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "aimTrainerScores",
+                name: "users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    userScore = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    name = table.Column<string>(type: "TEXT", nullable: false),
+                    surname = table.Column<string>(type: "TEXT", nullable: false),
+                    username = table.Column<string>(type: "TEXT", nullable: false),
+                    password = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "aimTrainerScores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    userScore = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,13 +46,32 @@ namespace Projektas.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "mathGameScores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    userScore = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_mathGameScores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_mathGameScores_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "pairUpScores",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    userScore = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    userTimeInSeconds = table.Column<int>(type: "INTEGER", nullable: true),
+                    fails = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,8 +90,9 @@ namespace Projektas.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    userScore = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    userTimeInSeconds = table.Column<int>(type: "INTEGER", nullable: true),
+                    solved = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,6 +108,11 @@ namespace Projektas.Server.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_aimTrainerScores_UserId",
                 table: "aimTrainerScores",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_mathGameScores_UserId",
+                table: "mathGameScores",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -93,10 +133,16 @@ namespace Projektas.Server.Migrations
                 name: "aimTrainerScores");
 
             migrationBuilder.DropTable(
+                name: "mathGameScores");
+
+            migrationBuilder.DropTable(
                 name: "pairUpScores");
 
             migrationBuilder.DropTable(
                 name: "sudokuScores");
+
+            migrationBuilder.DropTable(
+                name: "users");
         }
     }
 }

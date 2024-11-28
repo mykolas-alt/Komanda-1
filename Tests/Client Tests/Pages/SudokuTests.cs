@@ -31,9 +31,9 @@ namespace Projektas.Tests.Client_Tests.Pages
 			_mockSudokuService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>())).Returns(Task.CompletedTask);
 			_mockSudokuService.Setup(s => s.GetUserHighscore(It.IsAny<string>())).ReturnsAsync(0);
 			_mockSudokuService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto> {
-				new UserScoreDto {Username="User1",Score=100},
-				new UserScoreDto {Username="User2",Score=90},
-				new UserScoreDto {Username="User3",Score=80}
+				new UserScoreDto {Username="User1",Data=100},
+				new UserScoreDto {Username="User2",Data=90},
+				new UserScoreDto {Username="User3",Data=80}
 			});
 
 			_mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");

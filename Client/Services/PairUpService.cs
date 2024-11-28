@@ -13,7 +13,7 @@ namespace Projektas.Client.Services {
         public async Task SaveScoreAsync(string username,int score) {
             var data=new UserScoreDto {
                 Username=username,
-                Score=score
+                Data=score
             };
             await _httpClient.PostAsJsonAsync("api/pairup/save-score",data);
         }

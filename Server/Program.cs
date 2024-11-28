@@ -32,7 +32,7 @@ builder.Services.AddScoped<PairUpService>();
 builder.Services.AddScoped<SudokuService>();
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
-builder.Services.AddScoped(typeof(IScoreRepository<>), typeof(ScoreRepository<>));
+builder.Services.AddScoped(typeof(IScoreRepository), typeof(ScoreRepository));
 
 builder.Services.AddSingleton<UserTrackingService>();
 

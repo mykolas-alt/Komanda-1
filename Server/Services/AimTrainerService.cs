@@ -2,22 +2,22 @@
 
 namespace Projektas.Server.Services {
     public class AimTrainerService {
-        private readonly IScoreRepository<AimTrainerM> _scoreRepository;
+        private readonly IScoreRepository _scoreRepository;
 
-        public AimTrainerService (IScoreRepository<AimTrainerM> scoreRepository) {
+        public AimTrainerService (IScoreRepository scoreRepository) {
             _scoreRepository=scoreRepository;
         }
 
         public async Task AddScoreToDb(UserScoreDto data) {
-            await _scoreRepository.AddScoreToUserAsync(data.Username,data.Score);
+            await _scoreRepository.AddScoreToUserAsync<AimTrainerModel>(data.Username,new AimTrainerModel(),data.Data);
         }
 
         public async Task<int?> GetUserHighscore(string username) {
-            return await _scoreRepository.GetHighscoreFromUserAsync(username);
+            return await _scoreRepository.GetHighscoreFromUserAsync<AimTrainerModel>(username);
         }
 
         public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
-            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync<AimTrainerModel>();
             List<UserScoreDto> topScores=new List<UserScoreDto>();
             
             for(int i=0;i<topCount && i<userScores.Count;i++) {

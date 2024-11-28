@@ -6,13 +6,13 @@ namespace Projektas.Tests.Server_Tests.Services
 {
     public class SudokuServiceTests
     {
-        private readonly Mock<IScoreRepository<SudokuM>> _mockScoreRepository;
+        private readonly Mock<IScoreRepository<SudokuModel>> _mockScoreRepository;
         private readonly SudokuService _sudokuService;
 
         public SudokuServiceTests()
         {
             
-            _mockScoreRepository=new Mock<IScoreRepository<SudokuM>>();
+            _mockScoreRepository=new Mock<IScoreRepository<SudokuModel>>();
             _sudokuService = new SudokuService(_mockScoreRepository.Object);
         }
 
