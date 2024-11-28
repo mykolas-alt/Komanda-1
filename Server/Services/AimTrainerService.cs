@@ -16,14 +16,14 @@ namespace Projektas.Server.Services {
             return await _scoreRepository.GetHighscoreFromUserAsync(username);
         }
 
-        public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
-            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync();
-            List<UserScoreDto> topScores=new List<UserScoreDto>();
-            
-            for(int i=0;i<topCount && i<userScores.Count;i++) {
-                topScores.Add(userScores[i]);
-            }
-            
+        public async Task<List<UserScoreDto>> GetTopScores(int topCount)
+        {
+            List<UserScoreDto> userScores = await _scoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> topScores = userScores
+            .OrderByDescending(score => score.Score)
+            .Take(topCount)
+            .ToList();
+
             return topScores;
         }
     }

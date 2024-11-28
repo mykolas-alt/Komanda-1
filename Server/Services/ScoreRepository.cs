@@ -4,6 +4,7 @@ using Projektas.Server.Database;
 using Projektas.Server.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Projektas.Shared.Interfaces;
+using System.Globalization;
 
 namespace Projektas.Server.Services {
     public class ScoreRepository<T> : IScoreRepository<T> where T : IGame {
@@ -20,10 +21,12 @@ namespace Projektas.Server.Services {
                     return;
                 }
 
-				var score=new Score<T> {
+                var score = new Score<T>
+				{
 					UserScores=userScore,
-					UserId=user.Id
-				};
+					UserId=user.Id,
+					Timestamp = DateTime.UtcNow.ToLocalTime()
+                };
 
 				_userDbContext.Set<Score<T>>().Add(score);
 				await _userDbContext.SaveChangesAsync();
@@ -54,13 +57,14 @@ namespace Projektas.Server.Services {
 
 		public async Task<List<UserScoreDto>> GetAllScoresAsync() {
 			try {
-				return await _userDbContext.Set<Score<T>>()
+
+                return await _userDbContext.Set<Score<T>>()
 					.Include(s => s.User)
-					.OrderByDescending(s => s.UserScores)
 					.Select(s => new UserScoreDto {
 						Username=s.User.Username,
-						Score=s.UserScores
-					})
+						Score=s.UserScores,
+                        Timestamp = s.Timestamp
+                    })
 					.ToListAsync();
 			} catch(DbUpdateException dbEx) {
 				throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);

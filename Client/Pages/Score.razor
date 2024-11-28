@@ -18,7 +18,7 @@
         <ul>
             @foreach (var score in MathGameScores)
             {
-                <li>@score.Username: @score.Score</li>
+                <li>@score.Score points   @score.showOtherDateTimeFormat()</li>
             }
         </ul>
     }
@@ -37,7 +37,7 @@
         <ul>
             @foreach (var score in AimTrainerScores)
             {
-                <li>@score.Username: @score.Score</li>
+                <li>@score.Score points   @score.showOtherDateTimeFormat()</li>
             }
         </ul>
     }
@@ -56,7 +56,7 @@
         <ul>
             @foreach (var score in PairUpScores)
             {
-                <li>@score.Username: @score.Score</li>
+                <li>@score.Score attempts    @score.showOtherDateTimeFormat()</li>
             }
         </ul>
     }

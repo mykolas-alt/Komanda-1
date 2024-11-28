@@ -26,29 +26,33 @@ namespace Projektas.Server.Database
 			mgScoresConfig.ToTable("mathGameScores");
 			mgScoresConfig.HasKey(c => c.Id);
 			mgScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
+            mgScoresConfig.Property(s => s.Timestamp).HasColumnName("Timestamp").IsRequired();
 
-			mgScoresConfig.HasOne(s => s.User).WithMany(u => u.MathGameScores).HasForeignKey(s => s.UserId);
+            mgScoresConfig.HasOne(s => s.User).WithMany(u => u.MathGameScores).HasForeignKey(s => s.UserId);
 			
 			var sudokuScoresConfig=modelBuilder.Entity<Score<SudokuM>>();
 			sudokuScoresConfig.ToTable("sudokuScores");
 			sudokuScoresConfig.HasKey(c => c.Id);
 			sudokuScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
+            sudokuScoresConfig.Property(s => s.Timestamp).HasColumnName("Timestamp").IsRequired();
 
-			sudokuScoresConfig.HasOne(s => s.User).WithMany(u => u.SudokuScores).HasForeignKey(s => s.UserId);
+            sudokuScoresConfig.HasOne(s => s.User).WithMany(u => u.SudokuScores).HasForeignKey(s => s.UserId);
 
 			var atScoresConfig=modelBuilder.Entity<Score<AimTrainerM>>();
 			atScoresConfig.ToTable("aimTrainerScores");
 			atScoresConfig.HasKey(c => c.Id);
 			atScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
+            atScoresConfig.Property(s => s.Timestamp).HasColumnName("Timestamp").IsRequired();
 
-			atScoresConfig.HasOne(s => s.User).WithMany(u => u.AimTrainerScores).HasForeignKey(s => s.UserId);
+            atScoresConfig.HasOne(s => s.User).WithMany(u => u.AimTrainerScores).HasForeignKey(s => s.UserId);
 
 			var puScoresConfig=modelBuilder.Entity<Score<PairUpM>>();
 			puScoresConfig.ToTable("pairUpScores");
 			puScoresConfig.HasKey(c => c.Id);
 			puScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
+            puScoresConfig.Property(s => s.Timestamp).HasColumnName("Timestamp").IsRequired();
 
-			puScoresConfig.HasOne(s => s.User).WithMany(u => u.PairUpScores).HasForeignKey(s => s.UserId);
+            puScoresConfig.HasOne(s => s.User).WithMany(u => u.PairUpScores).HasForeignKey(s => s.UserId);
 		}
 	}
 }

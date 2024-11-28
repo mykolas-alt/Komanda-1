@@ -3,7 +3,7 @@ using Projektas.Client.Interfaces;
 using Projektas.Shared.Models;
 
 namespace Projektas.Client.Pages {
-	public partial class MathGame {
+	public partial class MathGame : IDisposable {
         public string? question {get;private set;}=null;
         public bool isTimesUp {get;private set;}=false;
         public List<int>? options {get;private set;}
@@ -37,12 +37,8 @@ namespace Projektas.Client.Pages {
 			StateHasChanged();
 		}
 
-        protected override async void OnInitialized() {
-            TimerService.OnTick+=OnTimerTick;
-        }
-
-
         public async Task StartGame() {
+            TimerService.OnTick+=OnTimerTick;
             TimerService.Start(60);
             isTimesUp=false;
             score=0;
@@ -81,8 +77,9 @@ namespace Projektas.Client.Pages {
                 if(TimerService.RemainingTime==0) {
                     isTimesUp=true;
                     TimerService.Stop();
+                    TimerService.OnTick-=OnTimerTick;
 
-                    if(username!=null) {
+                    if (username!=null) {
                         await MathGameService.SaveScoreAsync(username,score);
                     }
 
