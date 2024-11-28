@@ -1,4 +1,5 @@
-﻿using Projektas.Shared.Interfaces;
+﻿using Projektas.Shared.Enums;
+using Projektas.Shared.Interfaces;
 
 namespace Projektas.Shared.Models {
 	public class Score<T> where T : IGame {
@@ -9,5 +10,6 @@ namespace Projektas.Shared.Models {
 
 		public User User {get;set;}
         public DateTime Timestamp {get;set;}
+		public string? Difficulty {get;set;}
     }
 }

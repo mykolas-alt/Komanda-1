@@ -1,4 +1,5 @@
-﻿using Projektas.Shared.Models;
+﻿using Projektas.Shared.Enums;
+using Projektas.Shared.Models;
 using System.Net.Http.Json;
 
 namespace Projektas.Client.Services {
@@ -9,10 +10,11 @@ namespace Projektas.Client.Services {
             _httpClient = httpClient;
         }
 
-        public async Task SaveScoreAsync(string username,int score) {
+        public async Task SaveScoreAsync(string username,int score, string? difficulty) {
             var data=new UserScoreDto {
                 Username=username,
-                Score=score
+                Score=score,
+                Difficulty=difficulty
             };
             await _httpClient.PostAsJsonAsync("api/pairup/save-score",data);
         }

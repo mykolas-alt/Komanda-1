@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
-using Projektas.Client.Services;﻿
+using Projektas.Client.Services;
+using Projektas.Shared.Enums;
 
 namespace Projektas.Client.Pages {
     public partial class Sudoku {
@@ -12,13 +13,8 @@ namespace Projektas.Client.Pages {
         public required ITimerService TimerService {get;set;}
 
         private static Random _random=new Random();
-        public enum Difficulty {
-            Easy,
-            Medium,
-            Hard
-        }
 
-        private Difficulty CurrentDifficulty {get;set;}
+        private GameDifficulty? CurrentDifficulty { get; set; }
 
         public bool IsGameActive {get;set;}
         private bool IsLoading {get;set;}
@@ -91,9 +87,9 @@ namespace Projektas.Client.Pages {
 
         public int SudokuDifficulty() {
             return CurrentDifficulty switch {
-                Difficulty.Easy => _random.Next(20,25),
-                Difficulty.Medium => _random.Next(40,45),
-                Difficulty.Hard => _random.Next(55,57),
+                GameDifficulty.Easy => _random.Next(20,25),
+                GameDifficulty.Medium => _random.Next(40,45),
+                GameDifficulty.Hard => _random.Next(55,57),
                 _ => 0,
             };
         }
@@ -131,7 +127,7 @@ namespace Projektas.Client.Pages {
         }
       
         public void OnDifficultyChanged(ChangeEventArgs e) {
-            if(Enum.TryParse(e.Value?.ToString(),true,out Difficulty parsedDifficulty)) {
+            if(Enum.TryParse(e.Value?.ToString(),true,out GameDifficulty parsedDifficulty)) {
                 CurrentDifficulty=parsedDifficulty;
             }
         }

@@ -35,6 +35,7 @@ namespace Projektas.Server.Database
 			sudokuScoresConfig.HasKey(c => c.Id);
 			sudokuScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
             sudokuScoresConfig.Property(s => s.Timestamp).HasColumnName("Timestamp").IsRequired();
+            sudokuScoresConfig.Property(s => s.Difficulty).HasColumnName("Difficulty");
 
             sudokuScoresConfig.HasOne(s => s.User).WithMany(u => u.SudokuScores).HasForeignKey(s => s.UserId);
 
@@ -43,6 +44,7 @@ namespace Projektas.Server.Database
 			atScoresConfig.HasKey(c => c.Id);
 			atScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
             atScoresConfig.Property(s => s.Timestamp).HasColumnName("Timestamp").IsRequired();
+			atScoresConfig.Property(s => s.Difficulty).HasColumnName("Difficulty");
 
             atScoresConfig.HasOne(s => s.User).WithMany(u => u.AimTrainerScores).HasForeignKey(s => s.UserId);
 
@@ -51,6 +53,7 @@ namespace Projektas.Server.Database
 			puScoresConfig.HasKey(c => c.Id);
 			puScoresConfig.Property(s => s.UserScores).HasColumnName("userScore");
             puScoresConfig.Property(s => s.Timestamp).HasColumnName("Timestamp").IsRequired();
+            puScoresConfig.Property(s => s.Difficulty).HasColumnName("Difficulty");
 
             puScoresConfig.HasOne(s => s.User).WithMany(u => u.PairUpScores).HasForeignKey(s => s.UserId);
 		}

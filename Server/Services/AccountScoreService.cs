@@ -1,4 +1,5 @@
-﻿using Projektas.Shared.Models;
+﻿using Projektas.Shared.Interfaces;
+using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services
 {
@@ -7,6 +8,7 @@ namespace Projektas.Server.Services
         private readonly IScoreRepository<MathGameM> _mathGameScoreRepository;
         private readonly IScoreRepository<AimTrainerM> _aimTrainerScoreRepository;
         private readonly IScoreRepository<PairUpM> _pairUpScoreRepository;
+        const int lastGamesCount = 10;
 
         public AccountScoreService(
             IScoreRepository<MathGameM> mathGameScoreRepository,
@@ -18,49 +20,102 @@ namespace Projektas.Server.Services
             _pairUpScoreRepository = pairUpScoreRepository;
         }
 
-        public async Task<List<UserScoreDto>> GetMathGameUserScores(User user)
+        public async Task<List<UserScoreDto>> GetMathGameUserScores(User user) 
         {
             List<UserScoreDto> userScores = await _mathGameScoreRepository.GetAllScoresAsync();
-            List<UserScoreDto> mathGameScores = new List<UserScoreDto>();
-
-            foreach (var score in userScores)
-            {
-                if (user.Username == score.Username)
-                {
-                    mathGameScores.Add(score);
-                }
-            }
+            List<UserScoreDto> mathGameScores = GetUserScores(userScores, user);
             return mathGameScores;
         }
 
         public async Task<List<UserScoreDto>> GetAimTrainerUserScores(User user)
         {
             List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
-            List<UserScoreDto> aimTrainerScores = new List<UserScoreDto>();
-
-            foreach (var score in userScores)
-            {
-                if (user.Username == score.Username)
-                {
-                    aimTrainerScores.Add(score);
-                }
-            }
+            List<UserScoreDto> aimTrainerScores = GetUserScores(userScores, user);
             return aimTrainerScores;
         }
 
         public async Task<List<UserScoreDto>> GetPairUpUserScores(User user)
         {
             List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
-            List<UserScoreDto> pairUpScores = new List<UserScoreDto>();
-
-            foreach (var score in userScores)
-            {
-                if (user.Username == score.Username)
-                {
-                    pairUpScores.Add(score);
-                }
-            }
+            List<UserScoreDto> pairUpScores = GetUserScores(userScores, user);
             return pairUpScores;
+        }
+
+        public async Task<int?> GetMathGameHighscore(User user)
+        {
+            int? highscore = await _mathGameScoreRepository.GetHighscoreFromUserAsync(user.Username);
+            if (highscore != null)
+            {
+                return highscore;
+            }
+            else return 0;
+        }
+
+        public async Task<int?> GetAimTrainerHighscore(User user)
+        {
+            int? highscore = await _aimTrainerScoreRepository.GetHighscoreFromUserAsync(user.Username);
+            if (highscore != null)
+            {
+                return highscore;
+            }
+            else return 0;
+        }
+
+        public async Task<int?> GetPairUpHighscore(User user)
+        {
+            var userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username).ToList();
+
+            if (userSpecificScores.Count == 0)
+            {
+                return 0;
+            }
+
+            return userSpecificScores.Min(score => (int?)score.Score);
+        }
+
+        public async Task<int> GetMathGameAllTimeAverageScore(User user)
+        {
+            List<UserScoreDto> userScores = await _mathGameScoreRepository.GetAllScoresAsync();
+            int average = GetAllTimeAverageScore(userScores, user);
+
+            return average;
+        }
+
+        public async Task<int> GetAimTrainerAllTimeAverageScore(User user)
+        {
+            List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            int average = GetAllTimeAverageScore(userScores, user);
+
+            return average;
+        }
+        public async Task<int> GetPairUpAllTimeAverageScore(User user)
+        {
+            List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            int average = GetAllTimeAverageScore(userScores, user);
+
+            return average;
+        }
+        
+
+        private List<UserScoreDto> GetUserScores(List<UserScoreDto> userScores, User user)
+        {
+            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username)
+                                                          .OrderByDescending(score => score.Timestamp)
+                                                          .Take(lastGamesCount)
+                                                          .ToList();
+            return scores;
+        }
+        private int GetAllTimeAverageScore(List<UserScoreDto> userScores, User user)
+        {
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username).ToList();
+            if (userSpecificScores.Count == 0)
+            {
+                return 0;
+            }
+
+            int average = (int)userSpecificScores.Average(score => score.Score);
+            return average;
         }
     }
 }

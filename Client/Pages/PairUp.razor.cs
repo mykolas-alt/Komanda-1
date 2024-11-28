@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
 using Projektas.Client.Services;
+using Projektas.Shared.Enums;
+using Projektas.Shared.Extensions;
 
 namespace Projektas.Client.Pages
 {
@@ -17,6 +19,7 @@ namespace Projektas.Client.Pages
         public string gridStyle {get;private set;}
         public bool changeIcon {get;private set;}
 
+        public GameDifficulty? Difficulty {get;set;} = GameDifficulty.Normal;
         
 		public string? username=null;
 
@@ -64,7 +67,7 @@ namespace Projektas.Client.Pages
 
         public void OnDifficultyChanged(ChangeEventArgs e) {
             isHardMode=e.Value?.ToString()=="Hard";
-            Console.WriteLine(isHardMode);
+            Difficulty = GameDifficulty.Hard;
         }
 
         public void ResetGame() {
@@ -118,7 +121,7 @@ namespace Projektas.Client.Pages
 
                     if(cards.All(c => c.IsMatched)) {
                         if(username!=null) {
-                            PairUpService.SaveScoreAsync(username,attempts);
+                            PairUpService.SaveScoreAsync(username,attempts,Difficulty.ToString());
                         }
                         isGameActive=false;
                     }

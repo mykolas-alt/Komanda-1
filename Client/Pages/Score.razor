@@ -5,7 +5,7 @@
 @if (username != null)
 {
     <h3>Math Game Scores</h3>
-    @if (MathGameScores == null)
+    @if (MathGameScores == null || MathGameHighscore == null || MathGameAllTimeAverage == null)
     {
         <p>Loading...</p>
     }
@@ -15,16 +15,29 @@
     }
     else
     {
-        <ul>
-            @foreach (var score in MathGameScores)
-            {
-                <li>@score.Score points   @score.showOtherDateTimeFormat()</li>
-            }
-        </ul>
+        <p>High Score: @MathGameHighscore points</p>
+        <p>Average Score: @MathGameAllTimeAverage points</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var score in MathGameScores)
+                {
+                    <tr>
+                        <td>@score.showOtherDateTimeFormat()</td>
+                        <td>@score.Score points</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 
     <h3>Aim Trainer Scores</h3>
-    @if (AimTrainerScores == null)
+    @if (AimTrainerScores == null || AimTrainerHighscore == null || AimTrainerAllTimeAverage == null)
     {
         <p>Loading...</p>
     }
@@ -34,16 +47,31 @@
     }
     else
     {
-        <ul>
-            @foreach (var score in AimTrainerScores)
-            {
-                <li>@score.Score points   @score.showOtherDateTimeFormat()</li>
-            }
-        </ul>
+        <p>High Score: @AimTrainerHighscore points</p>
+        <p>Average Score: @AimTrainerAllTimeAverage points</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Score</th>
+                    <th>Difficulty</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var score in AimTrainerScores)
+                {
+                    <tr>
+                        <td>@score.showOtherDateTimeFormat()</td>
+                        <td>@score.Score points</td>
+                        <td>@score.Difficulty</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 
     <h3>Pair Up Scores</h3>
-    @if (PairUpScores == null)
+    @if (PairUpScores == null || PairUpHighscore == null || PairUpAllTimeAverage == null)
     {
         <p>Loading...</p>
     }
@@ -53,15 +81,30 @@
     }
     else
     {
-        <ul>
-            @foreach (var score in PairUpScores)
-            {
-                <li>@score.Score attempts    @score.showOtherDateTimeFormat()</li>
-            }
-        </ul>
+        <p>High Score: @PairUpHighscore attempts</p>
+        <p>Average Score: @PairUpAllTimeAverage attempts</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Attempts</th>
+                    <th>Difficulty</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var score in PairUpScores)
+                {
+                    <tr>
+                        <td>@score.showOtherDateTimeFormat()</td>
+                        <td>@score.Score attempts</td>
+                        <td>@score.Difficulty</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 }
 else
 {
-    <h3>Create an account to see your scores!</h3>
+    <h3>Create an account to track your scores!</h3>
 }

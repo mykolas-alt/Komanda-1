@@ -4,7 +4,7 @@ using Projektas.Server.Database;
 using Projektas.Server.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Projektas.Shared.Interfaces;
-using System.Globalization;
+using Projektas.Shared.Enums;
 
 namespace Projektas.Server.Services {
     public class ScoreRepository<T> : IScoreRepository<T> where T : IGame {
@@ -14,19 +14,21 @@ namespace Projektas.Server.Services {
 			_userDbContext=userDbContext;
 		}
 
-		public async Task AddScoreToUserAsync(string username,int userScore) {
+		public async Task AddScoreToUserAsync(string username,int userScore, string? difficulty) {
 			try {
 				var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
 				if(user==null) {
                     return;
                 }
 
-                var score = new Score<T>
+				var score = new Score<T>
 				{
 					UserScores=userScore,
 					UserId=user.Id,
-					Timestamp = DateTime.UtcNow.ToLocalTime()
-                };
+					Timestamp = DateTime.UtcNow.ToLocalTime(),
+					Difficulty = difficulty
+
+				};
 
 				_userDbContext.Set<Score<T>>().Add(score);
 				await _userDbContext.SaveChangesAsync();
@@ -46,8 +48,14 @@ namespace Projektas.Server.Services {
 					return null;
 
 				var scores=_userDbContext.Set<Score<T>>().Where(s => s.UserId==user.Id);
+				if (!scores.Any()){
+					return 0;
+				}
+				else{
+                    return scores.Max(s => s.UserScores);
+                }
 
-				return scores.Max(s => s.UserScores);
+				
 			} catch(DbUpdateException dbEx) {
 				throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
 			} catch(Exception ex) {
@@ -63,6 +71,7 @@ namespace Projektas.Server.Services {
 					.Select(s => new UserScoreDto {
 						Username=s.User.Username,
 						Score=s.UserScores,
+						Difficulty=s.Difficulty,
                         Timestamp = s.Timestamp
                     })
 					.ToListAsync();

@@ -38,5 +38,53 @@ namespace Projektas.Server.Controllers
             var scores = await _accountScoreService.GetPairUpUserScores(user);
             return Ok(scores);
         }
+
+        [HttpGet("math-game-highscore")]
+        public async Task<ActionResult<int?>> GetMathGameHighscore([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var highscore = await _accountScoreService.GetMathGameHighscore(user);
+            return Ok(highscore);
+        }
+
+        [HttpGet("aim-trainer-highscore")]
+        public async Task<ActionResult<int?>> GetAimTrainerHighscore([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var highscore = await _accountScoreService.GetAimTrainerHighscore(user);
+            return Ok(highscore);
+        }
+
+        [HttpGet("pair-up-highscore")]
+        public async Task<ActionResult<int?>> GetPairUpHighscore([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var highscore = await _accountScoreService.GetPairUpHighscore(user);
+            return Ok(highscore);
+        }
+
+        [HttpGet("math-game-average-score")]
+        public async Task<ActionResult<int>> GetMathGameAllTimeAverageScore([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScore = await _accountScoreService.GetMathGameAllTimeAverageScore(user);
+            return Ok(averageScore);
+        }
+
+        [HttpGet("aim-trainer-average-score")]
+        public async Task<ActionResult<int>> GetAimTrainerAllTimeAverageScore([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScore = await _accountScoreService.GetAimTrainerAllTimeAverageScore(user);
+            return Ok(averageScore);
+        }
+
+        [HttpGet("pair-up-average-score")]
+        public async Task<ActionResult<int>> GetPairUpAllTimeAverageScore([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScore = await _accountScoreService.GetPairUpAllTimeAverageScore(user);
+            return Ok(averageScore);
+        }
     }
 }
