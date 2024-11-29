@@ -70,10 +70,10 @@ namespace Projektas.Tests.Controllers {
 
 				var newUserScore=await db.MathGameScores
 					.Include(s => s.User)
-					.FirstOrDefaultAsync(u => u.UserScores==userScore.Score && u.User.Username==userScore.Username);
+					.FirstOrDefaultAsync(u => u.GameInfo.UserScores==userScore.Data && u.User.Username==userScore.Username);
 
 				Assert.NotNull(newUserScore);
-				Assert.Equal(userScore.Score,newUserScore.UserScores);
+				Assert.Equal(userScore.Data,newUserScore.GameInfo.UserScores);
 				Assert.Equal(userScore.Username,newUserScore.User.Username);
 			}
 		}
@@ -101,7 +101,7 @@ namespace Projektas.Tests.Controllers {
 				var actualUserHighscore=await db.MathGameScores
 					.Include(s => s.User)
 					.Where(u => u.User.Username==username)
-					.Select(u => u.UserScores)
+					.Select(u => u.GameInfo.UserScores)
 					.FirstOrDefaultAsync();
 
 				Assert.Equal(actualUserHighscore, highscore);
@@ -133,13 +133,13 @@ namespace Projektas.Tests.Controllers {
 
 				var actualTopScores=await db.MathGameScores
 					.Include(s => s.User)
-					.OrderByDescending(s => s.UserScores)
+					.OrderByDescending(s => s.GameInfo.UserScores)
 					.Take(topCount)
-					.Select(s => new UserScoreDto {Username=s.User.Username,Data=s.UserScores})
+					.Select(s => new UserScoreDto {Username=s.User.Username,Data=s.GameInfo.UserScores})
 					.ToListAsync();
 
 				for(int i=0;i<topCount;i++) {
-					Assert.Equal(actualTopScores[i].Score,topScores[i].Score);
+					Assert.Equal(actualTopScores[i].Data,topScores[i].Data);
 					Assert.Equal(actualTopScores[i].Username,topScores[i].Username);
 				}
 			}

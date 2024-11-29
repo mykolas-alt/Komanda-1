@@ -5,11 +5,11 @@ using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Services.MathGameTests {
     public class MathGameScoreboardServiceTests {
-		private readonly Mock<IScoreRepository<MathGameModel>> _mockScoreRepository;
+		private readonly Mock<IScoreRepository> _mockScoreRepository;
 		private readonly MathGameScoreboardService _mathGameScoreboardService;
 
         public MathGameScoreboardServiceTests() {
-			_mockScoreRepository=new Mock<IScoreRepository<MathGameModel>>();
+			_mockScoreRepository=new Mock<IScoreRepository>();
 			_mathGameScoreboardService=new MathGameScoreboardService(_mockScoreRepository.Object);
         }
 
@@ -19,14 +19,21 @@ namespace Projektas.Tests.Services.MathGameTests {
 
 			await _mathGameScoreboardService.AddScoreToDb(userScore);
 
-			_mockScoreRepository.Verify(repo => repo.AddScoreToUserAsync(userScore.Username,userScore.Score),Times.Once);
+			_mockScoreRepository.Verify(
+				repo => repo.AddScoreToUserAsync(
+					userScore.Username,
+					It.Is<MathGameModel>(m => m.UserScores==userScore.Data),
+					userScore.Data
+					),
+				Times.Once
+				);
 		}
 
 		[Fact]
 		public async Task GetUserHighscore_ShouldReturnHighscore() {
 			var username="testuser";
 			var expectedHighscore=200;
-			_mockScoreRepository.Setup(repo => repo.GetHighscoreFromUserAsync(username)).ReturnsAsync(expectedHighscore);
+			_mockScoreRepository.Setup(repo => repo.GetHighscoreFromUserAsync<MathGameModel>(username)).ReturnsAsync(expectedHighscore);
 
 			var result=await _mathGameScoreboardService.GetUserHighscore(username);
 
@@ -42,7 +49,7 @@ namespace Projektas.Tests.Services.MathGameTests {
 				new UserScoreDto {Username="user3",Data=200},
 				new UserScoreDto {Username="user4",Data=150}
 			};
-			_mockScoreRepository.Setup(repo => repo.GetAllScoresAsync()).ReturnsAsync(userScores);
+			_mockScoreRepository.Setup(repo => repo.GetAllScoresAsync<MathGameModel>()).ReturnsAsync(userScores);
 
 			var result=await _mathGameScoreboardService.GetTopScores(topCount);
 

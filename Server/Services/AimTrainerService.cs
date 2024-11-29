@@ -9,7 +9,11 @@ namespace Projektas.Server.Services {
         }
 
         public async Task AddScoreToDb(UserScoreDto data) {
-            await _scoreRepository.AddScoreToUserAsync<AimTrainerModel>(data.Username,new AimTrainerModel(),data.Data);
+            var aimTrainer=new AimTrainerModel {
+                UserScores=data.Data
+            };
+
+            await _scoreRepository.AddScoreToUserAsync<AimTrainerModel>(data.Username,aimTrainer,data.Data);
         }
 
         public async Task<int?> GetUserHighscore(string username) {
