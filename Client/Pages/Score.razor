@@ -5,7 +5,7 @@
 @if (username != null)
 {
     <h3>Math Game Scores</h3>
-    @if (MathGameScores == null || MathGameHighscore == null || MathGameAllTimeAverage == null)
+    @if (MathGameScores == null)
     {
         <p>Loading...</p>
     }
@@ -15,9 +15,11 @@
     }
     else
     {
+        <p>Matches Played: @MathGameMatchesPlayes</p>
         <p>High Score: @MathGameHighscore points</p>
         <p>Average Score: @MathGameAllTimeAverage points</p>
-        <table class="table">
+        <h4>Last 10 games:</h4>
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Date</th>
@@ -37,7 +39,7 @@
     }
 
     <h3>Aim Trainer Scores</h3>
-    @if (AimTrainerScores == null || AimTrainerHighscore == null || AimTrainerAllTimeAverage == null)
+    @if (AimTrainerScores == null)
     {
         <p>Loading...</p>
     }
@@ -47,9 +49,15 @@
     }
     else
     {
-        <p>High Score: @AimTrainerHighscore points</p>
-        <p>Average Score: @AimTrainerAllTimeAverage points</p>
-        <table class="table">
+        <p>Total Matches Played: @AimTrainerTotalMatchesPlayed</p>
+        <p>Matches Played In Normal Mode: @AimTrainerMatchesPlayedNormalMode</p>
+        <p>Matches Played In Hard Mode: @AimTrainerMatchesPlayedHardMode</p>
+        <p>High Score On Normal Mode: @AimTrainerHighscoreNormalMode points</p>
+        <p>High Score On Hard Mode: @AimTrainerHighscoreHardMode points</p>
+        <p>Average Score On Normal Mode: @AimTrainerAllTimeAverageNormalMode points</p>
+        <p>Average Score On Hard Mode: @AimTrainerAllTimeAverageHardMode points</p>
+        <h4>Last 10 games:</h4>
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Date</th>
@@ -71,7 +79,7 @@
     }
 
     <h3>Pair Up Scores</h3>
-    @if (PairUpScores == null || PairUpHighscore == null || PairUpAllTimeAverage == null)
+    @if (PairUpScores == null)
     {
         <p>Loading...</p>
     }
@@ -81,9 +89,15 @@
     }
     else
     {
-        <p>High Score: @PairUpHighscore attempts</p>
-        <p>Average Score: @PairUpAllTimeAverage attempts</p>
-        <table class="table">
+        <p>Total Matches Played: @PairUpTotalMatchesPlayed</p>
+        <p>Matches Played In Normal Mode: @PairUpMatchesPlayedNormalMode</p>
+        <p>Matches Played In Hard Mode: @PairUpMatchesPlayedHardMode</p>
+        <p>High Score On Normal Mode: @PairUpHighscoreNormalMode points</p>
+        <p>High Score On Hard Mode: @PairUpHighscoreHardMode points</p>
+        <p>Average Score On Normal Mode: @PairUpAllTimeAverageNormalMode attempts</p>
+        <p>Average Score On Hard Mode: @PairUpAllTimeAverageHardMode attempts</p>
+        <h4>Last 10 games:</h4>
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Date</th>

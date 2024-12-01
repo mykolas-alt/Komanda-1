@@ -1,5 +1,4 @@
-﻿using Projektas.Shared.Interfaces;
-using Projektas.Shared.Models;
+﻿using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services
 {
@@ -51,20 +50,53 @@ namespace Projektas.Server.Services
             else return 0;
         }
 
-        public async Task<int?> GetAimTrainerHighscore(User user)
+        public async Task<int?> GetAimTrainerHighscoreNormalMode(User user)
         {
-            int? highscore = await _aimTrainerScoreRepository.GetHighscoreFromUserAsync(user.Username);
-            if (highscore != null)
+            var userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username &&
+                                                      score.Difficulty == "Normal").ToList();
+
+            if (userSpecificScores.Count == 0)
             {
-                return highscore;
+                return 0;
             }
-            else return 0;
+
+            return userSpecificScores.Max(score => (int?)score.Score);
         }
 
-        public async Task<int?> GetPairUpHighscore(User user)
+        public async Task<int?> GetAimTrainerHighscoreHardMode(User user)
+        {
+            var userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username &&
+                                                      score.Difficulty == "Hard").ToList();
+
+            if (userSpecificScores.Count == 0)
+            {
+                return 0;
+            }
+
+            return userSpecificScores.Max(score => (int?)score.Score);
+        }
+
+        public async Task<int?> GetPairUpHighscoreNormalMode(User user)
         {
             var userScores = await _pairUpScoreRepository.GetAllScoresAsync();
-            var userSpecificScores = userScores.Where(score => score.Username == user.Username).ToList();
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username &&
+                                                      score.Difficulty == "Normal").ToList();
+
+            if (userSpecificScores.Count == 0)
+            {
+                return 0;
+            }
+
+            return userSpecificScores.Min(score => (int?)score.Score);
+        }
+
+        public async Task<int?> GetPairUpHighscoreHardMode(User user)
+        {
+            var userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username &&
+                                                score.Difficulty == "Hard").ToList();
 
             if (userSpecificScores.Count == 0)
             {
@@ -82,21 +114,144 @@ namespace Projektas.Server.Services
             return average;
         }
 
-        public async Task<int> GetAimTrainerAllTimeAverageScore(User user)
+        public async Task<int> GetAimTrainerAllTimeAverageScoreNormalMode(User user)
         {
             List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
-            int average = GetAllTimeAverageScore(userScores, user);
+            int average = GetAllTimeAverageScoreNormalMode(userScores, user);
 
             return average;
         }
-        public async Task<int> GetPairUpAllTimeAverageScore(User user)
+        public async Task<int> GetAimTrainerAllTimeAverageScoreHardMode(User user)
+        {
+            List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            int average = GetAllTimeAverageScoreHardMode(userScores, user);
+
+            return average;
+        }
+
+        public async Task<int> GetPairUpAllTimeAverageScoreNormalMode(User user)
         {
             List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
-            int average = GetAllTimeAverageScore(userScores, user);
+            int average = GetAllTimeAverageScoreNormalMode(userScores, user);
 
             return average;
         }
         
+        public async Task<int> GetPairUpAllTimeAverageScoreHardMode(User user)
+        {
+            List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            int average = GetAllTimeAverageScoreHardMode(userScores, user);
+
+            return average;
+        }
+
+
+        public async Task<int> GetMathGameMatchesPlayed(User user)
+        {
+            List<UserScoreDto> userScores = await _mathGameScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username)
+                                                  .ToList();
+            if (scores != null)
+            {
+                return scores.Count();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public async Task<int> GetTotalAimTrainerMatchesPlayed(User user)
+        {
+            List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username)
+                                                  .ToList();
+            if (scores != null)
+            {
+                return scores.Count();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public async Task<int> GetAimTrainerMatchesPlayedNormalMode(User user)
+        {
+            List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username &&
+                                                         score.Difficulty == "Normal")
+                                                  .ToList();
+            if (scores != null)
+            {
+                return scores.Count();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public async Task<int> GetAimTrainerMatchesPlayedHardMode(User user)
+        {
+            List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username &&
+                                                         score.Difficulty == "Hard")
+                                                  .ToList();
+            if (scores != null)
+            {
+                return scores.Count();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public async Task<int> GetTotalPairUpMatchesPlayed(User user)
+        {
+            List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username)
+                                                  .ToList();
+            if (scores != null)
+            {
+                return scores.Count();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public async Task<int> GetPairUpMatchesPlayedNormalMode(User user)
+        {
+            List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username &&
+                                                         score.Difficulty == "Normal")
+                                                  .ToList();
+            if (scores != null)
+            {
+                return scores.Count();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public async Task<int> GetPairUpMatchesPlayedHardMode(User user)
+        {
+            List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username &&
+                                                         score.Difficulty == "Hard")
+                                                  .ToList();
+            if (scores != null)
+            {
+                return scores.Count();
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
         private List<UserScoreDto> GetUserScores(List<UserScoreDto> userScores, User user)
         {
@@ -117,5 +272,32 @@ namespace Projektas.Server.Services
             int average = (int)userSpecificScores.Average(score => score.Score);
             return average;
         }
+        private int GetAllTimeAverageScoreNormalMode(List<UserScoreDto> userScores, User user)
+        {
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username 
+                                                      && score.Difficulty == "Normal")
+                                               .ToList();
+            if (userSpecificScores.Count == 0)
+            {
+                return 0;
+            }
+
+            int average = (int)userSpecificScores.Average(score => score.Score);
+            return average;
+        }
+        private int GetAllTimeAverageScoreHardMode(List<UserScoreDto> userScores, User user)
+        {
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username
+                                                      && score.Difficulty == "Hard")
+                                               .ToList();
+            if (userSpecificScores.Count == 0)
+            {
+                return 0;
+            }
+
+            int average = (int)userSpecificScores.Average(score => score.Score);
+            return average;
+        }
+
     }
 }

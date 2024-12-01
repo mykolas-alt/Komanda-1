@@ -47,20 +47,89 @@ namespace Projektas.Server.Controllers
             return Ok(highscore);
         }
 
-        [HttpGet("aim-trainer-highscore")]
-        public async Task<ActionResult<int?>> GetAimTrainerHighscore([FromQuery] string username)
+        [HttpGet("aim-trainer-highscore-normal-mode")]
+        public async Task<ActionResult<int?>> GetAimTrainerHighscoreNormalMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var highscore = await _accountScoreService.GetAimTrainerHighscore(user);
+            var highscore = await _accountScoreService.GetAimTrainerHighscoreNormalMode(user);
+            return Ok(highscore);
+        }
+        [HttpGet("aim-trainer-highscore-hard-mode")]
+        public async Task<ActionResult<int?>> GetAimTrainerHighscoreHardMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var highscore = await _accountScoreService.GetAimTrainerHighscoreHardMode(user);
             return Ok(highscore);
         }
 
-        [HttpGet("pair-up-highscore")]
-        public async Task<ActionResult<int?>> GetPairUpHighscore([FromQuery] string username)
+        [HttpGet("pair-up-highscore-normal-mode")]
+        public async Task<ActionResult<int?>> GetPairUpHighscoreNormalMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var highscore = await _accountScoreService.GetPairUpHighscore(user);
+            var highscore = await _accountScoreService.GetPairUpHighscoreNormalMode(user);
             return Ok(highscore);
+        }
+
+        [HttpGet("pair-up-highscore-hard-mode")]
+        public async Task<ActionResult<int?>> GetPairUpHighscoreHardMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var highscore = await _accountScoreService.GetPairUpHighscoreHardMode(user);
+            return Ok(highscore);
+        }
+
+        [HttpGet("math-game-matches-played")]
+        public async Task<ActionResult<int>> GetMathGameMatchesPlayed([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var totalMatches = await _accountScoreService.GetMathGameMatchesPlayed(user);
+            return Ok(totalMatches);
+        }
+        [HttpGet("aim-trainer-matches-played")]
+        public async Task<ActionResult<int>> GetTotalAimTrainerMatchesPlayed([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var totalMatches = await _accountScoreService.GetTotalAimTrainerMatchesPlayed(user);
+            return Ok(totalMatches);
+        }
+        [HttpGet("aim-trainer-matches-played-normal-mode")]
+        public async Task<ActionResult<int>> GetAimTrainerMatchesPlayedNormalMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var totalMatches = await _accountScoreService.GetAimTrainerMatchesPlayedNormalMode(user);
+            return Ok(totalMatches);
+        }
+
+        [HttpGet("aim-trainer-matches-played-hard-mode")]
+        public async Task<ActionResult<int>> GetAimTrainerMatchesPlayedHardMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var totalMatches = await _accountScoreService.GetAimTrainerMatchesPlayedHardMode(user);
+            return Ok(totalMatches);
+        }
+
+        [HttpGet("pair-up-matches-played")]
+        public async Task<ActionResult<int>> GetTotalPairUpMatchesPlayed([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var totalMatches = await _accountScoreService.GetTotalPairUpMatchesPlayed(user);
+            return Ok(totalMatches);
+        }
+
+        [HttpGet("pair-up-matches-played-normal-mode")]
+        public async Task<ActionResult<int>> GetPairUpMatchesPlayedNormalMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var totalMatches = await _accountScoreService.GetPairUpMatchesPlayedNormalMode(user);
+            return Ok(totalMatches);
+        }
+
+        [HttpGet("pair-up-matches-played-hard-mode")]
+        public async Task<ActionResult<int>> GetPairUpMatchesPlayedHardMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var totalMatches = await _accountScoreService.GetPairUpMatchesPlayedHardMode(user);
+            return Ok(totalMatches);
         }
 
         [HttpGet("math-game-average-score")]
@@ -71,19 +140,33 @@ namespace Projektas.Server.Controllers
             return Ok(averageScore);
         }
 
-        [HttpGet("aim-trainer-average-score")]
-        public async Task<ActionResult<int>> GetAimTrainerAllTimeAverageScore([FromQuery] string username)
+        [HttpGet("aim-trainer-average-score-normal-mode")]
+        public async Task<ActionResult<int>> GetAimTrainerAllTimeAverageScoreNormalMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScore = await _accountScoreService.GetAimTrainerAllTimeAverageScore(user);
+            var averageScore = await _accountScoreService.GetAimTrainerAllTimeAverageScoreNormalMode(user);
+            return Ok(averageScore);
+        }
+        [HttpGet("aim-trainer-average-score-hard-mode")]
+        public async Task<ActionResult<int>> GetAimTrainerAllTimeAverageScoreHardMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScore = await _accountScoreService.GetAimTrainerAllTimeAverageScoreHardMode(user);
             return Ok(averageScore);
         }
 
-        [HttpGet("pair-up-average-score")]
-        public async Task<ActionResult<int>> GetPairUpAllTimeAverageScore([FromQuery] string username)
+        [HttpGet("pair-up-average-score-normal-mode")]
+        public async Task<ActionResult<int>> GetPairUpAllTimeAverageScoreNormalMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScore = await _accountScoreService.GetPairUpAllTimeAverageScore(user);
+            var averageScore = await _accountScoreService.GetPairUpAllTimeAverageScoreNormalMode(user);
+            return Ok(averageScore);
+        }
+        [HttpGet("pair-up-average-score-hard-mode")]
+        public async Task<ActionResult<int>> GetPairUpAllTimeAverageScoreHardMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScore = await _accountScoreService.GetPairUpAllTimeAverageScoreHardMode(user);
             return Ok(averageScore);
         }
     }

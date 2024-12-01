@@ -2,7 +2,6 @@
 using Projektas.Client.Interfaces;
 using Projektas.Client.Services;
 using Projektas.Shared.Enums;
-using Projektas.Shared.Extensions;
 
 namespace Projektas.Client.Pages
 {

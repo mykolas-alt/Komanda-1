@@ -36,14 +36,24 @@ namespace Projektas.Client.Services
             var url = $"api/accountscore/math-game-highscore?username={username}";
             return await _httpClient.GetFromJsonAsync<int?>(url);
         }
-        public async Task<int?> GetAimTrainerHighscoreAsync(string username)
+        public async Task<int?> GetAimTrainerHighscoreNormalModeAsync(string username)
         {
-            var url = $"api/accountscore/aim-trainer-highscore?username={username}";
+            var url = $"api/accountscore/aim-trainer-highscore-normal-mode?username={username}";
             return await _httpClient.GetFromJsonAsync<int?>(url);
         }
-        public async Task<int?> GetPairUpHighscoreAsync(string username)
+        public async Task<int?> GetAimTrainerHighscoreHardModeAsync(string username)
         {
-            var url = $"api/accountscore/pair-up-highscore?username={username}";
+            var url = $"api/accountscore/aim-trainer-highscore-hard-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<int?>(url);
+        }
+        public async Task<int?> GetPairUpHighscoreNormalModeAsync(string username)
+        {
+            var url = $"api/accountscore/pair-up-highscore-normal-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<int?>(url);
+        }
+        public async Task<int?> GetPairUpHighscoreHardModeAsync(string username)
+        {
+            var url = $"api/accountscore/pair-up-highscore-hard-mode?username={username}";
             return await _httpClient.GetFromJsonAsync<int?>(url);
         }
         public async Task<int?> GetMathGameAllTimeAverageAsync(string username)
@@ -51,15 +61,66 @@ namespace Projektas.Client.Services
             var url = $"api/accountscore/math-game-average-score?username={username}";
             return await _httpClient.GetFromJsonAsync<int?>(url);
         }
-        public async Task<int?> GetAimTrainerAllTimeAverageAsync(string username)
+        public async Task<int?> GetAimTrainerAllTimeAverageNormalModeAsync(string username)
         {
-            var url = $"api/accountscore/aim-trainer-average-score?username={username}";
+            var url = $"api/accountscore/aim-trainer-average-score-normal-mode?username={username}";
             return await _httpClient.GetFromJsonAsync<int?>(url);
         }
-        public async Task<int?> GetPairUpAllTimeAverageAsync(string username)
+        public async Task<int?> GetAimTrainerAllTimeAverageHardModeAsync(string username)
         {
-            var url = $"api/accountscore/pair-up-average-score?username={username}";
+            var url = $"api/accountscore/aim-trainer-average-score-hard-mode?username={username}";
             return await _httpClient.GetFromJsonAsync<int?>(url);
+        }
+        public async Task<int?> GetPairUpAllTimeAverageNormalModeAsync(string username)
+        {
+            var url = $"api/accountscore/pair-up-average-score-normal-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<int?>(url);
+        }
+        public async Task<int?> GetPairUpAllTimeAverageHardModeAsync(string username)
+        {
+            var url = $"api/accountscore/pair-up-average-score-hard-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<int?>(url);
+        }
+        public async Task<int> GetMathGameMatchesPlayedAsync(string username)
+        {
+            var url = $"api/accountscore/math-game-matches-played?username={username}";
+            return await _httpClient.GetFromJsonAsync<int>(url);
+        }
+
+        public async Task<int> GetTotalAimTrainerMatchesPlayedAsync(string username)
+        {
+            var url = $"api/accountscore/aim-trainer-matches-played?username={username}";
+            return await _httpClient.GetFromJsonAsync<int>(url);
+        }
+
+        public async Task<int> GetAimTrainerMatchesPlayedNormalModeAsync(string username)
+        {
+            var url = $"api/accountscore/aim-trainer-matches-played-normal-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<int>(url);
+        }
+
+        public async Task<int> GetAimTrainerMatchesPlayedHardModeAsync(string username)
+        {
+            var url = $"api/accountscore/aim-trainer-matches-played-hard-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<int>(url);
+        }
+
+        public async Task<int> GetTotalPairUpMatchesPlayedAsync(string username)
+        {
+            var url = $"api/accountscore/pair-up-matches-played?username={username}";
+            return await _httpClient.GetFromJsonAsync<int>(url);
+        }
+
+        public async Task<int> GetPairUpMatchesPlayedNormalModeAsync(string username)
+        {
+            var url = $"api/accountscore/pair-up-matches-played-normal-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<int>(url);
+        }
+
+        public async Task<int> GetPairUpMatchesPlayedHardModeAsync(string username)
+        {
+            var url = $"api/accountscore/pair-up-matches-played-hard-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<int>(url);
         }
     }
 }
