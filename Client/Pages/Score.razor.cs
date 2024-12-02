@@ -34,6 +34,9 @@ namespace Projektas.Client.Pages
         public int PairUpTotalMatchesPlayed { get; set; }
         public int PairUpMatchesPlayedNormalMode { get; set; }
         public int PairUpMatchesPlayedHardMode { get; set; }
+        public List<AverageScoreDto> MathGameAverageScoreLast7Days { get; set; }
+
+        private string activeTab = "MathGame";
 
         public string? username = null;
 
@@ -83,7 +86,7 @@ namespace Projektas.Client.Pages
             PairUpAllTimeAverageNormalMode = await accountScoreService.GetPairUpAllTimeAverageNormalModeAsync(username);
             PairUpAllTimeAverageHardMode = await accountScoreService.GetPairUpAllTimeAverageHardModeAsync(username);
 
-
+            MathGameAverageScoreLast7Days = await accountScoreService.GetMathGameAverageScoreLast7Days(username);
             StateHasChanged();
         }
 
@@ -95,6 +98,11 @@ namespace Projektas.Client.Pages
                 await InvokeAsync(LoadScoresAsync);
             }
             StateHasChanged();
+        }
+
+        private void SetActiveTab(string tabName)
+        {
+            activeTab = tabName;
         }
 
         public void Dispose()

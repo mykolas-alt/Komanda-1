@@ -253,6 +253,13 @@ namespace Projektas.Server.Services
             }
         }
 
+        public async Task<List<AverageScoreDto>> GetMathGameAverageScoreLast7Days(User user)
+        {
+            List<UserScoreDto> userScores = await _mathGameScoreRepository.GetAllScoresAsync();
+            List<AverageScoreDto> averageLast7Days = GetAverageScoresLast7Days(userScores, user);
+            return averageLast7Days;
+        }
+
         private List<UserScoreDto> GetUserScores(List<UserScoreDto> userScores, User user)
         {
             List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username)
@@ -297,6 +304,40 @@ namespace Projektas.Server.Services
 
             int average = (int)userSpecificScores.Average(score => score.Score);
             return average;
+        }
+
+        private List<AverageScoreDto> GetAverageScoresLast7Days(List<UserScoreDto> userScores, User user)
+        {
+            DateTime today = DateTime.Today;
+
+            var last7DaysScores = userScores
+                .Where(score => score.Username == user.Username && score.Timestamp.Date >= today.AddDays(-6))
+                .ToList();
+
+            var groupedScores = last7DaysScores
+                .GroupBy(score => score.Timestamp.Date)
+                .OrderBy(group => group.Key)
+                .ToList();
+
+            var averageScores = new List<AverageScoreDto>();
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime date = today.AddDays(-i);
+                var scoresForDate = groupedScores.FirstOrDefault(group => group.Key == date);
+
+                if (scoresForDate != null)
+                {
+                    int averageScore = (int)scoresForDate.Average(score => score.Score);
+                    averageScores.Add(new AverageScoreDto { AverageScore = averageScore, Date = date });
+                }
+                else
+                {
+                    averageScores.Add(new AverageScoreDto { AverageScore = 0, Date = date });
+                }
+            }
+
+            averageScores.Reverse();
+            return averageScores;
         }
 
     }

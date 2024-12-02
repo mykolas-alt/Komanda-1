@@ -1,122 +1,153 @@
 ﻿@page "/score"
+@using Projektas.Client.Components;
 
 <PageTitle>Score</PageTitle>
 
 @if (username != null)
 {
-    <h3>Math Game Scores</h3>
-    @if (MathGameScores == null)
-    {
-        <p>Loading...</p>
-    }
-    else if (MathGameScores.Count == 0)
-    {
-        <p>No scores available.</p>
-    }
-    else
-    {
-        <p>Matches Played: @MathGameMatchesPlayes</p>
-        <p>High Score: @MathGameHighscore points</p>
-        <p>Average Score: @MathGameAllTimeAverage points</p>
-        <h4>Last 10 games:</h4>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var score in MathGameScores)
-                {
-                    <tr>
-                        <td>@score.showOtherDateTimeFormat()</td>
-                        <td>@score.Score points</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+    <h3>Game Scores</h3>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link @(activeTab == "MathGame" ? "active" : "")" @onclick='() => SetActiveTab("MathGame")'>Math Game</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(activeTab == "AimTrainer" ? "active" : "")" @onclick='() => SetActiveTab("AimTrainer")'>Aim Trainer</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(activeTab == "PairUp" ? "active" : "")" @onclick='() => SetActiveTab("PairUp")'>Pair Up</a>
+        </li>
+    </ul>
 
-    <h3>Aim Trainer Scores</h3>
-    @if (AimTrainerScores == null)
-    {
-        <p>Loading...</p>
-    }
-    else if (AimTrainerScores.Count == 0)
-    {
-        <p>No scores available.</p>
-    }
-    else
-    {
-        <p>Total Matches Played: @AimTrainerTotalMatchesPlayed</p>
-        <p>Matches Played In Normal Mode: @AimTrainerMatchesPlayedNormalMode</p>
-        <p>Matches Played In Hard Mode: @AimTrainerMatchesPlayedHardMode</p>
-        <p>High Score On Normal Mode: @AimTrainerHighscoreNormalMode points</p>
-        <p>High Score On Hard Mode: @AimTrainerHighscoreHardMode points</p>
-        <p>Average Score On Normal Mode: @AimTrainerAllTimeAverageNormalMode points</p>
-        <p>Average Score On Hard Mode: @AimTrainerAllTimeAverageHardMode points</p>
-        <h4>Last 10 games:</h4>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Score</th>
-                    <th>Difficulty</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var score in AimTrainerScores)
+    <div class="tab-content">
+        @if (activeTab == "MathGame")
+        {
+            <div class="tab-pane fade show active">
+                <h3>Math Game Scores</h3>
+                @if (MathGameScores == null)
                 {
-                    <tr>
-                        <td>@score.showOtherDateTimeFormat()</td>
-                        <td>@score.Score points</td>
-                        <td>@score.Difficulty</td>
-                    </tr>
+                    <p>Loading...</p>
                 }
-            </tbody>
-        </table>
-    }
-
-    <h3>Pair Up Scores</h3>
-    @if (PairUpScores == null)
-    {
-        <p>Loading...</p>
-    }
-    else if (PairUpScores.Count == 0)
-    {
-        <p>No scores available.</p>
-    }
-    else
-    {
-        <p>Total Matches Played: @PairUpTotalMatchesPlayed</p>
-        <p>Matches Played In Normal Mode: @PairUpMatchesPlayedNormalMode</p>
-        <p>Matches Played In Hard Mode: @PairUpMatchesPlayedHardMode</p>
-        <p>High Score On Normal Mode: @PairUpHighscoreNormalMode points</p>
-        <p>High Score On Hard Mode: @PairUpHighscoreHardMode points</p>
-        <p>Average Score On Normal Mode: @PairUpAllTimeAverageNormalMode attempts</p>
-        <p>Average Score On Hard Mode: @PairUpAllTimeAverageHardMode attempts</p>
-        <h4>Last 10 games:</h4>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Attempts</th>
-                    <th>Difficulty</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var score in PairUpScores)
+                else if (MathGameScores.Count == 0)
                 {
-                    <tr>
-                        <td>@score.showOtherDateTimeFormat()</td>
-                        <td>@score.Score attempts</td>
-                        <td>@score.Difficulty</td>
-                    </tr>
+                    <p>No scores available.</p>
                 }
-            </tbody>
-        </table>
-    }
+                else
+                {
+                    <p>Matches Played: @MathGameMatchesPlayes</p>
+                    <p>High Score: @MathGameHighscore points</p>
+                    <p>Average Score: @MathGameAllTimeAverage points</p>
+                    <h4>Last 10 games:</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var score in MathGameScores)
+                            {
+                                <tr>
+                                    <td>@score.showOtherDateTimeFormat()</td>
+                                    <td>@score.Score points</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <h4>Average Scores for the Last 7 Days:</h4>
+                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGameAverageScoreLast7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Data="@(MathGameAverageScoreLast7Days.Select(s => s.AverageScore).ToArray())" />
+                }
+            </div>
+        }
+        else if (activeTab == "AimTrainer")
+        {
+            <div class="tab-pane fade show active">
+                <h3>Aim Trainer Scores</h3>
+                @if (AimTrainerScores == null)
+                {
+                    <p>Loading...</p>
+                }
+                else if (AimTrainerScores.Count == 0)
+                {
+                    <p>No scores available.</p>
+                }
+                else
+                {
+                    <p>Total Matches Played: @AimTrainerTotalMatchesPlayed</p>
+                    <p>Matches Played In Normal Mode: @AimTrainerMatchesPlayedNormalMode</p>
+                    <p>Matches Played In Hard Mode: @AimTrainerMatchesPlayedHardMode</p>
+                    <p>High Score On Normal Mode: @AimTrainerHighscoreNormalMode points</p>
+                    <p>High Score On Hard Mode: @AimTrainerHighscoreHardMode points</p>
+                    <p>Average Score On Normal Mode: @AimTrainerAllTimeAverageNormalMode points</p>
+                    <p>Average Score On Hard Mode: @AimTrainerAllTimeAverageHardMode points</p>
+                    <h4>Last 10 games:</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Score</th>
+                                <th>Difficulty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var score in AimTrainerScores)
+                            {
+                                <tr>
+                                    <td>@score.showOtherDateTimeFormat()</td>
+                                    <td>@score.Score points</td>
+                                    <td>@score.Difficulty</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        }
+        else if (activeTab == "PairUp")
+        {
+            <div class="tab-pane fade show active">
+                <h3>Pair Up Scores</h3>
+                @if (PairUpScores == null)
+                {
+                    <p>Loading...</p>
+                }
+                else if (PairUpScores.Count == 0)
+                {
+                    <p>No scores available.</p>
+                }
+                else
+                {
+                    <p>Total Matches Played: @PairUpTotalMatchesPlayed</p>
+                    <p>Matches Played In Normal Mode: @PairUpMatchesPlayedNormalMode</p>
+                    <p>Matches Played In Hard Mode: @PairUpMatchesPlayedHardMode</p>
+                    <p>High Score On Normal Mode: @PairUpHighscoreNormalMode points</p>
+                    <p>High Score On Hard Mode: @PairUpHighscoreHardMode points</p>
+                    <p>Average Score On Normal Mode: @PairUpAllTimeAverageNormalMode attempts</p>
+                    <p>Average Score On Hard Mode: @PairUpAllTimeAverageHardMode attempts</p>
+                    <h4>Last 10 games:</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Attempts</th>
+                                <th>Difficulty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var score in PairUpScores)
+                            {
+                                <tr>
+                                    <td>@score.showOtherDateTimeFormat()</td>
+                                    <td>@score.Score attempts</td>
+                                    <td>@score.Difficulty</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        }
+    </div>
 }
 else
 {

@@ -122,5 +122,11 @@ namespace Projektas.Client.Services
             var url = $"api/accountscore/pair-up-matches-played-hard-mode?username={username}";
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
+
+        public async Task<List<AverageScoreDto>> GetMathGameAverageScoreLast7Days(string username)
+        {
+            var url = $"api/accountscore/math-game-average-score-last-7days?username={username}";
+            return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
+        }
     }
 }

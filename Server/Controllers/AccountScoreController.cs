@@ -169,5 +169,13 @@ namespace Projektas.Server.Controllers
             var averageScore = await _accountScoreService.GetPairUpAllTimeAverageScoreHardMode(user);
             return Ok(averageScore);
         }
+
+        [HttpGet("math-game-average-score-last-7days")]
+        public async Task<ActionResult<List<AverageScoreDto>>> GetMathGameAverageScoreLast7Days([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScoreLast7days = await _accountScoreService.GetMathGameAverageScoreLast7Days(user);
+            return Ok(averageScoreLast7days);
+        }
     }
 }

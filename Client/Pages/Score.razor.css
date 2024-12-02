@@ -21,3 +21,11 @@
         background-color: #4CAF50;
         color: white;
     }
+
+.nav-item .nav-link:hover {
+    background-color: #ddd;
+}
+
+.nav-item {
+    background-color: #f8f9fa;
+}
