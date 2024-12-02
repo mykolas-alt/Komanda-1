@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Projektas.Client.Components;
 using Projektas.Client.Interfaces;
 using Projektas.Client.Services;
 using Projektas.Shared.Models;
@@ -35,8 +36,15 @@ namespace Projektas.Client.Pages
         public int PairUpMatchesPlayedNormalMode { get; set; }
         public int PairUpMatchesPlayedHardMode { get; set; }
         public List<AverageScoreDto> MathGameAverageScoreLast7Days { get; set; }
+        public List<AverageScoreDto> AimTrainerAverageScoreLast7DaysNormalMode { get; set; }
+        public List<AverageScoreDto> AimTrainerAverageScoreLast7DaysHardMode { get; set; }
+        public List<AverageScoreDto> PairUpAverageScoreLast7DaysNormalMode { get; set; }
+        public List<AverageScoreDto> PairUpAverageScoreLast7DaysHardMode { get; set; }
 
         private string activeTab = "MathGame";
+        public Dataset[] MathGameAverageScoreLast7DaysDataset { get; set; }
+        public Dataset[] AimTrainerAverageScoreLast7DaysDataset { get; set; }
+        public Dataset[] PairUpAverageScoreLast7DaysDataset { get; set; }
 
         public string? username = null;
 
@@ -87,8 +95,59 @@ namespace Projektas.Client.Pages
             PairUpAllTimeAverageHardMode = await accountScoreService.GetPairUpAllTimeAverageHardModeAsync(username);
 
             MathGameAverageScoreLast7Days = await accountScoreService.GetMathGameAverageScoreLast7Days(username);
+            AimTrainerAverageScoreLast7DaysNormalMode = await accountScoreService.GetAimTrainerAverageScoreLast7DaysNormalMode(username);
+            AimTrainerAverageScoreLast7DaysHardMode = await accountScoreService.GetAimTrainerAverageScoreLast7DaysHardMode(username);
+            PairUpAverageScoreLast7DaysNormalMode = await accountScoreService.GetPairUpAverageScoreLast7DaysNormalMode(username);
+            PairUpAverageScoreLast7DaysHardMode = await accountScoreService.GetPairUpAverageScoreLast7DaysHardMode(username);
+            LoadDataSets();
             StateHasChanged();
         }
+
+        private void LoadDataSets()
+        {
+            MathGameAverageScoreLast7DaysDataset = new Dataset[]
+            {
+                new Dataset
+                {
+                    Label = "Scores",
+                    Data = MathGameAverageScoreLast7Days.Select(s => s.AverageScore).ToArray(),
+                    BorderColor = "rgba(75, 192, 192, 1)" // Green
+                }
+            };
+
+            AimTrainerAverageScoreLast7DaysDataset = new Dataset[]
+            {
+                new Dataset
+                {
+                    Label = "Normal mode",
+                    Data = AimTrainerAverageScoreLast7DaysNormalMode.Select(s => s.AverageScore).ToArray(),
+                    BorderColor = "rgba(54, 162, 235, 1)" // Blue
+                },
+                new Dataset
+                {
+                    Label = "Hard mode",
+                    Data = AimTrainerAverageScoreLast7DaysHardMode.Select(s => s.AverageScore).ToArray(),
+                    BorderColor = "rgba(255, 99, 132, 1)" // Red
+                }
+            };
+
+            PairUpAverageScoreLast7DaysDataset = new Dataset[]
+            {
+                new Dataset
+                {
+                    Label = "Normal mode",
+                    Data = PairUpAverageScoreLast7DaysNormalMode.Select(s => s.AverageScore).ToArray(),
+                    BorderColor = "rgba(153, 102, 255, 1)" // Purple
+                },
+                new Dataset
+                {
+                    Label = "Hard mode",
+                    Data = PairUpAverageScoreLast7DaysHardMode.Select(s => s.AverageScore).ToArray(),
+                    BorderColor = "rgba(255, 159, 64, 1)" // Orange
+                }
+            };
+        }
+
 
         private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
         {

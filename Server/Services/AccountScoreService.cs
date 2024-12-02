@@ -260,6 +260,36 @@ namespace Projektas.Server.Services
             return averageLast7Days;
         }
 
+        public async Task<List<AverageScoreDto>> GetAimTrainerAverageScoreLast7DaysNormalMode(User user)
+        {
+            List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scoresInNormalMode = userScores.Where(score => score.Difficulty == "Normal").ToList();
+            List<AverageScoreDto> averageLast7Days = GetAverageScoresLast7Days(scoresInNormalMode, user);
+            return averageLast7Days;
+        }
+        public async Task<List<AverageScoreDto>> GetAimTrainerAverageScoreLast7DaysHardMode(User user)
+        {
+            List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scoresInHardMode = userScores.Where(score => score.Difficulty == "Hard").ToList();
+            List<AverageScoreDto> averageLast7Days = GetAverageScoresLast7Days(scoresInHardMode, user);
+            return averageLast7Days;
+        }
+
+        public async Task<List<AverageScoreDto>> GetPairUpAverageScoreLast7DaysNormalMode(User user)
+        {
+            List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scoresInNormalMode = userScores.Where(score => score.Difficulty == "Normal").ToList();
+            List<AverageScoreDto> averageLast7Days = GetAverageScoresLast7Days(scoresInNormalMode, user);
+            return averageLast7Days;
+        }
+        public async Task<List<AverageScoreDto>> GetPairUpAverageScoreLast7DaysHardMode(User user)
+        {
+            List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
+            List<UserScoreDto> scoresInHardMode = userScores.Where(score => score.Difficulty == "Hard").ToList();
+            List<AverageScoreDto> averageLast7Days = GetAverageScoresLast7Days(scoresInHardMode, user);
+            return averageLast7Days;
+        }
+
         private List<UserScoreDto> GetUserScores(List<UserScoreDto> userScores, User user)
         {
             List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username)

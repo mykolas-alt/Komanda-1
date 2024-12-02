@@ -55,7 +55,8 @@
                         </tbody>
                     </table>
                     <h4>Average Scores for the Last 7 Days:</h4>
-                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGameAverageScoreLast7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Data="@(MathGameAverageScoreLast7Days.Select(s => s.AverageScore).ToArray())" />
+                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGameAverageScoreLast7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="MathGameAverageScoreLast7DaysDataset" />
+                    
                 }
             </div>
         }
@@ -100,6 +101,8 @@
                             }
                         </tbody>
                     </table>
+                    <h4>Average Scores for the Last 7 Days:</h4>
+                    <ScoreChart ChartId="aimTrainerChart" Labels="@(AimTrainerAverageScoreLast7DaysNormalMode.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="AimTrainerAverageScoreLast7DaysDataset" />
                 }
             </div>
         }
@@ -144,6 +147,8 @@
                             }
                         </tbody>
                     </table>
+                    <h4>Average Scores for the Last 7 Days:</h4>
+                    <ScoreChart ChartId="pairUpChart" Labels="@(PairUpAverageScoreLast7DaysNormalMode.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="PairUpAverageScoreLast7DaysDataset" />
                 }
             </div>
         }

@@ -177,5 +177,35 @@ namespace Projektas.Server.Controllers
             var averageScoreLast7days = await _accountScoreService.GetMathGameAverageScoreLast7Days(user);
             return Ok(averageScoreLast7days);
         }
+
+        [HttpGet("aim-trainer-average-score-last-7days-normal-mode")]
+        public async Task<ActionResult<List<AverageScoreDto>>> GetAimTrainerAverageScoreLast7DaysNormalMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScoreLast7days = await _accountScoreService.GetAimTrainerAverageScoreLast7DaysNormalMode(user);
+            return Ok(averageScoreLast7days);
+        }
+        [HttpGet("aim-trainer-average-score-last-7days-hard-mode")]
+        public async Task<ActionResult<List<AverageScoreDto>>> GetAimTrainerAverageScoreLast7DaysHardMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScoreLast7days = await _accountScoreService.GetAimTrainerAverageScoreLast7DaysHardMode(user);
+            return Ok(averageScoreLast7days);
+        }
+
+        [HttpGet("pair-up-average-score-last-7days-normal-mode")]
+        public async Task<ActionResult<List<AverageScoreDto>>> GetPairUpAverageScoreLast7DaysNormalMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScoreLast7days = await _accountScoreService.GetPairUpAverageScoreLast7DaysNormalMode(user);
+            return Ok(averageScoreLast7days);
+        }
+        [HttpGet("pair-up-average-score-last-7days-hard-mode")]
+        public async Task<ActionResult<List<AverageScoreDto>>> GetPairUpAverageScoreLast7DaysHardMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScoreLast7days = await _accountScoreService.GetPairUpAverageScoreLast7DaysHardMode(user);
+            return Ok(averageScoreLast7days);
+        }
     }
 }

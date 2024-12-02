@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
+@using Projektas.Client.Components;
 
 <div>
     <canvas id="@ChartId" width="400" height="50"></canvas>
@@ -9,14 +10,14 @@
     [Parameter] public string ChartId { get; set; }
     [Parameter] public string ChartType { get; set; } = "line";
     [Parameter] public string[] Labels { get; set; }
-    [Parameter] public int[] Data { get; set; }
+    [Parameter] public Dataset[] Datasets { get; set; }
     [Inject] IJSRuntime JSRuntime { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("createChart", ChartId, ChartType, Labels, Data);
+            await JSRuntime.InvokeVoidAsync("createChart", ChartId, ChartType, Labels, Datasets);
         }
     }
 }

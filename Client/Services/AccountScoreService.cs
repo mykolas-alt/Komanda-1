@@ -128,5 +128,26 @@ namespace Projektas.Client.Services
             var url = $"api/accountscore/math-game-average-score-last-7days?username={username}";
             return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
         }
+
+        public async Task<List<AverageScoreDto>> GetAimTrainerAverageScoreLast7DaysNormalMode(string username)
+        {
+            var url = $"api/accountscore/aim-trainer-average-score-last-7days-normal-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
+        }
+        public async Task<List<AverageScoreDto>> GetAimTrainerAverageScoreLast7DaysHardMode(string username)
+        {
+            var url = $"api/accountscore/aim-trainer-average-score-last-7days-hard-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
+        }
+        public async Task<List<AverageScoreDto>> GetPairUpAverageScoreLast7DaysNormalMode(string username)
+        {
+            var url = $"api/accountscore/pair-up-average-score-last-7days-normal-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
+        }
+        public async Task<List<AverageScoreDto>> GetPairUpAverageScoreLast7DaysHardMode(string username)
+        {
+            var url = $"api/accountscore/pair-up-average-score-last-7days-hard-mode?username={username}";
+            return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
+        }
     }
 }
