@@ -87,12 +87,6 @@ namespace Projektas.Client.Services
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
 
-        public async Task<int> GetTotalAimTrainerMatchesPlayedAsync(string username)
-        {
-            var url = $"api/accountscore/aim-trainer-matches-played?username={username}";
-            return await _httpClient.GetFromJsonAsync<int>(url);
-        }
-
         public async Task<int> GetAimTrainerMatchesPlayedNormalModeAsync(string username)
         {
             var url = $"api/accountscore/aim-trainer-matches-played-normal-mode?username={username}";
@@ -102,12 +96,6 @@ namespace Projektas.Client.Services
         public async Task<int> GetAimTrainerMatchesPlayedHardModeAsync(string username)
         {
             var url = $"api/accountscore/aim-trainer-matches-played-hard-mode?username={username}";
-            return await _httpClient.GetFromJsonAsync<int>(url);
-        }
-
-        public async Task<int> GetTotalPairUpMatchesPlayedAsync(string username)
-        {
-            var url = $"api/accountscore/pair-up-matches-played?username={username}";
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
 

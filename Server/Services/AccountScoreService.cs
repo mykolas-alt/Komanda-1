@@ -109,8 +109,13 @@ namespace Projektas.Server.Services
         public async Task<int> GetMathGameAllTimeAverageScore(User user)
         {
             List<UserScoreDto> userScores = await _mathGameScoreRepository.GetAllScoresAsync();
-            int average = GetAllTimeAverageScore(userScores, user);
+            var userSpecificScores = userScores.Where(score => score.Username == user.Username).ToList();
+            if (userSpecificScores.Count == 0)
+            {
+                return 0;
+            }
 
+            int average = (int)userSpecificScores.Average(score => score.Score);
             return average;
         }
 
@@ -161,21 +166,6 @@ namespace Projektas.Server.Services
             }
         }
 
-        public async Task<int> GetTotalAimTrainerMatchesPlayed(User user)
-        {
-            List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
-            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username)
-                                                  .ToList();
-            if (scores != null)
-            {
-                return scores.Count();
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
         public async Task<int> GetAimTrainerMatchesPlayedNormalMode(User user)
         {
             List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
@@ -196,21 +186,6 @@ namespace Projektas.Server.Services
             List<UserScoreDto> userScores = await _aimTrainerScoreRepository.GetAllScoresAsync();
             List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username &&
                                                          score.Difficulty == "Hard")
-                                                  .ToList();
-            if (scores != null)
-            {
-                return scores.Count();
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-        public async Task<int> GetTotalPairUpMatchesPlayed(User user)
-        {
-            List<UserScoreDto> userScores = await _pairUpScoreRepository.GetAllScoresAsync();
-            List<UserScoreDto> scores = userScores.Where(score => score.Username == user.Username)
                                                   .ToList();
             if (scores != null)
             {
@@ -297,17 +272,6 @@ namespace Projektas.Server.Services
                                                           .Take(lastGamesCount)
                                                           .ToList();
             return scores;
-        }
-        private int GetAllTimeAverageScore(List<UserScoreDto> userScores, User user)
-        {
-            var userSpecificScores = userScores.Where(score => score.Username == user.Username).ToList();
-            if (userSpecificScores.Count == 0)
-            {
-                return 0;
-            }
-
-            int average = (int)userSpecificScores.Average(score => score.Score);
-            return average;
         }
         private int GetAllTimeAverageScoreNormalMode(List<UserScoreDto> userScores, User user)
         {

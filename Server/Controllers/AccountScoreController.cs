@@ -85,13 +85,6 @@ namespace Projektas.Server.Controllers
             var totalMatches = await _accountScoreService.GetMathGameMatchesPlayed(user);
             return Ok(totalMatches);
         }
-        [HttpGet("aim-trainer-matches-played")]
-        public async Task<ActionResult<int>> GetTotalAimTrainerMatchesPlayed([FromQuery] string username)
-        {
-            var user = new User { Username = username };
-            var totalMatches = await _accountScoreService.GetTotalAimTrainerMatchesPlayed(user);
-            return Ok(totalMatches);
-        }
         [HttpGet("aim-trainer-matches-played-normal-mode")]
         public async Task<ActionResult<int>> GetAimTrainerMatchesPlayedNormalMode([FromQuery] string username)
         {
@@ -105,14 +98,6 @@ namespace Projektas.Server.Controllers
         {
             var user = new User { Username = username };
             var totalMatches = await _accountScoreService.GetAimTrainerMatchesPlayedHardMode(user);
-            return Ok(totalMatches);
-        }
-
-        [HttpGet("pair-up-matches-played")]
-        public async Task<ActionResult<int>> GetTotalPairUpMatchesPlayed([FromQuery] string username)
-        {
-            var user = new User { Username = username };
-            var totalMatches = await _accountScoreService.GetTotalPairUpMatchesPlayed(user);
             return Ok(totalMatches);
         }
 

@@ -29,10 +29,8 @@ namespace Projektas.Client.Pages
         public int? PairUpAllTimeAverageNormalMode { get; set; }
         public int? PairUpAllTimeAverageHardMode { get; set; }
         public int MathGameMatchesPlayes { get; set; }
-        public int AimTrainerTotalMatchesPlayed { get; set; }
         public int AimTrainerMatchesPlayedNormalMode { get; set; }
         public int AimTrainerMatchesPlayedHardMode { get; set; }
-        public int PairUpTotalMatchesPlayed { get; set; }
         public int PairUpMatchesPlayedNormalMode { get; set; }
         public int PairUpMatchesPlayedHardMode { get; set; }
         public List<AverageScoreDto> MathGameAverageScoreLast7Days { get; set; }
@@ -72,10 +70,8 @@ namespace Projektas.Client.Pages
             PairUpScores = await accountScoreService.GetUsersPairUpScoreAsync(username);
 
             MathGameMatchesPlayes = await accountScoreService.GetMathGameMatchesPlayedAsync(username);
-            AimTrainerTotalMatchesPlayed = await accountScoreService.GetTotalAimTrainerMatchesPlayedAsync(username);
             AimTrainerMatchesPlayedNormalMode = await accountScoreService.GetAimTrainerMatchesPlayedNormalModeAsync(username);
             AimTrainerMatchesPlayedHardMode = await accountScoreService.GetAimTrainerMatchesPlayedHardModeAsync(username);
-            PairUpTotalMatchesPlayed = await accountScoreService.GetTotalPairUpMatchesPlayedAsync(username);
             PairUpMatchesPlayedNormalMode = await accountScoreService.GetPairUpMatchesPlayedNormalModeAsync(username);
             PairUpMatchesPlayedHardMode = await accountScoreService.GetPairUpMatchesPlayedHardModeAsync(username);
 
