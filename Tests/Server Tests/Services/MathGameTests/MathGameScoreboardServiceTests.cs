@@ -19,7 +19,7 @@ namespace Projektas.Tests.Services.MathGameTests {
 
 			await _mathGameScoreboardService.AddScoreToDb(userScore);
 
-			_mockScoreRepository.Verify(repo => repo.AddScoreToUserAsync(userScore.Username,userScore.Score),Times.Once);
+			_mockScoreRepository.Verify(repo => repo.AddScoreToUserAsync(userScore.Username,userScore.Score, null),Times.Once);
 		}
 
 		[Fact]
