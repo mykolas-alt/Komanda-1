@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
-using Projektas.Client.Services;﻿
 
 namespace Projektas.Client.Pages {
     public partial class Sudoku {
@@ -21,9 +18,11 @@ namespace Projektas.Client.Pages {
         private Difficulty CurrentDifficulty {get;set;}
 
         public bool IsGameActive {get;set;}
-        private bool IsLoading {get;set;}
+        public bool IsLoading {get;set;}
 
         public int GridSize {get;set;}
+        public int NextGridSize { get; set; }
+        public int InternalGridSize { get; set; }
         public int[,]? GridValues {get;set;}
         public int[,]? Solution {get;set;}
 
@@ -35,7 +34,9 @@ namespace Projektas.Client.Pages {
 
         public int ElapsedTime {get;private set;}
         public string? Message {get;set;}
-		    public string? username=null;
+
+		public string? username=null;
+
 
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider {get;set;}
@@ -57,8 +58,8 @@ namespace Projektas.Client.Pages {
 		    }
 
         protected override void OnInitialized() {
-            GridSize=9;
-            PossibleValues=new List<int> {1,2,3,4,5,6,7,8,9};
+            NextGridSize = 9;
+            CurrentDifficulty = Difficulty.Medium;
             TimerService.OnTick+=TimerTick;
             IsGameActive=false;
             GenerateSudokuGame();
@@ -66,7 +67,15 @@ namespace Projektas.Client.Pages {
 
 
         public async Task GenerateSudokuGame() {
-            IsLoading=true;
+            if (IsLoading)
+            {
+                return;
+            }
+            IsLoading = true;
+            GridSize = NextGridSize;
+            int toHide=SudokuDifficulty();
+            InternalGridSize = (int)Math.Sqrt(GridSize);
+            PossibleValues = Enumerable.Range(1, GridSize).ToList();
             ElapsedTime=0;
             TimerService.Stop();
             StateHasChanged();
@@ -74,7 +83,7 @@ namespace Projektas.Client.Pages {
             GridValues=await SudokuService.GenerateSolvedSudokuAsync(GridSize);
             Solution=(int[,])GridValues.Clone();
 
-            GridValues=await SudokuService.HideNumbersAsync(GridValues,GridSize,SudokuDifficulty());
+            GridValues=await SudokuService.HideNumbersAsync(GridValues,GridSize, toHide);
 
             DisabledCells=Enumerable
                .Range(0,GridSize)
@@ -89,12 +98,32 @@ namespace Projektas.Client.Pages {
             StateHasChanged();
         }
 
-        public int SudokuDifficulty() {
-            return CurrentDifficulty switch {
-                Difficulty.Easy => _random.Next(20,25),
-                Difficulty.Medium => _random.Next(40,45),
-                Difficulty.Hard => _random.Next(55,57),
-                _ => 0,
+        public int SudokuDifficulty()
+        {
+            return GridSize switch
+            {
+                4 => CurrentDifficulty switch
+                {
+                    Difficulty.Easy => _random.Next(7, 8),
+                    Difficulty.Medium => _random.Next(9, 10),
+                    Difficulty.Hard => _random.Next(11, 12),
+                    _ => 0,
+                },
+                9 => CurrentDifficulty switch
+                {
+                    Difficulty.Easy => _random.Next(30, 35),
+                    Difficulty.Medium => _random.Next(45, 48),
+                    Difficulty.Hard => _random.Next(53, 57),
+                    _ => 0,
+                },
+                16 => CurrentDifficulty switch
+                {
+                    Difficulty.Easy => _random.Next(30, 50),
+                    Difficulty.Medium => _random.Next(100, 130),
+                    Difficulty.Hard => _random.Next(140, 150),
+                    _ => 0,
+                },
+                _ => throw new ArgumentException("Unsupported grid size"),
             };
         }
 
@@ -121,7 +150,7 @@ namespace Projektas.Client.Pages {
         }
       
         public void IsCorrect() {
-            if(IsGameActive) {
+            if(IsGameActive && !IsLoading) {
                 if(GridValues!.Cast<int>().SequenceEqual(Solution!.Cast<int>())) {
                     EndGame(true);
                 } else {
@@ -135,7 +164,15 @@ namespace Projektas.Client.Pages {
                 CurrentDifficulty=parsedDifficulty;
             }
         }
-      
+
+        public void OnSizeChanged(ChangeEventArgs e)
+        {
+            if (int.TryParse(e.Value?.ToString(), out int size))
+            {
+                NextGridSize = size;
+            }
+        }
+
         public string FormatTime(int totalSeconds) {
             int minutes=totalSeconds/60;
             int seconds=totalSeconds%60;
