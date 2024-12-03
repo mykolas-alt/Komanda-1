@@ -76,18 +76,49 @@ namespace Projektas.Tests.Client_Tests.Pages
         {
             var cut = RenderComponent<Sudoku>();
 
+            cut.Instance.GridSize = 4;
+
             cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Easy" });
             var difficulty = cut.Instance.SudokuDifficulty();
-            Assert.InRange(difficulty, 20, 25);
+            Assert.InRange(difficulty, 7, 8);
 
             cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Medium" });
             difficulty = cut.Instance.SudokuDifficulty();
-            Assert.InRange(difficulty, 40, 45);
+            Assert.InRange(difficulty, 9, 10);
 
             cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Hard" });
             difficulty = cut.Instance.SudokuDifficulty();
-            Assert.InRange(difficulty, 55, 57);
+            Assert.InRange(difficulty, 11, 12);
+
+            cut.Instance.GridSize = 9;
+
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Easy" });
+            difficulty = cut.Instance.SudokuDifficulty();
+            Assert.InRange(difficulty, 30, 35);
+
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Medium" });
+            difficulty = cut.Instance.SudokuDifficulty();
+            Assert.InRange(difficulty, 45, 48);
+
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Hard" });
+            difficulty = cut.Instance.SudokuDifficulty();
+            Assert.InRange(difficulty, 53, 57);
+
+            cut.Instance.GridSize = 16;
+
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Easy" });
+            difficulty = cut.Instance.SudokuDifficulty();
+            Assert.InRange(difficulty, 30, 50);
+
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Medium" });
+            difficulty = cut.Instance.SudokuDifficulty();
+            Assert.InRange(difficulty, 100, 130);
+
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Hard" });
+            difficulty = cut.Instance.SudokuDifficulty();
+            Assert.InRange(difficulty, 140, 150);
         }
+
 
         [Fact]
         public void TimerTick_ShouldEndGame_WhenTimeRunsOut()
@@ -112,6 +143,7 @@ namespace Projektas.Tests.Client_Tests.Pages
             cut.Instance.GridValues = mockGrid;
             cut.Instance.Solution = mockGrid;
             cut.Instance.IsGameActive = true;
+            cut.Instance.IsLoading = false;
 
             cut.Instance.IsCorrect();
 
@@ -139,5 +171,28 @@ namespace Projektas.Tests.Client_Tests.Pages
 
             Assert.Equal(5, cut.Instance.GridValues[1, 1]);
         }
+
+        [Fact]
+        public void OnSizeChanged_ShouldUpdateNextGridSize()
+        {
+            var cut = RenderComponent<Sudoku>();
+
+            var changeArgs = new ChangeEventArgs { Value = "9" };
+            cut.Instance.OnSizeChanged(changeArgs);
+            Assert.Equal(9, cut.Instance.NextGridSize);
+
+            changeArgs = new ChangeEventArgs { Value = "16" };
+            cut.Instance.OnSizeChanged(changeArgs);
+            Assert.Equal(16, cut.Instance.NextGridSize);
+
+
+            changeArgs = new ChangeEventArgs { Value = "invalid" };
+            cut.Instance.OnSizeChanged(changeArgs);
+            Assert.Equal(16, cut.Instance.NextGridSize);
+
+        }
+
+
+
     }
 }

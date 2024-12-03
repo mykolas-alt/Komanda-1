@@ -1,6 +1,5 @@
 ﻿using Google.OrTools.ConstraintSolver;
 using Projektas.Shared.Models;
-using System;
 
 namespace Projektas.Server.Services {
     public class SudokuService {
@@ -18,7 +17,8 @@ namespace Projektas.Server.Services {
         }
 
         public bool HasMultipleSolutions(int[,] grid,int gridSize) {
-            SetUpConstrains(grid,gridSize,gridSize/3);
+
+            SetUpConstrains(grid,gridSize,(int)Math.Sqrt(gridSize));
 
             _solutionCollector=_solver!.MakeAllSolutionCollector();
             _solutionCollector.Add(_possibleGrid.Flatten());
@@ -202,12 +202,12 @@ namespace Projektas.Server.Services {
                     return false;
                 }
             }
+            int internalGridSize = (int)Math.Sqrt(gridSize);
+            int startRow=row-row% internalGridSize;
+            int startCol=col-col% internalGridSize;
 
-            int startRow=row-row%3;
-            int startCol=col-col%3;
-
-            for(int i=startRow;i<startRow+3;i++) {
-                for(int j=startCol;j<startCol+3;j++) {
+            for(int i=startRow;i<startRow+ internalGridSize; i++) {
+                for(int j=startCol;j<startCol+ internalGridSize; j++) {
                     if(grid[i,j]==num) {
                         return false;
                     }
