@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Projektas.Server.Repositories;
 using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
 using Projektas.Server.Database;

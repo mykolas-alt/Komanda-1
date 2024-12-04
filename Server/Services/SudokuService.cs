@@ -1,4 +1,5 @@
 ﻿using Google.OrTools.ConstraintSolver;
+using Projektas.Server.Interfaces;
 using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services {
@@ -70,19 +71,26 @@ namespace Projektas.Server.Services {
         }
 
         public async Task AddScoreToDbAsync(UserScoreDto<SudokuData> data) {
-            await _scoreRepository.AddScoreToUserAsync<SudokuData>(data.Username,data.GameData,(data.GameData.TimeInSeconds,data.GameData.Solved));
+            var gameData=new SudokuData() {
+                TimeInSeconds=data.GameData.TimeInSeconds
+            };
+
+            await _scoreRepository.AddScoreToUserAsync<SudokuData>(data.Username,gameData);
         }
 
-        public async Task<UserScoreDto<SudokuData>?> GetUserHighscoreAsync(string username) {
-            return await _scoreRepository.GetHighscoreFromUserAsync<SudokuData>(username);
+        public async Task<UserScoreDto<SudokuData>> GetUserHighscoreAsync(string username) {
+            var scores = await _scoreRepository.GetHighscoreFromUserAsync<SudokuData>(username);
+
+            return scores.OrderBy(s => s.GameData.TimeInSeconds).First();
         }
 
         public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(int topCount) {
             List<UserScoreDto<SudokuData>> userScores=await _scoreRepository.GetAllScoresAsync<SudokuData>();
+            List<UserScoreDto<SudokuData>> orderedScores = userScores.OrderByDescending(s => s.GameData.TimeInSeconds).ToList();
             List<UserScoreDto<SudokuData>> topScores=new List<UserScoreDto<SudokuData>>();
             
-            for(int i=0;i<topCount && i<userScores.Count;i++) {
-                topScores.Add(userScores[i]);
+            for(int i=0;i<topCount && i<orderedScores.Count;i++) {
+                topScores.Add(orderedScores[i]);
             }
             
             return topScores;

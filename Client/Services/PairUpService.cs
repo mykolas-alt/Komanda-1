@@ -21,7 +21,7 @@ namespace Projektas.Client.Services {
             await _httpClient.PostAsJsonAsync("api/pairup/save-score",data);
         }
 
-        public async Task<UserScoreDto<PairUpData>?> GetUserHighscoreAsync(string username) {
+        public async Task<UserScoreDto<PairUpData>> GetUserHighscoreAsync(string username) {
             var url=$"api/pairup/highscore?username={username}";
             return await _httpClient.GetFromJsonAsync<UserScoreDto<PairUpData>?>(url);
         }

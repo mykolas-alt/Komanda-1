@@ -11,7 +11,7 @@ namespace Projektas.Client.Pages {
 		public List<UserScoreDto<MathGameData>>? topScores {get;private set;}
 		public string? username=null;
         public int score {get;private set;}=0;
-		private UserScoreDto<MathGameData>? highscore {get;set;}
+		private UserScoreDto<MathGameData> highscore {get;set;} = new UserScoreDto<MathGameData>();
 
         [Inject]
         public IMathGameService MathGameService {get;set;}

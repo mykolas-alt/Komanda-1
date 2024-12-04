@@ -2,10 +2,11 @@
 using Projektas.Shared.Models;
 using Projektas.Server.Database;
 using Projektas.Server.Exceptions;
+using Projektas.Server.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Projektas.Shared.Interfaces;
 
-namespace Projektas.Server.Services {
+namespace Projektas.Server.Repositories {
     public class ScoreRepository : IScoreRepository {
         private readonly UserDbContext _userDbContext;
 
@@ -13,26 +14,12 @@ namespace Projektas.Server.Services {
 			_userDbContext=userDbContext;
 		}
 
-		public async Task AddScoreToUserAsync<T>(string username,T gameData,object additionalInfo) where T : IGame {
+		public async Task AddScoreToUserAsync<T>(string username,T gameData) where T : IGame {
 			try {
 				var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
 				if(user==null) {
                     return;
                 }
-
-				if(gameData is AimTrainerData aimTrainer && additionalInfo is int aimTScore) {
-					aimTrainer.Scores=aimTScore;
-				} else if(gameData is MathGameData mathGame && additionalInfo is int mathScore) {
-					mathGame.Scores=mathScore;
-				} else if(gameData is PairUpData pairUp && additionalInfo is (int pairUpTime,int pairUpFails)) {
-					pairUp.TimeInSeconds=pairUpTime;
-					pairUp.Fails=pairUpFails;
-				} else if(gameData is SudokuData sudokuGame && additionalInfo is (int sudokuTime,bool sudokuSolved)) {
-					sudokuGame.TimeInSeconds=sudokuTime;
-					sudokuGame.Solved=sudokuSolved;
-				} else {
-					throw new ArgumentException("Invalid game info or additional info provided.");
-				}
 
 				var score=new Score<T> {
 					UserId=user.Id,
@@ -50,57 +37,21 @@ namespace Projektas.Server.Services {
 			
         }
 
-		public async Task<UserScoreDto<T>?> GetHighscoreFromUserAsync<T>(string username) where T : IGame {
+		public async Task<List<UserScoreDto<T>>> GetHighscoreFromUserAsync<T>(string username) where T : IGame {
 			try {
 				var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
 
 				if(user==null)
-					return null;
+					return new List<UserScoreDto<T>>();
 
-				if(typeof(T)==typeof(AimTrainerData)) {
-					var score=await _userDbContext.Set<Score<AimTrainerData>>()
-						.Where(s => s.UserId==user.Id)
-						.OrderByDescending(s => s.GameData.Scores)
-						.FirstOrDefaultAsync();
-
-					return score==null ? null : new UserScoreDto<T> {
-						Username=username,
-						GameData=(T)(IGame)score.GameData
-					};
-				} else if(typeof(T)==typeof(MathGameData)) {
-					var score=await _userDbContext.Set<Score<MathGameData>>()
-						.Where(s => s.UserId==user.Id)
-						.OrderByDescending(s => s.GameData.Scores)
-						.FirstOrDefaultAsync();
-
-					return score==null ? null : new UserScoreDto<T> {
-						Username=username,
-						GameData=(T)(IGame)score.GameData
-					};
-				} else if(typeof(T)==typeof(PairUpData)) {
-					var score=await _userDbContext.Set<Score<PairUpData>>()
-						.Where(s => s.UserId==user.Id)
-						.OrderBy(s => s.GameData.TimeInSeconds)
-						.ThenBy(s => s.GameData.Fails)
-						.FirstOrDefaultAsync();
-
-					return score==null ? null : new UserScoreDto<T> {
-						Username=username,
-						GameData=(T)(IGame)score.GameData
-					};
-				} else if(typeof(T)==typeof(SudokuData)) {
-					var score=await _userDbContext.Set<Score<SudokuData>>()
-						.Where(s => s.UserId==user.Id && s.GameData.Solved)
-						.OrderBy(s => s.GameData.TimeInSeconds)
-						.FirstOrDefaultAsync();
-
-					return score==null ? null : new UserScoreDto<T> {
-						Username=username,
-						GameData=(T)(IGame)score.GameData
-					};
-				} else {
-					throw new NotSupportedException($"Highscore retrieval is not supported for type {typeof(T).Name}");
-				}
+				return await _userDbContext.Set<Score<T>>()
+					.AsNoTracking()
+					.Where(s => s.UserId==user.Id)
+					.Select(s => new UserScoreDto<T> {
+						Username=s.User.Username,
+						GameData=(T)(IGame)s.GameData
+					})
+					.ToListAsync();
 			} catch(DbUpdateException dbEx) {
 				throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
 			} catch(Exception ex) {
@@ -110,6 +61,14 @@ namespace Projektas.Server.Services {
 
 		public async Task<List<UserScoreDto<T>>> GetAllScoresAsync<T>() where T : IGame {
 			try {
+				return await _userDbContext.Set<Score<T>>()
+					.AsNoTracking()
+					.Include(s => s.User)
+					.Select(s => new UserScoreDto<T> {
+						Username=s.User.Username,
+						GameData=(T)(IGame)s.GameData
+					})
+					.ToListAsync();
 				if(typeof(T)==typeof(AimTrainerData)) {
 					return await _userDbContext.Set<Score<AimTrainerData>>()
 						.AsNoTracking()
@@ -145,7 +104,6 @@ namespace Projektas.Server.Services {
 					return await _userDbContext.Set<Score<SudokuData>>()
 						.AsNoTracking()
 						.Include(s => s.User)
-						.Where(s => s.GameData.Solved)
 						.OrderByDescending(s => s.GameData.TimeInSeconds)
 						.Select(s => new UserScoreDto<T> {
 							Username=s.User.Username,

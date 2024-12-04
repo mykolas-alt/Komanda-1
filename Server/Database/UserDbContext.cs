@@ -58,7 +58,6 @@ namespace Projektas.Server.Database
 			ConfigureScoreTable<SudokuData>(modelBuilder,"sudokuScores",score => {
 				score.OwnsOne(s => s.GameData,gameData => {
 					gameData.Property(g => g.TimeInSeconds).HasColumnName("timeInSeconds");
-					gameData.Property(g => g.Solved).HasColumnName("solved");
 				});
 				score.HasOne(s => s.User)
 					.WithMany(u => u.SudokuScores)

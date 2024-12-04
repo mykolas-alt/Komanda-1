@@ -35,7 +35,7 @@ namespace Projektas.Client.Services {
             await _httpClient.PostAsJsonAsync("api/mathgame/save-score",data);
         }
 
-        public async Task<UserScoreDto<MathGameData>?> GetUserHighscoreAsync(string username) {
+        public async Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username) {
             var url=$"api/mathgame/highscore?username={username}";
             return await _httpClient.GetFromJsonAsync<UserScoreDto<MathGameData>?>(url);
         }

@@ -4,7 +4,7 @@ using Projektas.Server.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Projektas.Server.Interfaces;
 
-namespace Projektas.Server.Services {
+namespace Projektas.Server.Repositories {
 	public class UserRepository : IUserRepository {
 		private readonly UserDbContext _userDbContext;
 
