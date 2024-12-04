@@ -26,21 +26,23 @@ namespace Projektas.Client.Services {
         }
 
         public async Task SaveScoreAsync(string username,int score) {
-            var data=new UserScoreDto {
+            var data=new UserScoreDto<MathGameData> {
                 Username=username,
-                Data=score
+                GameData=new MathGameData {
+                    Scores=score
+                }
             };
             await _httpClient.PostAsJsonAsync("api/mathgame/save-score",data);
         }
 
-        public async Task<int> GetUserHighscore(string username) {
+        public async Task<UserScoreDto<MathGameData>?> GetUserHighscoreAsync(string username) {
             var url=$"api/mathgame/highscore?username={username}";
-            return await _httpClient.GetFromJsonAsync<int>(url);
+            return await _httpClient.GetFromJsonAsync<UserScoreDto<MathGameData>?>(url);
         }
 
-        public async Task<List<UserScoreDto>> GetTopScoresAsync(int topCount=10)  {
+        public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount=10)  {
             var url=$"api/mathgame/top-score?topCount={topCount}";
-            return await _httpClient.GetFromJsonAsync<List<UserScoreDto>>(url);
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto<MathGameData>>>(url);
         }
     }
 }

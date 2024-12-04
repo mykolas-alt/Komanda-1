@@ -2,9 +2,9 @@
 
 namespace Projektas.Client.Interfaces {
     public interface IAccountService {
-        public Task<string?> LogIn(User user);
-        public void LogOff(string username);
+        public Task<string?> LogInAsync(User user);
+        public void LogOffAsync(string username);
         public Task<HttpResponseMessage> CreateAccountAsync(User user);
-        public Task<List<string>> GetUsernames();
+        public Task<List<string>> GetUsernamesAsync();
     }
 }

@@ -13,18 +13,18 @@ namespace Projektas.Server.Controllers {
         }
 
         [HttpPost("save-score")]
-        public async Task SaveScore([FromBody] UserScoreDto data) {
-            await _aimTrainerService.AddScoreToDb(data);
+        public async Task SaveScoreAsync([FromBody] UserScoreDto<AimTrainerData> data) {
+            await _aimTrainerService.AddScoreToDbAsync(data);
         }
 
         [HttpGet("highscore")]
-        public async Task<ActionResult<int>> GetUserHighscore([FromQuery] string username) {
-            return await _aimTrainerService.GetUserHighscore(username);
+        public async Task<ActionResult<UserScoreDto<AimTrainerData>?>> GetUserHighscoreAsync([FromQuery] string username) {
+            return await _aimTrainerService.GetUserHighscoreAsync(username);
         }
 
         [HttpGet("top-score")]
-        public async Task<ActionResult<List<UserScoreDto>>> GetTopScores([FromQuery] int topCount) {
-            return await _aimTrainerService.GetTopScores(topCount);
+        public async Task<ActionResult<List<UserScoreDto<AimTrainerData>>>> GetTopScoresAsync([FromQuery] int topCount) {
+            return await _aimTrainerService.GetTopScoresAsync(topCount);
         }
     }
 }

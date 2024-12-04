@@ -17,11 +17,11 @@ namespace Projektas.Server.Services {
 			_userTrackingService=userTrackingService;
 		}
 
-		public async Task CreateUser(User newUser) {
+		public async Task CreateUserAsync(User newUser) {
 			await _userRepository.CreateUserAsync(newUser);
 		}
 
-		public async Task<bool> LogInToUser(User userInfo) {
+		public async Task<bool> LogInToUserAsync(User userInfo) {
 			bool userMached=await _userRepository.ValidateUserAsync(userInfo.Username,userInfo.Password);
 			if(userMached) {
 				_userTrackingService.AddOrUpdateUser(userInfo.Username);
@@ -31,6 +31,17 @@ namespace Projektas.Server.Services {
 
 		public void LogOffFromUser(string username) {
 			_userTrackingService.AddOrUpdateUser(username);
+		}
+		
+		public async Task<List<string>> GetUsernamesAsync() {
+			IEnumerable<User> users=await _userRepository.GetAllUsersAsync();
+			List<string> usernames=new List<string>();
+
+			foreach(User user in users) {
+				usernames.Add(user.Username);
+			}
+
+			return usernames;
 		}
 
 		public string GenerateJwtToken(User user) {
@@ -51,17 +62,6 @@ namespace Projektas.Server.Services {
 			);
 
 			return new JwtSecurityTokenHandler().WriteToken(token);
-		}
-		
-		public async Task<List<string>> GetUsernamesAsync() {
-			IEnumerable<User> users=await _userRepository.GetAllUsersAsync();
-			List<string> usernames=new List<string>();
-
-			foreach(User user in users) {
-				usernames.Add(user.Username);
-			}
-
-			return usernames;
 		}
 	}
 }

@@ -1,6 +1,5 @@
 ﻿using Google.OrTools.ConstraintSolver;
 using Projektas.Shared.Models;
-using System;
 
 namespace Projektas.Server.Services {
     public class SudokuService {
@@ -70,21 +69,17 @@ namespace Projektas.Server.Services {
             _possibleGrid=null;
         }
 
-        public async Task AddScoreToDb(UserScoreDto data) {
-            var sudoku=new SudokuModel {
-                UserTimeInSeconds=data.Data
-            };
-
-            await _scoreRepository.AddScoreToUserAsync<SudokuModel>(data.Username,sudoku,data.Data);
+        public async Task AddScoreToDbAsync(UserScoreDto<SudokuData> data) {
+            await _scoreRepository.AddScoreToUserAsync<SudokuData>(data.Username,data.GameData,(data.GameData.TimeInSeconds,data.GameData.Solved));
         }
 
-        public async Task<int?> GetUserHighscore(string username) {
-            return await _scoreRepository.GetHighscoreFromUserAsync<SudokuModel>(username);
+        public async Task<UserScoreDto<SudokuData>?> GetUserHighscoreAsync(string username) {
+            return await _scoreRepository.GetHighscoreFromUserAsync<SudokuData>(username);
         }
 
-        public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
-            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync<SudokuModel>();
-            List<UserScoreDto> topScores=new List<UserScoreDto>();
+        public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(int topCount) {
+            List<UserScoreDto<SudokuData>> userScores=await _scoreRepository.GetAllScoresAsync<SudokuData>();
+            List<UserScoreDto<SudokuData>> topScores=new List<UserScoreDto<SudokuData>>();
             
             for(int i=0;i<topCount && i<userScores.Count;i++) {
                 topScores.Add(userScores[i]);
@@ -121,7 +116,7 @@ namespace Projektas.Server.Services {
                     i--;
                     attempts++;
 
-                    if (attempts>1) {
+                    if(attempts>1) {
                         string lastCords=hidenNumbers.Keys.Last();
                         string[] cords=lastCords.Split(',');
                         row=int.Parse(cords[0]);
@@ -144,7 +139,6 @@ namespace Projektas.Server.Services {
 
             return grid;
         }
-
 
         public int[,] GenerateSolvedSudoku(int gridSize) {
             int[,] grid=new int[gridSize,gridSize];

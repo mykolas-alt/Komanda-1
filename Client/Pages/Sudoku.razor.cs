@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
-using Projektas.Client.Services;﻿
 
 namespace Projektas.Client.Pages {
     public partial class Sudoku {
@@ -35,37 +32,37 @@ namespace Projektas.Client.Pages {
 
         public int ElapsedTime {get;private set;}
         public string? Message {get;set;}
-		    public string? username=null;
+		public string? username=null;
 
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider {get;set;}
 
-		    protected override async Task OnInitializedAsync() {
-			      AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
+		protected override async Task OnInitializedAsync() {
+		    AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChangedAsync;
 
-			      await LoadUsernameAsync();
-		    }
+		    await LoadUsernameAsync();
+	    }
 
-		    private async Task LoadUsernameAsync() {
-			      username=await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
-			      StateHasChanged();
-		    }
+	    private async Task LoadUsernameAsync() {
+		    username=await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
+		    StateHasChanged();
+	    }
 
-		    private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
-			      await InvokeAsync(LoadUsernameAsync);
-			      StateHasChanged();
-		    }
+	    private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
+		    await InvokeAsync(LoadUsernameAsync);
+		    StateHasChanged();
+	    }
 
         protected override void OnInitialized() {
             GridSize=9;
             PossibleValues=new List<int> {1,2,3,4,5,6,7,8,9};
             TimerService.OnTick+=TimerTick;
             IsGameActive=false;
-            GenerateSudokuGame();
+            GenerateSudokuGameAsync();
         }
 
 
-        public async Task GenerateSudokuGame() {
+        public async Task GenerateSudokuGameAsync() {
             IsLoading=true;
             ElapsedTime=0;
             TimerService.Stop();
@@ -110,6 +107,9 @@ namespace Projektas.Client.Pages {
       
         private void EndGame(bool won) {
             IsGameActive=false;
+            if(username!=null) {
+                SudokuService.SaveScoreAsync(username,TimerService.RemainingTime,won);
+            }
             TimerService.Stop();
             if(won) {
                 Message="Correct solution. Solved in "+FormatTime(ElapsedTime);
@@ -160,7 +160,7 @@ namespace Projektas.Client.Pages {
         }
 
         public void Dispose() {
-            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChanged;
+            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChangedAsync;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Projektas.Client.Interfaces {
         public Task<List<int>> GetOptionsAsync();
         public Task<bool> CheckAnswerAsync(int option);
         public Task SaveScoreAsync(string username,int score);
-        public Task<int> GetUserHighscore(string username);
-		public Task<List<UserScoreDto>> GetTopScoresAsync(int topCount);
+        public Task<UserScoreDto<MathGameData>?> GetUserHighscoreAsync(string username);
+		public Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount);
     }
 }

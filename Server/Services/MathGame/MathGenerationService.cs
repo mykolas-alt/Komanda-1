@@ -72,8 +72,8 @@ namespace Projektas.Server.Services.MathGame {
 
         private static List<int> GetDivisors(int number) {
             List<int> divisors=new();
-            for (int i=2;i<=number;i++) {
-                if (number%i==0) {
+            for(int i=2;i<=number;i++) {
+                if(number%i==0) {
                     divisors.Add(i);
                 }
             }

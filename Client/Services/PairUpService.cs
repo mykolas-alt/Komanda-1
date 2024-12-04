@@ -10,22 +10,25 @@ namespace Projektas.Client.Services {
             _httpClient = httpClient;
         }
 
-        public async Task SaveScoreAsync(string username,int score) {
-            var data=new UserScoreDto {
+        public async Task SaveScoreAsync(string username,int score,int fails) {
+            var data=new UserScoreDto<PairUpData> {
                 Username=username,
-                Data=score
+                GameData=new PairUpData {
+                    TimeInSeconds=score,
+                    Fails=fails
+                }
             };
             await _httpClient.PostAsJsonAsync("api/pairup/save-score",data);
         }
 
-        public async Task<int> GetUserHighscore(string username) {
+        public async Task<UserScoreDto<PairUpData>?> GetUserHighscoreAsync(string username) {
             var url=$"api/pairup/highscore?username={username}";
-            return await _httpClient.GetFromJsonAsync<int>(url);
+            return await _httpClient.GetFromJsonAsync<UserScoreDto<PairUpData>?>(url);
         }
 
-        public async Task<List<UserScoreDto>> GetTopScoresAsync(int topCount=10)  {
+        public async Task<List<UserScoreDto<PairUpData>>> GetTopScoresAsync(int topCount=10)  {
             var url=$"api/pairup/top-score?topCount={topCount}";
-            return await _httpClient.GetFromJsonAsync<List<UserScoreDto>>(url);
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto<PairUpData>>>(url);
         }
     }
 }

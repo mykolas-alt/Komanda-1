@@ -30,7 +30,7 @@
         public IAccountAuthStateProvider AuthStateProvider {get;set;}
 
 		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
+			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChangedAsync;
 
 			await LoadUsernameAsync();
 		}
@@ -40,7 +40,7 @@
 			StateHasChanged();
 		}
 
-		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+		private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
 			await InvokeAsync(LoadUsernameAsync);
 			StateHasChanged();
 		}
@@ -75,7 +75,7 @@
 
         public void TimerTick() {
             if(TimerService.RemainingTime==0) {
-                EndGame();
+                EndGameAsync();
             } else {
                 InvokeAsync(StateHasChanged);
             }
@@ -89,7 +89,7 @@
             }
         }
 
-        private async Task EndGame() {
+        private async Task EndGameAsync() {
             if(username!=null) {
                 await AimTrainerService.SaveScoreAsync(username,score);
             }
@@ -112,7 +112,7 @@
         }
 
         protected virtual void Dispose(bool disposing) {
-            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChanged;
+            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChangedAsync;
             if(disposing) {
                 TimerService.OnTick-=TimerTick;
                 moveDotTimer?.Stop();

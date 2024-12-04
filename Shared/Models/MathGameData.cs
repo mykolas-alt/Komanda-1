@@ -1,7 +1,7 @@
 ﻿using Projektas.Shared.Interfaces;
 
 namespace Projektas.Shared.Models {
-    public class AimTrainerModel : IGame {
-		public int UserScores {get;set;}
+    public class MathGameData : IGame {
+		public int Scores {get;set;}
     }
 }

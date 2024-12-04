@@ -10,10 +10,10 @@ namespace Projektas.Server.Database
 
 		public DbSet<User> Users {get;set;}
 
-		public DbSet<Score<MathGameModel>> MathGameScores {get;set;}
-		public DbSet<Score<SudokuModel>> SudokuScores {get;set;}
-		public DbSet<Score<AimTrainerModel>> AimTrainerScores {get;set;}
-		public DbSet<Score<PairUpModel>> PairUpScores {get;set;}
+		public DbSet<Score<MathGameData>> MathGameScores {get;set;}
+		public DbSet<Score<SudokuData>> SudokuScores {get;set;}
+		public DbSet<Score<AimTrainerData>> AimTrainerScores {get;set;}
+		public DbSet<Score<PairUpData>> PairUpScores {get;set;}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			var userConfig=modelBuilder.Entity<User>();
@@ -24,9 +24,9 @@ namespace Projektas.Server.Database
 			userConfig.Property(c => c.Username).HasColumnName("username").IsRequired();
 			userConfig.Property(c => c.Password).HasColumnName("password").IsRequired();
 			
-			ConfigureScoreTable<AimTrainerModel>(modelBuilder,"aimTrainerScores",score => {
-				score.OwnsOne(s => s.GameInfo,gameInfo => {
-					gameInfo.Property(g => g.UserScores).HasColumnName("userScore");
+			ConfigureScoreTable<AimTrainerData>(modelBuilder,"aimTrainerScores",score => {
+				score.OwnsOne(s => s.GameData,gameData => {
+					gameData.Property(g => g.Scores).HasColumnName("score");
 				});
 				score.HasOne(s => s.User)
 					.WithMany(u => u.AimTrainerScores)
@@ -34,9 +34,9 @@ namespace Projektas.Server.Database
 					.OnDelete(DeleteBehavior.Cascade);
 			});
 			
-			ConfigureScoreTable<MathGameModel>(modelBuilder,"mathGameScores",score => {
-				score.OwnsOne(s => s.GameInfo,gameInfo => {
-					gameInfo.Property(g => g.UserScores).HasColumnName("userScore");
+			ConfigureScoreTable<MathGameData>(modelBuilder,"mathGameScores",score => {
+				score.OwnsOne(s => s.GameData,gameData => {
+					gameData.Property(g => g.Scores).HasColumnName("score");
 				});
 				score.HasOne(s => s.User)
 					.WithMany(u => u.MathGameScores)
@@ -44,10 +44,10 @@ namespace Projektas.Server.Database
 					.OnDelete(DeleteBehavior.Cascade);
 			});
 			
-			ConfigureScoreTable<PairUpModel>(modelBuilder,"pairUpScores",score => {
-				score.OwnsOne(s => s.GameInfo,gameInfo => {
-					gameInfo.Property(g => g.UserTimeInSeconds).HasColumnName("userTimeInSeconds");
-					gameInfo.Property(g => g.Fails).HasColumnName("fails");
+			ConfigureScoreTable<PairUpData>(modelBuilder,"pairUpScores",score => {
+				score.OwnsOne(s => s.GameData,gameData => {
+					gameData.Property(g => g.TimeInSeconds).HasColumnName("timeInSeconds");
+					gameData.Property(g => g.Fails).HasColumnName("fails");
 				});
 				score.HasOne(s => s.User)
 					.WithMany(u => u.PairUpScores)
@@ -55,10 +55,10 @@ namespace Projektas.Server.Database
 					.OnDelete(DeleteBehavior.Cascade);
 			});
 			
-			ConfigureScoreTable<SudokuModel>(modelBuilder,"sudokuScores",score => {
-				score.OwnsOne(s => s.GameInfo,gameInfo => {
-					gameInfo.Property(g => g.UserTimeInSeconds).HasColumnName("userTimeInSeconds");
-					gameInfo.Property(g => g.Solved).HasColumnName("solved");
+			ConfigureScoreTable<SudokuData>(modelBuilder,"sudokuScores",score => {
+				score.OwnsOne(s => s.GameData,gameData => {
+					gameData.Property(g => g.TimeInSeconds).HasColumnName("timeInSeconds");
+					gameData.Property(g => g.Solved).HasColumnName("solved");
 				});
 				score.HasOne(s => s.User)
 					.WithMany(u => u.SudokuScores)

@@ -34,17 +34,17 @@ namespace Projektas.Client.Pages {
 				account.Username=accountUsername;
 				account.Password=accountPassword;
 
-				token=await AccountService.LogIn(account);
+				token=await AccountService.LogInAsync(account);
 
 				if(!string.IsNullOrEmpty(token)) {
-					await AuthStateProvider.MarkUserAsAuthenticated(token);
+					await AuthStateProvider.MarkUserAsAuthenticatedAsync(token);
 					Navigation.NavigateTo("/");
 				}
 			}
 		}
 
 		public void LogOffEvent() {
-			AccountService.LogOff(username);
+			AccountService.LogOffAsync(username);
 			AuthStateProvider.MarkUserAsLoggedOut();
 
 			token="";
@@ -71,7 +71,7 @@ namespace Projektas.Client.Pages {
 		}
 
 		public async void UsernameChange(ChangeEventArgs changeEvent) {
-			List<string> usernames=await AccountService.GetUsernames();
+			List<string> usernames=await AccountService.GetUsernamesAsync();
 
 			newAccountUsername=(string)changeEvent.Value;
 

@@ -8,21 +8,17 @@ namespace Projektas.Server.Services {
             _scoreRepository=scoreRepository;
         }
 
-        public async Task AddScoreToDb(UserScoreDto data) {
-            var pairUp=new PairUpModel {
-                UserTimeInSeconds=data.Data
-            };
-
-            await _scoreRepository.AddScoreToUserAsync<PairUpModel>(data.Username,pairUp,data.Data);
+        public async Task AddScoreToDbAsync(UserScoreDto<PairUpData> data) {
+            await _scoreRepository.AddScoreToUserAsync<PairUpData>(data.Username,data.GameData,(data.GameData.TimeInSeconds,data.GameData.Fails));
         }
 
-        public async Task<int?> GetUserHighscore(string username) {
-            return await _scoreRepository.GetHighscoreFromUserAsync<PairUpModel>(username);
+        public async Task<UserScoreDto<PairUpData>?> GetUserHighscoreAsync(string username) {
+            return await _scoreRepository.GetHighscoreFromUserAsync<PairUpData>(username);
         }
 
-        public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
-            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync<PairUpModel>();
-            List<UserScoreDto> topScores=new List<UserScoreDto>();
+        public async Task<List<UserScoreDto<PairUpData>>> GetTopScoresAsync(int topCount) {
+            List<UserScoreDto<PairUpData>> userScores=await _scoreRepository.GetAllScoresAsync<PairUpData>();
+            List<UserScoreDto<PairUpData>> topScores=new List<UserScoreDto<PairUpData>>();
             
             for(int i=0;i<topCount && i<userScores.Count;i++) {
                 topScores.Add(userScores[i]);

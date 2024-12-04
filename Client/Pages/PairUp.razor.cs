@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
-using Projektas.Client.Services;
 
-namespace Projektas.Client.Pages
-{
-    public partial class PairUp : ComponentBase
-    {
+namespace Projektas.Client.Pages {
+    public partial class PairUp : ComponentBase {
         public List<Card> cards {get;set;}
         public Card? firstSelectedCard {get;private set;}
         public Card? secondSelectedCard {get;private set;}
@@ -50,7 +47,7 @@ namespace Projektas.Client.Pages
         public IAccountAuthStateProvider AuthStateProvider {get;set;}
 
 		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
+			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChangedAsync;
 
 			await LoadUsernameAsync();
 		}
@@ -60,7 +57,7 @@ namespace Projektas.Client.Pages
 			StateHasChanged();
 		}
 
-		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+		private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
 			await InvokeAsync(LoadUsernameAsync);
 			StateHasChanged();
 		}
@@ -121,7 +118,7 @@ namespace Projektas.Client.Pages
 
                     if(cards.All(c => c.IsMatched)) {
                         if(username!=null) {
-                            PairUpService.SaveScoreAsync(username,attempts);
+                            PairUpService.SaveScoreAsync(username,0,attempts);
                         }
                         isGameActive=false;
                     }
@@ -144,7 +141,7 @@ namespace Projektas.Client.Pages
         }
 
         public void Dispose() {
-            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChanged;
+            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChangedAsync;
         }
 
         public class Card {

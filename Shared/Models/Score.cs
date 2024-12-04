@@ -5,7 +5,7 @@ namespace Projektas.Shared.Models {
 		public int Id {get;set;}
 		public int UserId {get;set;}
 
-		public T GameInfo {get;set;}
+		public T GameData {get;set;}
 
 		public User User {get;set;}
 	}

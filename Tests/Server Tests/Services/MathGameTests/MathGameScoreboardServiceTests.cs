@@ -22,7 +22,7 @@ namespace Projektas.Tests.Services.MathGameTests {
 			_mockScoreRepository.Verify(
 				repo => repo.AddScoreToUserAsync(
 					userScore.Username,
-					It.Is<MathGameModel>(m => m.UserScores==userScore.Data),
+					It.Is<MathGameData>(m => m.UserScores==userScore.Data),
 					userScore.Data
 					),
 				Times.Once
@@ -33,7 +33,7 @@ namespace Projektas.Tests.Services.MathGameTests {
 		public async Task GetUserHighscore_ShouldReturnHighscore() {
 			var username="testuser";
 			var expectedHighscore=200;
-			_mockScoreRepository.Setup(repo => repo.GetHighscoreFromUserAsync<MathGameModel>(username)).ReturnsAsync(expectedHighscore);
+			_mockScoreRepository.Setup(repo => repo.GetHighscoreFromUserAsync<MathGameData>(username)).ReturnsAsync(expectedHighscore);
 
 			var result=await _mathGameScoreboardService.GetUserHighscore(username);
 
@@ -49,7 +49,7 @@ namespace Projektas.Tests.Services.MathGameTests {
 				new UserScoreDto {Username="user3",Data=200},
 				new UserScoreDto {Username="user4",Data=150}
 			};
-			_mockScoreRepository.Setup(repo => repo.GetAllScoresAsync<MathGameModel>()).ReturnsAsync(userScores);
+			_mockScoreRepository.Setup(repo => repo.GetAllScoresAsync<MathGameData>()).ReturnsAsync(userScores);
 
 			var result=await _mathGameScoreboardService.GetTopScores(topCount);
 

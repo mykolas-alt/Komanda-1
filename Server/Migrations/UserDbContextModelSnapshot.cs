@@ -16,7 +16,7 @@ namespace Projektas.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.20");
 
-            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.AimTrainerModel>", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.AimTrainerData>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,7 +32,7 @@ namespace Projektas.Server.Migrations
                     b.ToTable("aimTrainerScores", (string)null);
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.MathGameModel>", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.MathGameData>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace Projektas.Server.Migrations
                     b.ToTable("mathGameScores", (string)null);
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.PairUpModel>", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.PairUpData>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace Projektas.Server.Migrations
                     b.ToTable("pairUpScores", (string)null);
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.SudokuModel>", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.SudokuData>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,7 +111,7 @@ namespace Projektas.Server.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.AimTrainerModel>", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.AimTrainerData>", b =>
                 {
                     b.HasOne("Projektas.Shared.Models.User", "User")
                         .WithMany("AimTrainerScores")
@@ -119,14 +119,14 @@ namespace Projektas.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Projektas.Shared.Models.AimTrainerModel", "GameInfo", b1 =>
+                    b.OwnsOne("Projektas.Shared.Models.AimTrainerData", "GameData", b1 =>
                         {
                             b1.Property<int>("ScoreId")
                                 .HasColumnType("INTEGER");
 
-                            b1.Property<int>("UserScores")
+                            b1.Property<int>("Scores")
                                 .HasColumnType("INTEGER")
-                                .HasColumnName("userScore");
+                                .HasColumnName("score");
 
                             b1.HasKey("ScoreId");
 
@@ -136,12 +136,12 @@ namespace Projektas.Server.Migrations
                                 .HasForeignKey("ScoreId");
                         });
 
-                    b.Navigation("GameInfo");
+                    b.Navigation("GameData");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.MathGameModel>", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.MathGameData>", b =>
                 {
                     b.HasOne("Projektas.Shared.Models.User", "User")
                         .WithMany("MathGameScores")
@@ -149,14 +149,14 @@ namespace Projektas.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Projektas.Shared.Models.MathGameModel", "GameInfo", b1 =>
+                    b.OwnsOne("Projektas.Shared.Models.MathGameData", "GameData", b1 =>
                         {
                             b1.Property<int>("ScoreId")
                                 .HasColumnType("INTEGER");
 
-                            b1.Property<int>("UserScores")
+                            b1.Property<int>("Scores")
                                 .HasColumnType("INTEGER")
-                                .HasColumnName("userScore");
+                                .HasColumnName("score");
 
                             b1.HasKey("ScoreId");
 
@@ -166,12 +166,12 @@ namespace Projektas.Server.Migrations
                                 .HasForeignKey("ScoreId");
                         });
 
-                    b.Navigation("GameInfo");
+                    b.Navigation("GameData");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.PairUpModel>", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.PairUpData>", b =>
                 {
                     b.HasOne("Projektas.Shared.Models.User", "User")
                         .WithMany("PairUpScores")
@@ -179,7 +179,7 @@ namespace Projektas.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Projektas.Shared.Models.PairUpModel", "GameInfo", b1 =>
+                    b.OwnsOne("Projektas.Shared.Models.PairUpData", "GameData", b1 =>
                         {
                             b1.Property<int>("ScoreId")
                                 .HasColumnType("INTEGER");
@@ -188,9 +188,9 @@ namespace Projektas.Server.Migrations
                                 .HasColumnType("INTEGER")
                                 .HasColumnName("fails");
 
-                            b1.Property<int>("UserTimeInSeconds")
+                            b1.Property<int>("TimeInSeconds")
                                 .HasColumnType("INTEGER")
-                                .HasColumnName("userTimeInSeconds");
+                                .HasColumnName("timeInSeconds");
 
                             b1.HasKey("ScoreId");
 
@@ -200,12 +200,12 @@ namespace Projektas.Server.Migrations
                                 .HasForeignKey("ScoreId");
                         });
 
-                    b.Navigation("GameInfo");
+                    b.Navigation("GameData");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.SudokuModel>", b =>
+            modelBuilder.Entity("Projektas.Shared.Models.Score<Projektas.Shared.Models.SudokuData>", b =>
                 {
                     b.HasOne("Projektas.Shared.Models.User", "User")
                         .WithMany("SudokuScores")
@@ -213,7 +213,7 @@ namespace Projektas.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Projektas.Shared.Models.SudokuModel", "GameInfo", b1 =>
+                    b.OwnsOne("Projektas.Shared.Models.SudokuData", "GameData", b1 =>
                         {
                             b1.Property<int>("ScoreId")
                                 .HasColumnType("INTEGER");
@@ -222,9 +222,9 @@ namespace Projektas.Server.Migrations
                                 .HasColumnType("INTEGER")
                                 .HasColumnName("solved");
 
-                            b1.Property<int>("UserTimeInSeconds")
+                            b1.Property<int>("TimeInSeconds")
                                 .HasColumnType("INTEGER")
-                                .HasColumnName("userTimeInSeconds");
+                                .HasColumnName("timeInSeconds");
 
                             b1.HasKey("ScoreId");
 
@@ -234,7 +234,7 @@ namespace Projektas.Server.Migrations
                                 .HasForeignKey("ScoreId");
                         });
 
-                    b.Navigation("GameInfo");
+                    b.Navigation("GameData");
 
                     b.Navigation("User");
                 });

@@ -20,7 +20,7 @@ namespace Projektas.Server.Services {
         }
 
         public bool RemoveUser(string username) {
-            Console.WriteLine("Removed");
+            Console.WriteLine("Removed: "+username);
             return _activeUsers.TryRemove(username,out _);
         }
 

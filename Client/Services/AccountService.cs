@@ -16,7 +16,7 @@ namespace Projektas.Client.Services {
 			return await _httpClient.PostAsJsonAsync("api/user/create_user",user);
 		}
 
-		public async Task<string?> LogIn(User user) {
+		public async Task<string?> LogInAsync(User user) {
 			var response=await _httpClient.PostAsJsonAsync("api/user/login",user);
 
 			if(response.IsSuccessStatusCode) {
@@ -27,11 +27,11 @@ namespace Projektas.Client.Services {
 			return "";
 		}
 
-		public async void LogOff(string username) {
+		public async void LogOffAsync(string username) {
 			await _httpClient.DeleteAsync($"api/user/logoff?username={username}");
 		}
 
-		public async Task<List<string>> GetUsernames() {
+		public async Task<List<string>> GetUsernamesAsync() {
 			return await _httpClient.GetFromJsonAsync<List<string>>("api/user/usernames");
 		}
 	}

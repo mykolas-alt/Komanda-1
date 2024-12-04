@@ -48,7 +48,7 @@ namespace Projektas.Client.Services {
 			return keyValuePairs.Select(kvp => new Claim(kvp.Key,kvp.Value?.ToString() ?? ""));
 		}
 
-		public async Task MarkUserAsAuthenticated(string token) {
+		public async Task MarkUserAsAuthenticatedAsync(string token) {
 			await _localStorage.SetItemAsync("token",token);
 
 			_httpClient.DefaultRequestHeaders.Authorization=new AuthenticationHeaderValue("Bearer",token);

@@ -9,21 +9,17 @@ namespace Projektas.Server.Services.MathGame {
             _scoreRepository = scoreRepository;
         }
 
-        public async Task AddScoreToDb(UserScoreDto data) {
-            var mathGame=new MathGameModel {
-                UserScores=data.Data
-            };
-
-            await _scoreRepository.AddScoreToUserAsync<MathGameModel>(data.Username,mathGame,data.Data);
+        public async Task AddScoreToDbAsync(UserScoreDto<MathGameData> data) {
+            await _scoreRepository.AddScoreToUserAsync<MathGameData>(data.Username,data.GameData,data.GameData.Scores);
         }
 
-        public async Task<int?> GetUserHighscore(string username) {
-            return await _scoreRepository.GetHighscoreFromUserAsync<MathGameModel>(username);
+        public async Task<UserScoreDto<MathGameData>?> GetUserHighscoreAsync(string username) {
+            return await _scoreRepository.GetHighscoreFromUserAsync<MathGameData>(username);
         }
 
-        public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
-            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync<MathGameModel>();
-            List<UserScoreDto> topScores=new List<UserScoreDto>();
+        public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount) {
+            List<UserScoreDto<MathGameData>> userScores=await _scoreRepository.GetAllScoresAsync<MathGameData>();
+            List<UserScoreDto<MathGameData>> topScores=new List<UserScoreDto<MathGameData>>();
             
             for(int i=0;i<topCount && i<userScores.Count;i++) {
                 topScores.Add(userScores[i]);

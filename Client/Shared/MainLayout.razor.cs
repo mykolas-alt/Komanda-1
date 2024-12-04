@@ -5,7 +5,7 @@ namespace Projektas.Client.Shared {
 		public string? username=null;
 
 		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
+			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChangedAsync;
 
 			await LoadUsernameAsync();
 		}
@@ -15,13 +15,13 @@ namespace Projektas.Client.Shared {
 			StateHasChanged();
 		}
 
-		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+		private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
 			await InvokeAsync(LoadUsernameAsync);
 			StateHasChanged();
 		}
 
 		public void Dispose() {
-			AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChanged;
+			AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChangedAsync;
 		}
 	}
 }

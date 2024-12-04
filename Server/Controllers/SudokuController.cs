@@ -31,7 +31,7 @@ namespace Projektas.Server.Controllers {
         }
 
         [HttpGet("hide-numbers")]
-        public async Task<ActionResult<List<List<int>>>> HideNumbers([FromQuery] int gridSize,[FromQuery] int numbersToRemove,[FromQuery] int[] grid) {
+        public ActionResult<List<List<int>>> HideNumbers([FromQuery] int gridSize,[FromQuery] int numbersToRemove,[FromQuery] int[] grid) {
             int[,] grid2D=new int[gridSize,gridSize];
             for(int i=0;i<gridSize;i++) {
                 for(int j=0;j<gridSize;j++) {
@@ -54,18 +54,18 @@ namespace Projektas.Server.Controllers {
         }
 
         [HttpPost("save-score")]
-        public async Task SaveScore([FromBody] UserScoreDto data) {
-            await _sudokuService.AddScoreToDb(data);
+        public async Task SaveScoreAsync([FromBody] UserScoreDto<SudokuData> data) {
+            await _sudokuService.AddScoreToDbAsync(data);
         }
 
         [HttpGet("highscore")]
-        public async Task<ActionResult<int>> GetUserHighscore([FromQuery] string username) {
-            return await _sudokuService.GetUserHighscore(username);
+        public async Task<ActionResult<UserScoreDto<SudokuData>?>> GetUserHighscoreAsync([FromQuery] string username) {
+            return await _sudokuService.GetUserHighscoreAsync(username);
         }
 
         [HttpGet("top-score")]
-        public async Task<ActionResult<List<UserScoreDto>>> GetTopScores([FromQuery] int topCount) {
-            return await _sudokuService.GetTopScores(topCount);
+        public async Task<ActionResult<List<UserScoreDto<SudokuData>>>> GetTopScoresAsync([FromQuery] int topCount) {
+            return await _sudokuService.GetTopScoresAsync(topCount);
         }
     }
 }

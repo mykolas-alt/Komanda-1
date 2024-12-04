@@ -28,11 +28,11 @@ namespace Projektas.Tests.Server_Tests {
 
 		}
 
-		private static List<Score<MathGameModel>> GetMathGameScores(List<User> users) {
-			return new List<Score<MathGameModel>>() {
-				new Score<MathGameModel>() {Id=1,UserId=users[0].Id,GameInfo=new MathGameModel{UserScores=12},User=users[0]},
-				new Score<MathGameModel>() {Id=2,UserId=users[1].Id,GameInfo=new MathGameModel{UserScores=15},User=users[1]},
-				new Score<MathGameModel>() {Id=3,UserId=users[2].Id,GameInfo=new MathGameModel{UserScores=20},User=users[2]}
+		private static List<Score<MathGameData>> GetMathGameScores(List<User> users) {
+			return new List<Score<MathGameData>>() {
+				new Score<MathGameData>() {Id=1,UserId=users[0].Id,GameInfo=new MathGameData{UserScores=12},User=users[0]},
+				new Score<MathGameData>() {Id=2,UserId=users[1].Id,GameInfo=new MathGameData{UserScores=15},User=users[1]},
+				new Score<MathGameData>() {Id=3,UserId=users[2].Id,GameInfo=new MathGameData{UserScores=20},User=users[2]}
 			};
 		}
 	}

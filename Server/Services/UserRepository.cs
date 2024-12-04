@@ -40,22 +40,6 @@ namespace Projektas.Server.Services {
 			}
 		}
 
-		public async Task<User> GetUserByIdAsync(int id) {
-			try {
-                var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Id==id);
-                if(user==null) {
-                    throw new DatabaseOperationException($"User with ID '{id}' not found in the database.","USER_NOT_FOUND");
-                }
-                return user;
-            }
-            catch(DbUpdateException dbEx) {
-                throw new DatabaseOperationException("An error occurred while updating the database.",dbEx);
-            }
-            catch(Exception ex) {
-                throw new DatabaseOperationException("An error occurred during the database operation.",ex);
-            }
-		}
-
 		public async Task<bool> ValidateUserAsync(string username,string password) {
 			var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
 

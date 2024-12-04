@@ -32,7 +32,7 @@ namespace Projektas.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    userScore = table.Column<int>(type: "INTEGER", nullable: true)
+                    score = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,7 +51,7 @@ namespace Projektas.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    userScore = table.Column<int>(type: "INTEGER", nullable: true)
+                    score = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -70,7 +70,7 @@ namespace Projektas.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    userTimeInSeconds = table.Column<int>(type: "INTEGER", nullable: true),
+                    timeInSeconds = table.Column<int>(type: "INTEGER", nullable: true),
                     fails = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -91,7 +91,7 @@ namespace Projektas.Server.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    userTimeInSeconds = table.Column<int>(type: "INTEGER", nullable: true),
+                    timeInSeconds = table.Column<int>(type: "INTEGER", nullable: true),
                     solved = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>

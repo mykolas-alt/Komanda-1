@@ -8,9 +8,9 @@
         public string Username {get;set;}="";
         public string Password {get;set;}="";
 
-        public List<Score<MathGameModel>> MathGameScores {get;set;}=new List<Score<MathGameModel>>();
-        public List<Score<SudokuModel>> SudokuScores {get;set;}=new List<Score<SudokuModel>>();
-        public List<Score<AimTrainerModel>> AimTrainerScores {get;set;}=new List<Score<AimTrainerModel>>();
-        public List<Score<PairUpModel>> PairUpScores {get;set;}=new List<Score<PairUpModel>>();
+        public List<Score<MathGameData>> MathGameScores {get;set;}=new List<Score<MathGameData>>();
+        public List<Score<SudokuData>> SudokuScores {get;set;}=new List<Score<SudokuData>>();
+        public List<Score<AimTrainerData>> AimTrainerScores {get;set;}=new List<Score<AimTrainerData>>();
+        public List<Score<PairUpData>> PairUpScores {get;set;}=new List<Score<PairUpData>>();
     }
 }
