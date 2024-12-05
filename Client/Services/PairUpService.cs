@@ -10,22 +10,25 @@ namespace Projektas.Client.Services {
             _httpClient = httpClient;
         }
 
-        public async Task SaveScoreAsync(string username,int score) {
-            var data=new UserScoreDto {
-                Username=username,
-                Score=score
+        public async Task SaveScoreAsync(string username, int score, int fails) {
+            var data = new UserScoreDto<PairUpData> {
+                Username = username,
+                GameData = new PairUpData {
+                    TimeInSeconds = score,
+                    Fails = fails
+                }
             };
-            await _httpClient.PostAsJsonAsync("api/pairup/save-score",data);
+            await _httpClient.PostAsJsonAsync("api/pairup/save-score", data);
         }
 
-        public async Task<int> GetUserHighscore(string username) {
-            var url=$"api/pairup/highscore?username={username}";
-            return await _httpClient.GetFromJsonAsync<int>(url);
+        public async Task<UserScoreDto<PairUpData>> GetUserHighscoreAsync(string username) {
+            var url = $"api/pairup/highscore?username={username}";
+            return await _httpClient.GetFromJsonAsync<UserScoreDto<PairUpData>>(url);
         }
 
-        public async Task<List<UserScoreDto>> GetTopScoresAsync(int topCount=10)  {
-            var url=$"api/pairup/top-score?topCount={topCount}";
-            return await _httpClient.GetFromJsonAsync<List<UserScoreDto>>(url);
+        public async Task<List<UserScoreDto<PairUpData>>> GetTopScoresAsync(int topCount = 10)  {
+            var url = $"api/pairup/top-score?topCount={topCount}";
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto<PairUpData>>>(url);
         }
     }
 }

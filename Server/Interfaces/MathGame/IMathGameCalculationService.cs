@@ -2,6 +2,6 @@
 
 namespace Projektas.Server.Interfaces.MathGame {
     public interface IMathCalculationService {
-        int CalculateAnswer(List<int> numbers,List<Operation> operations);
+        int CalculateAnswer(List<int> numbers, List<Operation> operations);
     }
 }

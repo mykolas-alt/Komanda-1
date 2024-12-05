@@ -1,27 +1,35 @@
-﻿using Projektas.Shared.Models;
+﻿using Projektas.Server.Interfaces;
+using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services {
     public class AimTrainerService {
-        private readonly IScoreRepository<AimTrainerM> _scoreRepository;
+        private readonly IScoreRepository _scoreRepository;
 
-        public AimTrainerService (IScoreRepository<AimTrainerM> scoreRepository) {
-            _scoreRepository=scoreRepository;
+        public AimTrainerService (IScoreRepository scoreRepository) {
+            _scoreRepository = scoreRepository;
         }
 
-        public async Task AddScoreToDb(UserScoreDto data) {
-            await _scoreRepository.AddScoreToUserAsync(data.Username,data.Score);
+        public async Task AddScoreToDbAsync(UserScoreDto<AimTrainerData> data) {
+            var gameData = new AimTrainerData() {
+                Scores = data.GameData.Scores
+            };
+
+            await _scoreRepository.AddScoreToUserAsync<AimTrainerData>(data.Username, gameData);
         }
 
-        public async Task<int?> GetUserHighscore(string username) {
-            return await _scoreRepository.GetHighscoreFromUserAsync(username);
+        public async Task<UserScoreDto<AimTrainerData>> GetUserHighscoreAsync(string username) {
+            var scores = await _scoreRepository.GetHighscoreFromUserAsync<AimTrainerData>(username);
+
+            return scores.OrderByDescending(s => s.GameData.Scores).First();
         }
 
-        public async Task<List<UserScoreDto>> GetTopScores(int topCount) {
-            List<UserScoreDto> userScores=await _scoreRepository.GetAllScoresAsync();
-            List<UserScoreDto> topScores=new List<UserScoreDto>();
+        public async Task<List<UserScoreDto<AimTrainerData>>> GetTopScoresAsync(int topCount) {
+            List<UserScoreDto<AimTrainerData>> userScores = await _scoreRepository.GetAllScoresAsync<AimTrainerData>();
+            List<UserScoreDto<AimTrainerData>> orderedScores = userScores.OrderByDescending(s => s.GameData.Scores).ToList();
+            List<UserScoreDto<AimTrainerData>> topScores = new List<UserScoreDto<AimTrainerData>>();
             
-            for(int i=0;i<topCount && i<userScores.Count;i++) {
-                topScores.Add(userScores[i]);
+            for(int i = 0; i < topCount && i < orderedScores.Count; i++) {
+                topScores.Add(orderedScores[i]);
             }
             
             return topScores;

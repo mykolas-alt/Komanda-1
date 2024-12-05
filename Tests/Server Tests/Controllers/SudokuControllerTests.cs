@@ -2,25 +2,20 @@
 using Projektas.Tests.Server_Tests;
 using System.Net.Http.Json;
 
-namespace Projektas.Tests.Controllers
-{
-    public class SudokuControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
-    {
+namespace Projektas.Tests.Controllers {
+    public class SudokuControllerTests : IClassFixture<CustomWebApplicationFactory<Program>> {
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Program> _factory;
 
-        public SudokuControllerTests(CustomWebApplicationFactory<Program> factory)
-        {
+        public SudokuControllerTests(CustomWebApplicationFactory<Program> factory) {
             _factory = factory;
-            _client = _factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
+            _client = _factory.CreateClient(new WebApplicationFactoryClientOptions {
                 AllowAutoRedirect = false
             });
         }
 
         [Fact]
-        public async Task GenerateSolvedSudoku_ReturnsValidGrid()
-        {
+        public async Task GenerateSolvedSudoku_ReturnsValidGrid() {
             int gridSize = 9;
 
             var response = await _client.GetAsync($"/api/sudoku/generate-sudoku?gridSize={gridSize}");
@@ -34,28 +29,22 @@ namespace Projektas.Tests.Controllers
             Assert.Equal(gridSize, grid.GetLength(0));
             Assert.Equal(gridSize, grid.GetLength(1));
 
-            for (int i = 0; i < gridSize; i++)
-            {
+            for(int i = 0; i < gridSize; i++) {
                 var row = Enumerable.Range(0, gridSize).Select(j => grid[i, j]).ToList();
                 Assert.True(IsValidSet(row, gridSize), $"Row {i} is invalid");
             }
 
-            for (int j = 0; j < gridSize; j++)
-            {
+            for(int j = 0; j < gridSize; j++) {
                 var column = Enumerable.Range(0, gridSize).Select(i => grid[i, j]).ToList();
                 Assert.True(IsValidSet(column, gridSize), $"Column {j} is invalid");
             }
 
             int subGridSize = (int)Math.Sqrt(gridSize);
-            for (int row = 0; row < gridSize; row += subGridSize)
-            {
-                for (int col = 0; col < gridSize; col += subGridSize)
-                {
+            for(int row = 0; row < gridSize; row += subGridSize) {
+                for(int col = 0; col < gridSize; col += subGridSize) {
                     var subGrid = new List<int>();
-                    for (int i = 0; i < subGridSize; i++)
-                    {
-                        for (int j = 0; j < subGridSize; j++)
-                        {
+                    for(int i = 0; i < subGridSize; i++) {
+                        for(int j = 0; j < subGridSize; j++) {
                             subGrid.Add(grid[row + i, col + j]);
                         }
                     }
@@ -64,15 +53,13 @@ namespace Projektas.Tests.Controllers
             }
         }
 
-        private bool IsValidSet(List<int> numbers, int gridSize)
-        {
+        private bool IsValidSet(List<int> numbers, int gridSize) {
             var validSet = Enumerable.Range(1, gridSize).ToHashSet();
             return numbers.Count == gridSize && validSet.SetEquals(numbers);
         }
 
         [Fact]
-        public async Task HideNumbers_HidesCorrectNumberOfCells()
-        {
+        public async Task HideNumbers_HidesCorrectNumberOfCells() {
             int gridSize = 9;
             int numbersToRemove = 20;
             int[,] grid = new int[9, 9]
@@ -104,19 +91,15 @@ namespace Projektas.Tests.Controllers
             int hiddenNumbers = resultGrid.Cast<int>().Count(value => value == 0);
             Assert.Equal(numbersToRemove, hiddenNumbers);
 
-            foreach (var value in resultGrid)
-            {
+            foreach(var value in resultGrid) {
                 Assert.InRange(value, 0, gridSize);
             }
         }
 
-        private static int[,] ConvertListTo2DArray(List<List<int>> gridList, int gridSize)
-        {
+        private static int[,] ConvertListTo2DArray(List<List<int>> gridList, int gridSize) {
             int[,] grid = new int[gridSize, gridSize];
-            for (int i = 0; i < gridSize; i++)
-            {
-                for (int j = 0; j < gridSize; j++)
-                {
+            for(int i = 0; i < gridSize; i++) {
+                for(int j = 0; j < gridSize; j++) {
                     grid[i, j] = gridList[i][j];
                 }
             }

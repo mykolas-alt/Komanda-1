@@ -1,6 +1,8 @@
-﻿namespace Projektas.Shared.Models {
-    public class UserScoreDto {
-        public string Username {get;set;}="";
-        public int Score {get;set;}
+﻿using Projektas.Shared.Interfaces;
+
+namespace Projektas.Shared.Models {
+    public class UserScoreDto<T> where T : IGame {
+        public string Username {get; set;} = "";
+        public T GameData {get; set;}
     }
 }

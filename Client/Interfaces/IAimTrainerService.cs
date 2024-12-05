@@ -2,8 +2,8 @@
 
 namespace Projektas.Client.Interfaces {
     public interface IAimTrainerService {
-        public Task SaveScoreAsync(string username,int score);
-        public Task<int> GetUserHighscore(string username);
-        public Task<List<UserScoreDto>> GetTopScoresAsync(int topCount);
+        public Task SaveScoreAsync(string username, int score);
+        public Task<UserScoreDto<AimTrainerData>> GetUserHighscoreAsync(string username);
+        public Task<List<UserScoreDto<AimTrainerData>>> GetTopScoresAsync(int topCount);
     }
 }

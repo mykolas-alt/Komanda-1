@@ -33,7 +33,7 @@
                 <p>Test your math skills!</p>
             </div>
             <div class="math-game-footer">
-                <button class="play-btn" @onclick="StartGame">Start game</button>
+                <button class="play-btn" @onclick="StartGameAsync">Start game</button>
             </div>
         } else if (isTimesUp==true && question!=null) {
             <div class="app-title">
@@ -45,12 +45,12 @@
                 </div>
                 @if(username!=null) {
                     <div class="highscore-after-game">
-                        <b>Your highscore: @highscore</b>
+                        <b>Your highscore: @highscore.GameData.Scores</b>
                     </div>
                 }
             </div>
             <div class="math-game-footer">
-                <button class="play-btn" @onclick="StartGame">Play again</button>
+                <button class="play-btn" @onclick="StartGameAsync">Play again</button>
             </div>
             <div class="scoreboard">
                 <div class="scoreboard-title">
@@ -58,7 +58,7 @@
                 </div>
                 @if (topScores!=null) {
                     for (int i=0;i<topScores.Count;i++) {
-                        <p>@(i+1). @topScores[i].Username @topScores[i].Score</p>
+                        <p>@(i+1). @topScores[i].Username @topScores[i].GameData.Scores</p>
                     }
                 }
             </div>

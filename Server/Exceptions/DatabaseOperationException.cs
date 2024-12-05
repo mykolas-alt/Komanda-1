@@ -7,9 +7,9 @@
             OccurredAt = DateTime.Now;
         }
 
-        public DatabaseOperationException(string message,string errorCode) : base(message) {
-            ErrorCode=errorCode;
-            OccurredAt=DateTime.Now;
+        public DatabaseOperationException(string message, string errorCode) : base(message) {
+            ErrorCode = errorCode;
+            OccurredAt = DateTime.Now;
         }
     }
 }

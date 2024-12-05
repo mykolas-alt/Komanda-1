@@ -2,9 +2,9 @@
 
 namespace Projektas.Server.Interfaces.MathGame {
     public interface IMathGameScoreboardService {
-        public Task<List<UserScoreDto>> GetTopScores(int topCount);
-        public Task AddScoreToDb(UserScoreDto data);
-        public Task<int?> GetUserHighscore(string username);
+        public Task AddScoreToDbAsync(UserScoreDto<MathGameData> data);
+        public Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username);
+        public Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount);
 
 	}
 }
