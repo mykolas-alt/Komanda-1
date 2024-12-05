@@ -2,6 +2,6 @@
 
 namespace Projektas.Shared.Models {
     public class SudokuData : IGame {
-		public int TimeInSeconds {get;set;}
+		public int TimeInSeconds {get; set;}
     }
 }

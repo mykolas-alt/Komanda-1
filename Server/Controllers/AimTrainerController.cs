@@ -9,7 +9,7 @@ namespace Projektas.Server.Controllers {
         private readonly AimTrainerService _aimTrainerService;
 
         public AimTrainerController (AimTrainerService aimTrainerService) {
-            _aimTrainerService=aimTrainerService;
+            _aimTrainerService = aimTrainerService;
         }
 
         [HttpPost("save-score")]

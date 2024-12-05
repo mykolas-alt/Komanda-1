@@ -9,7 +9,7 @@ namespace Projektas.Server.Controllers {
 		private readonly IUserService _userService;
 
 		public UserController(IUserService userService) {
-			_userService=userService;
+			_userService = userService;
 		}
 		
 		[HttpPost("create_user")]
@@ -20,11 +20,11 @@ namespace Projektas.Server.Controllers {
 
 		[HttpPost("login")]
 		public async Task<IActionResult> LogInAsync([FromBody]User user) {
-			var response=await _userService.LogInToUserAsync(user);
+			var response = await _userService.LogInToUserAsync(user);
 
 			if(response) {
-				var token=_userService.GenerateJwtToken(user);
-				return Ok(new {Token=token});
+				var token = _userService.GenerateJwtToken(user);
+				return Ok(new {Token = token});
 			}
 
 			return Unauthorized();

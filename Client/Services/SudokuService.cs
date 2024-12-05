@@ -7,25 +7,25 @@ namespace Projektas.Client.Services {
         private readonly HttpClient _httpClient;
 
         public SudokuService(HttpClient httpClient) {
-            _httpClient=httpClient;
+            _httpClient = httpClient;
         }
 
 
-        public async Task<int[,]> HideNumbersAsync(int[,] grid,int gridSize,int numbersToRemove) {
-            var queryString=string.Join("&",
-                Enumerable.Range(0,grid.GetLength(0))
-                          .SelectMany(i => Enumerable.Range(0,grid.GetLength(1))
+        public async Task<int[,]> HideNumbersAsync(int[,] grid, int gridSize, int numbersToRemove) {
+            var queryString = string.Join("&",
+                Enumerable.Range(0, grid.GetLength(0))
+                          .SelectMany(i => Enumerable.Range(0, grid.GetLength(1))
                                                      .Select(j => $"grid={grid[i, j]}"))
             );
 
-            var response=await _httpClient.GetAsync($"api/sudoku/hide-numbers?{queryString}&gridSize={gridSize}&numbersToRemove={numbersToRemove}");
-            var updatedGridList=await response.Content.ReadFromJsonAsync<List<List<int>>>();
+            var response = await _httpClient.GetAsync($"api/sudoku/hide-numbers?{queryString}&gridSize={gridSize}&numbersToRemove={numbersToRemove}");
+            var updatedGridList = await response.Content.ReadFromJsonAsync<List<List<int>>>();
 
-            int[,] updatedGrid=new int[gridSize,gridSize];
+            int[,] updatedGrid = new int[gridSize, gridSize];
 
-            for(int i=0;i<gridSize;i++) {
-                for(int j=0;j<gridSize;j++) {
-                    updatedGrid[i,j]=updatedGridList[i][j];
+            for(int i = 0; i < gridSize; i++) {
+                for(int j = 0; j < gridSize; j++) {
+                    updatedGrid[i, j] = updatedGridList[i][j];
                 }
             }
 
@@ -34,36 +34,36 @@ namespace Projektas.Client.Services {
 
 
         public async Task<int[,]> GenerateSolvedSudokuAsync(int gridSize) {
-            var response=await _httpClient.GetFromJsonAsync<List<List<int>>>($"api/sudoku/generate-sudoku?gridsize={gridSize}");
+            var response = await _httpClient.GetFromJsonAsync<List<List<int>>>($"api/sudoku/generate-sudoku?gridsize={gridSize}");
 
-            int[,] grid=new int[gridSize,gridSize];
+            int[,] grid = new int[gridSize, gridSize];
 
-            for(int i=0;i<gridSize;i++) {
-                for(int j=0;j<gridSize;j++) {
-                    grid[i,j]=response![i][j];
+            for(int i = 0; i < gridSize; i++) {
+                for(int j = 0; j < gridSize; j++) {
+                    grid[i, j] = response![i][j];
                 }
             }
 
             return grid;
         }
 
-        public async Task SaveScoreAsync(string username,int score,bool solved) {
-            var data=new UserScoreDto<SudokuData> {
-                Username=username,
-                GameData=new SudokuData {
-                    TimeInSeconds=score
+        public async Task SaveScoreAsync(string username, int score) {
+            var data = new UserScoreDto<SudokuData> {
+                Username = username,
+                GameData = new SudokuData {
+                    TimeInSeconds = score
                 }
             };
-            await _httpClient.PostAsJsonAsync("api/sudoku/save-score",data);
+            await _httpClient.PostAsJsonAsync("api/sudoku/save-score", data);
         }
 
         public async Task<UserScoreDto<SudokuData>> GetUserHighscoreAsync(string username) {
-            var url=$"api/sudoku/highscore?username={username}";
+            var url = $"api/sudoku/highscore?username={username}";
             return await _httpClient.GetFromJsonAsync<UserScoreDto<SudokuData>?>(url);
         }
 
-        public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(int topCount=10)  {
-            var url=$"api/sudoku/top-score?topCount={topCount}";
+        public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(int topCount = 10)  {
+            var url = $"api/sudoku/top-score?topCount={topCount}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<SudokuData>>>(url);
         }
     }

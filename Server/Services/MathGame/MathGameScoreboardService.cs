@@ -11,11 +11,11 @@ namespace Projektas.Server.Services.MathGame {
         }
 
         public async Task AddScoreToDbAsync(UserScoreDto<MathGameData> data) {
-            var gameData=new MathGameData() {
-                Scores=data.GameData.Scores
+            var gameData = new MathGameData() {
+                Scores = data.GameData.Scores
             };
 
-            await _scoreRepository.AddScoreToUserAsync<MathGameData>(data.Username,gameData);
+            await _scoreRepository.AddScoreToUserAsync<MathGameData>(data.Username, gameData);
         }
 
         public async Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username) {
@@ -25,18 +25,18 @@ namespace Projektas.Server.Services.MathGame {
         }
 
         public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount) {
-            List<UserScoreDto<MathGameData>> userScores=await _scoreRepository.GetAllScoresAsync<MathGameData>();
+            List<UserScoreDto<MathGameData>> userScores = await _scoreRepository.GetAllScoresAsync<MathGameData>();
             List<UserScoreDto<MathGameData>> orderedScores = userScores.OrderByDescending(s => s.GameData.Scores).ToList();
-            List<UserScoreDto<MathGameData>> topScores=new List<UserScoreDto<MathGameData>>();
+            List<UserScoreDto<MathGameData>> topScores = new List<UserScoreDto<MathGameData>>();
             
-            for(int i=0;i<topCount && i<orderedScores.Count;i++) {
+            for(int i = 0; i < topCount && i < orderedScores.Count; i++) {
                 topScores.Add(orderedScores[i]);
             }
             
             return topScores;
         }
 
-        public int Compare(int a,int b) {
+        public int Compare(int a, int b) {
             return b.CompareTo(a);
         }
     }

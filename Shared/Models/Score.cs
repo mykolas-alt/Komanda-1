@@ -2,11 +2,11 @@
 
 namespace Projektas.Shared.Models {
 	public class Score<T> where T : IGame {
-		public int Id {get;set;}
-		public int UserId {get;set;}
+		public int Id {get; set;}
+		public int UserId {get; set;}
 
-		public T GameData {get;set;}
+		public T GameData {get; set;}
 
-		public User User {get;set;}
+		public User User {get; set;}
 	}
 }

@@ -13,23 +13,23 @@ namespace Projektas.Tests.Server_Tests {
 			base.ConfigureWebHost(builder);
 
 			builder.ConfigureTestServices(services => {
-				var dbContextDescriptor=services.SingleOrDefault(d => d.ServiceType==typeof(DbContextOptions<UserDbContext>));
+				var dbContextDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<UserDbContext>));
 
 				services.Remove(dbContextDescriptor);
 
-				var dbConnectionDescriptor=services.SingleOrDefault(d => d.ServiceType==typeof(DbConnection));
+				var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
 
 				services.Remove(dbConnectionDescriptor);
 
 				services.AddSingleton<DbConnection>(container => {
-					var connection=new SqliteConnection("DataSource=:memory:");
+					var connection = new SqliteConnection("DataSource=:memory:");
 					connection.Open();
 
 					return connection;
 				});
 
 				services.AddDbContext<UserDbContext>((container,options) => {
-					var connection=container.GetRequiredService<DbConnection>();
+					var connection = container.GetRequiredService<DbConnection>();
 					options.UseSqlite(connection);
 				});
 			});

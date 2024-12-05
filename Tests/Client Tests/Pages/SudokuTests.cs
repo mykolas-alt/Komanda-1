@@ -6,20 +6,16 @@ using Projektas.Client.Interfaces;
 using Projektas.Client.Pages;
 using Projektas.Shared.Models;
 
-namespace Projektas.Tests.Client_Tests.Pages
-{
-    public class SudokuTests : TestContext
-    {
+namespace Projektas.Tests.Client_Tests.Pages {
+    public class SudokuTests : TestContext {
         private readonly Mock<ITimerService> _mockTimerService;
-
         private readonly Mock<ISudokuService> _mockSudokuService;
 		private readonly Mock<IAccountAuthStateProvider> _mockAuthStateProvider;
 
-        public SudokuTests()
-        {
+        public SudokuTests() {
             _mockSudokuService = new Mock<ISudokuService>();
             _mockTimerService = new Mock<ITimerService>();
-			_mockAuthStateProvider=new Mock<IAccountAuthStateProvider>();
+			_mockAuthStateProvider = new Mock<IAccountAuthStateProvider>();
             _mockSudokuService
                 .Setup(service => service.GenerateSolvedSudokuAsync(It.IsAny<int>()))
                 .ReturnsAsync(new int[9, 9]);
@@ -29,19 +25,38 @@ namespace Projektas.Tests.Client_Tests.Pages
 			Services.AddSingleton(_mockAuthStateProvider.Object);
 
 			_mockSudokuService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>())).Returns(Task.CompletedTask);
-			_mockSudokuService.Setup(s => s.GetUserHighscore(It.IsAny<string>())).ReturnsAsync(0);
-			_mockSudokuService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto> {
-				new UserScoreDto {Username="User1",Data=100},
-				new UserScoreDto {Username="User2",Data=90},
-				new UserScoreDto {Username="User3",Data=80}
+			_mockSudokuService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<SudokuData> {
+                Username = "User",
+                GameData = new SudokuData {
+                    TimeInSeconds = 30
+                }
+            });
+			_mockSudokuService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto<SudokuData>> {
+				new UserScoreDto<SudokuData> {
+                    Username = "User1",
+                    GameData = new SudokuData {
+                        TimeInSeconds = 30
+                    }
+                },
+				new UserScoreDto<SudokuData> {
+                    Username = "User2",
+                    GameData = new SudokuData {
+                        TimeInSeconds = 50
+                    }
+                },
+				new UserScoreDto<SudokuData> {
+                    Username = "User3",
+                    GameData = new SudokuData {
+                        TimeInSeconds = 80
+                    }
+                }
 			});
 
 			_mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");
         }
 
         [Fact]
-        public void OnInitialized_ShouldSetInitialState()
-        {
+        public void OnInitialized_ShouldSetInitialState() {
             var cut = RenderComponent<Sudoku>();
 
             Assert.False(cut.Instance.IsGameActive);
@@ -51,8 +66,7 @@ namespace Projektas.Tests.Client_Tests.Pages
         }
 
         [Fact]
-        public async Task GenerateSudokuGame_ShouldInitializeGridAndStartTimer()
-        {
+        public async Task GenerateSudokuGame_ShouldInitializeGridAndStartTimer() {
             var mockGrid = new int[9, 9];
             _mockSudokuService
                 .Setup(s => s.GenerateSolvedSudokuAsync(It.IsAny<int>()))
@@ -63,7 +77,7 @@ namespace Projektas.Tests.Client_Tests.Pages
 
             var cut = RenderComponent<Sudoku>();
 
-            await cut.InvokeAsync(() => cut.Instance.GenerateSudokuGame());
+            await cut.InvokeAsync(() => cut.Instance.GenerateSudokuGameAsync());
 
             Assert.True(cut.Instance.IsGameActive);
             Assert.Equal(0, cut.Instance.ElapsedTime);
@@ -72,26 +86,24 @@ namespace Projektas.Tests.Client_Tests.Pages
         }
 
         [Fact]
-        public void SudokuDifficulty_ShouldReturnCorrectRange()
-        {
+        public void SudokuDifficulty_ShouldReturnCorrectRange() {
             var cut = RenderComponent<Sudoku>();
 
-            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Easy" });
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs {Value = "Easy"});
             var difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 20, 25);
 
-            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Medium" });
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs {Value = "Medium"});
             difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 40, 45);
 
-            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Hard" });
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs {Value = "Hard"});
             difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 55, 57);
         }
 
         [Fact]
-        public void TimerTick_ShouldEndGame_WhenTimeRunsOut()
-        {
+        public void TimerTick_ShouldEndGame_WhenTimeRunsOut() {
             _mockTimerService.Setup(t => t.RemainingTime).Returns(0);
             var cut = RenderComponent<Sudoku>();
             cut.Instance.IsGameActive = true;
@@ -105,8 +117,7 @@ namespace Projektas.Tests.Client_Tests.Pages
         }
 
         [Fact]
-        public void IsCorrect_ShouldEndGame_WhenSolutionIsCorrect()
-        {
+        public void IsCorrect_ShouldEndGame_WhenSolutionIsCorrect() {
             var mockGrid = new int[9, 9];
             var cut = RenderComponent<Sudoku>();
             cut.Instance.GridValues = mockGrid;
@@ -120,8 +131,7 @@ namespace Projektas.Tests.Client_Tests.Pages
         }
 
         [Fact]
-        public void HandleCellClicked_ShouldSetSelectedRowAndCol()
-        {
+        public void HandleCellClicked_ShouldSetSelectedRowAndCol() {
             var cut = RenderComponent<Sudoku>();
             cut.Instance.HandleCellClicked(2, 3);
 
@@ -130,12 +140,11 @@ namespace Projektas.Tests.Client_Tests.Pages
         }
 
         [Fact]
-        public void HandleValueSelected_ShouldUpdateGridValues()
-        {
+        public void HandleValueSelected_ShouldUpdateGridValues() {
             var cut = RenderComponent<Sudoku>();
             cut.Instance.GridValues = new int[9, 9];
 
-            cut.Instance.HandleValueSelected(new ChangeEventArgs { Value = "5" }, 1, 1);
+            cut.Instance.HandleValueSelected(new ChangeEventArgs {Value = "5"}, 1, 1);
 
             Assert.Equal(5, cut.Instance.GridValues[1, 1]);
         }

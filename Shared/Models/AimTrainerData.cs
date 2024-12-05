@@ -2,6 +2,6 @@
 
 namespace Projektas.Shared.Models {
     public class AimTrainerData : IGame {
-		public int Scores {get;set;}
+		public int Scores {get; set;}
     }
 }

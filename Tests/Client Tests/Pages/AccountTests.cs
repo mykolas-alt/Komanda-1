@@ -14,11 +14,11 @@ namespace Projektas.Tests.Client_Tests.Pages {
 		private readonly Mock<IAccountAuthStateProvider> mockAuthStateProvider;
 
 		public AccountTests() {
-			var mockNavigationManager=new Mock<NavigationManager>();
-			mockAccountService=new Mock<IAccountService>();
-			mockAuthStateProvider=new Mock<IAccountAuthStateProvider>();
+			var mockNavigationManager = new Mock<NavigationManager>();
+			mockAccountService = new Mock<IAccountService>();
+			mockAuthStateProvider = new Mock<IAccountAuthStateProvider>();
 
-			var emptyUser=new ClaimsPrincipal(new ClaimsIdentity());
+			var emptyUser = new ClaimsPrincipal(new ClaimsIdentity());
 			mockAuthStateProvider.Setup(a => a.GetAuthenticationStateAsync()).ReturnsAsync(new AuthenticationState(emptyUser));
 
 			Services.AddSingleton<IAccountAuthStateProvider>(mockAuthStateProvider.Object);
@@ -29,89 +29,89 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
 		[Fact]
 		public async Task LogInEvent_ShouldAuthenticateUser_WhenCredentialsAreValid() {
-			var claims=new List<Claim> {
-				new Claim(ClaimTypes.Name,"validUser")
+			var claims = new List<Claim> {
+				new Claim(ClaimTypes.Name, "validUser")
 			};
-			var identity=new ClaimsIdentity(claims,"TestAuthType");
-			var user=new ClaimsPrincipal(identity);
+			var identity = new ClaimsIdentity(claims, "TestAuthType");
+			var user = new ClaimsPrincipal(identity);
 			mockAuthStateProvider.Setup(a => a.GetAuthenticationStateAsync()).ReturnsAsync(new AuthenticationState(user));
-			mockAccountService.Setup(s => s.LogIn(It.IsAny<User>())).ReturnsAsync("validToken");
+			mockAccountService.Setup(s => s.LogInAsync(It.IsAny<User>())).ReturnsAsync("validToken");
 
-			var cut=RenderComponent<Account>();
+			var cut = RenderComponent<Account>();
 
-			cut.Instance.accountUsername="validUser";
-			cut.Instance.accountPassword="validPassword";
-			await cut.InvokeAsync(() => cut.Instance.LogInEvent());
-			var authState=await mockAuthStateProvider.Object.GetAuthenticationStateAsync();
+			cut.Instance.accountUsername = "validUser";
+			cut.Instance.accountPassword = "validPassword";
+			await cut.InvokeAsync(() => cut.Instance.LogInEventAsync());
+			var authState = await mockAuthStateProvider.Object.GetAuthenticationStateAsync();
 
-			mockAccountService.Verify(s => s.LogIn(It.IsAny<User>()),Times.Once);
+			mockAccountService.Verify(s => s.LogInAsync(It.IsAny<User>()), Times.Once);
 			Assert.NotNull(authState.User.Identity);
 			Assert.True(authState.User.Identity.IsAuthenticated);
-			mockAuthStateProvider.Verify(a => a.MarkUserAsAuthenticated(It.IsAny<string>()),Times.Once);
-			Assert.Equal("validUser",authState.User.Identity.Name);
+			mockAuthStateProvider.Verify(a => a.MarkUserAsAuthenticatedAsync(It.IsAny<string>()), Times.Once);
+			Assert.Equal("validUser", authState.User.Identity.Name);
 		}
 
 		[Fact]
 		public async Task LogInEvent_ShouldNotAuthenticateUser_WhenCredentialsAreInvalid() {
-			var cut=RenderComponent<Account>();
-			cut.Instance.accountUsername="";
-			cut.Instance.accountPassword="";
+			var cut = RenderComponent<Account>();
+			cut.Instance.accountUsername = "";
+			cut.Instance.accountPassword = "";
 
-			await cut.InvokeAsync(() => cut.Instance.LogInEvent());
+			await cut.InvokeAsync(() => cut.Instance.LogInEventAsync());
 
 			Assert.False(cut.Instance.isFieldsFilled);
-			mockAccountService.Verify(s => s.LogIn(It.IsAny<User>()), Times.Never);
-			var authState=await mockAuthStateProvider.Object.GetAuthenticationStateAsync();
+			mockAccountService.Verify(s => s.LogInAsync(It.IsAny<User>()), Times.Never);
+			var authState = await mockAuthStateProvider.Object.GetAuthenticationStateAsync();
 			Assert.NotNull(authState.User.Identity);
 			Assert.False(authState.User.Identity.IsAuthenticated);
 		}
 
 		[Fact]
 		public void LogOffEvent_ShouldLogOutUser() {
-			var cut=RenderComponent<Account>();
+			var cut = RenderComponent<Account>();
 
 			cut.InvokeAsync(() => cut.Instance.LogOffEvent());
 
-			mockAuthStateProvider.Verify(a => a.MarkUserAsLoggedOut(),Times.Once);
+			mockAuthStateProvider.Verify(a => a.MarkUserAsLoggedOut(), Times.Once);
 		}
 
 		[Fact]
 		public async Task SignUpEvent_ShouldCreateAccount_WhenFieldsAreValid() {
-			var cut=RenderComponent<Account>();
+			var cut = RenderComponent<Account>();
 
-			cut.Instance.newAccountName="John";
-			cut.Instance.newAccountSurname="Doe";
-			cut.Instance.newAccountUsername="newUser";
-			cut.Instance.newAccountPassword="newPassword";
+			cut.Instance.newAccountName = "John";
+			cut.Instance.newAccountSurname = "Doe";
+			cut.Instance.newAccountUsername = "newUser";
+			cut.Instance.newAccountPassword = "newPassword";
 			mockAccountService.Setup(s => s.CreateAccountAsync(It.IsAny<User>())).ReturnsAsync(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
 
-			await cut.InvokeAsync(() => cut.Instance.SignUpEvent());
+			await cut.InvokeAsync(() => cut.Instance.SignUpEventAsync());
 
-			mockAccountService.Verify(a => a.CreateAccountAsync(It.IsAny<User>()),Times.Once);
+			mockAccountService.Verify(a => a.CreateAccountAsync(It.IsAny<User>()), Times.Once);
 		}
 
 		[Fact]
 		public async Task SignUpEvent_ShouldNotCreateAccountWhenFieldsAreEmpty() {
-			var cut=RenderComponent<Account>();
+			var cut = RenderComponent<Account>();
 
-			cut.Instance.newAccountName="";
-			cut.Instance.newAccountSurname="";
-			cut.Instance.newAccountUsername="";
-			cut.Instance.newAccountPassword="";
+			cut.Instance.newAccountName = "";
+			cut.Instance.newAccountSurname = "";
+			cut.Instance.newAccountUsername = "";
+			cut.Instance.newAccountPassword = "";
 
-			await cut.InvokeAsync(() => cut.Instance.SignUpEvent());
+			await cut.InvokeAsync(() => cut.Instance.SignUpEventAsync());
 
 			Assert.False(cut.Instance.isNewFieldsFilled);
 		}
 
 		[Fact]
 		public async Task UsernameChange_ShouldSetIsUsernameNewToFalse_WhenUsernameExists() {
-			var changeEvent=new ChangeEventArgs {Value="existinguser"};
-			mockAccountService.Setup(s => s.GetUsernames()).ReturnsAsync(new List<string> {"existinguser"});
+			var changeEvent = new ChangeEventArgs {Value = "existinguser"};
+			mockAccountService.Setup(s => s.GetUsernamesAsync()).ReturnsAsync(new List<string> {"existinguser"});
 
 			var cut = RenderComponent<Account>();
 
-			await cut.InvokeAsync(() => cut.Instance.UsernameChange(changeEvent));
+			await cut.InvokeAsync(() => cut.Instance.UsernameChangeAsync(changeEvent));
 
 			Assert.False(cut.Instance.isUsernameNew);
 		}

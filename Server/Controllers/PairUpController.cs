@@ -9,7 +9,7 @@ namespace Projektas.Server.Controllers {
         private readonly PairUpService _pairUpService;
 
         public PairUpController (PairUpService pairUpService) {
-            _pairUpService=pairUpService;
+            _pairUpService = pairUpService;
         }
 
         [HttpPost("save-score")]

@@ -17,7 +17,7 @@
 			<label class="textbox" for="accPassword">
 				Password: <input type="text" name="accPassword" @bind="@accountPassword"/>
 			</label>
-			<button class="submit" @onclick="LogInEvent">Submit</button>
+			<button class="submit" @onclick="LogInEventAsync">Submit</button>
 			@if(isFieldsFilled==false) {
 				<div class="new-account-warning">
 					Not all fields are filled!
@@ -40,12 +40,12 @@
 				Surname: <input type="text" name="accSurname" @bind="@newAccountSurname"/>
 			</label>
 			<label class="textbox" for="accUsername">
-				Username: <input type="text" name="accUsername" @bind="@newAccountUsername" @oninput="UsernameChange"/>
+				Username: <input type="text" name="accUsername" @bind="@newAccountUsername" @oninput="UsernameChangeAsync"/>
 			</label>
 			<label class="textbox" for="accPassword">
 				Password: <input type="text" name="accPassword" @bind="@newAccountPassword"/>
 			</label>
-			<button class="submit" @onclick="SignUpEvent">Submit</button>
+			<button class="submit" @onclick="SignUpEventAsync">Submit</button>
 			@if(isUsernameNew==false) {
 				<div class="new-account-warning">
 					This username is in use

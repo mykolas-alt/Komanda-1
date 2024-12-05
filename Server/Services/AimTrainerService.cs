@@ -6,15 +6,15 @@ namespace Projektas.Server.Services {
         private readonly IScoreRepository _scoreRepository;
 
         public AimTrainerService (IScoreRepository scoreRepository) {
-            _scoreRepository=scoreRepository;
+            _scoreRepository = scoreRepository;
         }
 
         public async Task AddScoreToDbAsync(UserScoreDto<AimTrainerData> data) {
-            var gameData=new AimTrainerData() {
-                Scores=data.GameData.Scores
+            var gameData = new AimTrainerData() {
+                Scores = data.GameData.Scores
             };
 
-            await _scoreRepository.AddScoreToUserAsync<AimTrainerData>(data.Username,gameData);
+            await _scoreRepository.AddScoreToUserAsync<AimTrainerData>(data.Username, gameData);
         }
 
         public async Task<UserScoreDto<AimTrainerData>> GetUserHighscoreAsync(string username) {
@@ -24,11 +24,11 @@ namespace Projektas.Server.Services {
         }
 
         public async Task<List<UserScoreDto<AimTrainerData>>> GetTopScoresAsync(int topCount) {
-            List<UserScoreDto<AimTrainerData>> userScores=await _scoreRepository.GetAllScoresAsync<AimTrainerData>();
+            List<UserScoreDto<AimTrainerData>> userScores = await _scoreRepository.GetAllScoresAsync<AimTrainerData>();
             List<UserScoreDto<AimTrainerData>> orderedScores = userScores.OrderByDescending(s => s.GameData.Scores).ToList();
-            List<UserScoreDto<AimTrainerData>> topScores=new List<UserScoreDto<AimTrainerData>>();
+            List<UserScoreDto<AimTrainerData>> topScores = new List<UserScoreDto<AimTrainerData>>();
             
-            for(int i=0;i<topCount && i<orderedScores.Count;i++) {
+            for(int i = 0; i < topCount && i < orderedScores.Count; i++) {
                 topScores.Add(orderedScores[i]);
             }
             

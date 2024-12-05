@@ -8,19 +8,19 @@ namespace Projektas.Client.Services {
 		private readonly ILocalStorageService _localStorage;
 
 		public AccountService(HttpClient httpClient, ILocalStorageService localStorage) {
-			_httpClient=httpClient;
-			_localStorage=localStorage;
+			_httpClient = httpClient;
+			_localStorage = localStorage;
 		}
 		
 		public async Task<HttpResponseMessage> CreateAccountAsync(User user) {
-			return await _httpClient.PostAsJsonAsync("api/user/create_user",user);
+			return await _httpClient.PostAsJsonAsync("api/user/create_user", user);
 		}
 
 		public async Task<string?> LogInAsync(User user) {
-			var response=await _httpClient.PostAsJsonAsync("api/user/login",user);
+			var response = await _httpClient.PostAsJsonAsync("api/user/login", user);
 
 			if(response.IsSuccessStatusCode) {
-				var result=await response.Content.ReadFromJsonAsync<LoginResponse>();
+				var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
 				return result?.Token;
 			}
 

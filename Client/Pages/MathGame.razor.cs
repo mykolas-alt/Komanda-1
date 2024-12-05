@@ -4,31 +4,31 @@ using Projektas.Shared.Models;
 
 namespace Projektas.Client.Pages {
 	public partial class MathGame {
-        public string? question {get;private set;}=null;
-        public bool isTimesUp {get;private set;}=false;
-        public List<int>? options {get;private set;}
-        public bool? isCorrect {get;private set;}=null;
-		public List<UserScoreDto<MathGameData>>? topScores {get;private set;}
-		public string? username=null;
-        public int score {get;private set;}=0;
-		private UserScoreDto<MathGameData> highscore {get;set;} = new UserScoreDto<MathGameData>();
+        public string? question {get; private set;} = null;
+        public bool isTimesUp {get; private set;} = false;
+        public List<int>? options {get; private set;}
+        public bool? isCorrect {get; private set;} = null;
+		public List<UserScoreDto<MathGameData>>? topScores {get; private set;}
+		public string? username = null;
+        public int score {get; private set;} = 0;
+		private UserScoreDto<MathGameData> highscore {get; set;} = new UserScoreDto<MathGameData>();
 
         [Inject]
-        public IMathGameService MathGameService {get;set;}
+        public IMathGameService MathGameService {get; set;}
 
         [Inject]
-        public ITimerService TimerService {get;set;}
+        public ITimerService TimerService {get; set;}
         [Inject]
-        public IAccountAuthStateProvider AuthStateProvider {get;set;}
+        public IAccountAuthStateProvider AuthStateProvider {get; set;}
 
 		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChangedAsync;
+			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
 
 			await LoadUsernameAsync();
 		}
 
 		private async Task LoadUsernameAsync() {
-			username=await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
+			username = await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
 			StateHasChanged();
 		}
 
@@ -38,31 +38,31 @@ namespace Projektas.Client.Pages {
 		}
 
         protected override async void OnInitialized() {
-            TimerService.OnTick+=OnTimerTick;
+            TimerService.OnTick += OnTimerTick;
         }
 
 
         public async Task StartGameAsync() {
             TimerService.Start(60);
-            isTimesUp=false;
-            score=0;
+            isTimesUp = false;
+            score = 0;
             await GenerateQuestionAsync();
         }
 
         public async Task GenerateQuestionAsync() {
-            isCorrect=null;
-            question=await MathGameService.GetQuestionAsync(score);
-            options=await MathGameService.GetOptionsAsync();
+            isCorrect = null;
+            question = await MathGameService.GetQuestionAsync(score);
+            options = await MathGameService.GetOptionsAsync();
         }
 
         public async Task CheckAnswer(int option) {
-            if(question!=null) {
-                isCorrect=await MathGameService.CheckAnswerAsync(option);
-                if(isCorrect==false) {
-                    if(TimerService.RemainingTime>5) {
-                        TimerService.RemainingTime=TimerService.RemainingTime-5;
+            if(question != null) {
+                isCorrect = await MathGameService.CheckAnswerAsync(option);
+                if(isCorrect == false) {
+                    if(TimerService.RemainingTime > 5) {
+                        TimerService.RemainingTime = TimerService.RemainingTime - 5;
                     } else {
-                        TimerService.RemainingTime=0;
+                        TimerService.RemainingTime = 0;
                         OnTimerTick();
                         return;
                     }
@@ -78,27 +78,27 @@ namespace Projektas.Client.Pages {
 
         public async void OnTimerTick() {
             await InvokeAsync(async () => {
-                if(TimerService.RemainingTime==0) {
-                    isTimesUp=true;
+                if(TimerService.RemainingTime == 0) {
+                    isTimesUp = true;
                     TimerService.Stop();
 
-                    if(username!=null) {
-                        await MathGameService.SaveScoreAsync(username,score);
+                    if(username != null) {
+                        await MathGameService.SaveScoreAsync(username, score);
                     }
 
-                    if(username!=null) {
-                        highscore=await MathGameService.GetUserHighscoreAsync(username);
+                    if(username != null) {
+                        highscore = await MathGameService.GetUserHighscoreAsync(username);
                     }
                     
-                    topScores=await MathGameService.GetTopScoresAsync(topCount:5);
+                    topScores = await MathGameService.GetTopScoresAsync(topCount: 5);
                 }
                 StateHasChanged();
             });
         }
 
         public void Dispose() {
-            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChangedAsync;
-            TimerService.OnTick-=OnTimerTick;
+            AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
+            TimerService.OnTick -= OnTimerTick;
         }
     }
 }
