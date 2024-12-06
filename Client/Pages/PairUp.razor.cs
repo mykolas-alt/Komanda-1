@@ -1,21 +1,25 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
+using Projektas.Client.Services;
 
 namespace Projektas.Client.Pages {
     public partial class PairUp : ComponentBase {
+
+        [Inject]
+        public required ITimerService TimerService { get; set; }
         public List<Card> cards {get; set;}
         public Card? firstSelectedCard {get; private set;}
         public Card? secondSelectedCard {get; private set;}
         public bool isGameActive {get; set;}
         public bool missMatch {get; private set;}
         public int matchedPairsCount {get; private set;}
-        public int attempts {get; private set;}
+        public int mistakes {get; private set;}
         public bool isHardMode {get; private set;}
         public string gridStyle {get; private set;}
         public bool changeIcon {get; private set;}
+        public int ElapsedTime = 0;
 
-        
-		public string? username = null;
+        public string? username = null;
 
         string[] cardIcons = new string[] {
             "\u2660",  // Spade: ♠
@@ -37,7 +41,7 @@ namespace Projektas.Client.Pages {
         };
 
         public PairUp() {
-            ResetGame();
+
         }
 
         [Inject]
@@ -46,10 +50,12 @@ namespace Projektas.Client.Pages {
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider {get; set;}
 
-		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
 
-			await LoadUsernameAsync();
+        protected override async Task OnInitializedAsync() {
+			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
+            TimerService.OnTick += TimerTick;
+            ResetGame();
+            await LoadUsernameAsync();
 		}
 
 		private async Task LoadUsernameAsync() {
@@ -68,7 +74,9 @@ namespace Projektas.Client.Pages {
         }
 
         public void ResetGame() {
-            attempts = 0;
+            ElapsedTime = 0;
+            TimerService.Stop();
+            mistakes = 0;
             matchedPairsCount = 0;
             firstSelectedCard = null;
             secondSelectedCard = null;
@@ -87,6 +95,19 @@ namespace Projektas.Client.Pages {
             }
             
             cards = GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
+            TimerService.Start(1800);
+
+        }
+
+        public void TimerTick()
+        {
+            ElapsedTime++;
+            if (TimerService.RemainingTime == 0)
+            {
+                ResetGame();
+            }
+
+            InvokeAsync(StateHasChanged);
         }
 
         private List<Card> GenerateCardDeck(int count) {
@@ -107,7 +128,6 @@ namespace Projektas.Client.Pages {
                 firstSelectedCard = selectedCard;
             } else if(secondSelectedCard == null) {
                 secondSelectedCard = selectedCard;
-                attempts++;
 
                 if((int)firstSelectedCard.Value == (int)secondSelectedCard.Value) {
                     firstSelectedCard.IsMatched = true;
@@ -117,12 +137,19 @@ namespace Projektas.Client.Pages {
                     secondSelectedCard = null;
 
                     if(cards.All(c => c.IsMatched)) {
-                        if(username != null) {
-                            PairUpService.SaveScoreAsync(username, 0, attempts);
+                        TimerService.Stop();
+                        if (username != null) {
+                            PairUpService.SaveScoreAsync(username, 0, mistakes);
                         }
                         isGameActive = false;
                     }
                 } else {
+                    if(firstSelectedCard.HasBeenSeen || secondSelectedCard.HasBeenSeen)
+                    {
+                        mistakes++;
+                    }
+                    firstSelectedCard.HasBeenSeen = secondSelectedCard.HasBeenSeen = true;
+
                     var first = firstSelectedCard;
                     var second = secondSelectedCard;
                     missMatch = true;
@@ -146,6 +173,7 @@ namespace Projektas.Client.Pages {
 
         public class Card {
             public required object Value {get; set;}
+            public bool HasBeenSeen = false;
             public bool IsMatched {get; set;}
             public bool IsSelected {get; set;}
         }
