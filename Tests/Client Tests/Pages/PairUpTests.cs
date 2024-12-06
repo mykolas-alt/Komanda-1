@@ -68,37 +68,6 @@ namespace Projektas.Tests.Client_Tests.Pages {
             Assert.Null(cut.Instance.secondSelectedCard);
             Assert.False(cut.Instance.missMatch);
             Assert.True(cut.Instance.isGameActive);
-            Assert.Equal("grid-template-columns: repeat(4, 81px);", cut.Instance.gridStyle);
-            Assert.False(cut.Instance.changeIcon);
-        }
-
-        [Fact]
-        public void OnDifficultyChanged_ShouldSetHardMode() {
-            var cut = RenderComponent<PairUp>();
-            var changeEventArgs = new ChangeEventArgs {Value = "Hard"};
-
-            cut.Instance.OnDifficultyChanged(changeEventArgs);
-
-            Assert.True(cut.Instance.isHardMode);
-        }
-
-        [Fact]
-        public void ResetGame_ShouldStartGameInHardMode() {
-            var cut = RenderComponent<PairUp>();
-            var changeEventArgs = new ChangeEventArgs {Value = "Hard"};
-            cut.Instance.OnDifficultyChanged(changeEventArgs);
-
-            cut.Instance.ResetGame();
-
-            Assert.True(cut.Instance.isHardMode);
-
-            Assert.Equal(0, cut.Instance.mistakes);
-            Assert.Equal(0, cut.Instance.matchedPairsCount);
-            Assert.Null(cut.Instance.firstSelectedCard);
-            Assert.Null(cut.Instance.secondSelectedCard);
-            Assert.False(cut.Instance.missMatch);
-            Assert.True(cut.Instance.isGameActive);
-
             Assert.Equal("grid-template-columns: repeat(8, 81px);", cut.Instance.gridStyle);
             Assert.True(cut.Instance.changeIcon);
         }

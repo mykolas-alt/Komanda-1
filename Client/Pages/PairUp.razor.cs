@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
 using Projektas.Client.Services;
+using System;
 
 namespace Projektas.Client.Pages {
     public partial class PairUp : ComponentBase {
@@ -14,7 +15,13 @@ namespace Projektas.Client.Pages {
         public bool missMatch {get; private set;}
         public int matchedPairsCount {get; private set;}
         public int mistakes {get; private set;}
-        public bool isHardMode {get; private set;}
+        public enum Difficulty
+        {
+            Easy,
+            Medium,
+            Hard
+        }
+        private Difficulty CurrentDifficulty { get; set; }
         public string gridStyle {get; private set;}
         public bool changeIcon {get; private set;}
         public int ElapsedTime = 0;
@@ -54,6 +61,7 @@ namespace Projektas.Client.Pages {
         protected override async Task OnInitializedAsync() {
 			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
             TimerService.OnTick += TimerTick;
+            CurrentDifficulty = Difficulty.Medium;
             ResetGame();
             await LoadUsernameAsync();
 		}
@@ -68,9 +76,12 @@ namespace Projektas.Client.Pages {
 			StateHasChanged();
 		}
 
-        public void OnDifficultyChanged(ChangeEventArgs e) {
-            isHardMode = e.Value?.ToString() == "Hard";
-            Console.WriteLine(isHardMode);
+        public void OnDifficultyChanged(ChangeEventArgs e)
+        {
+            if (Enum.TryParse(e.Value?.ToString(), true, out Difficulty parsedDifficulty))
+            {
+                CurrentDifficulty = parsedDifficulty;
+            }
         }
 
         public void ResetGame() {
@@ -82,18 +93,34 @@ namespace Projektas.Client.Pages {
             secondSelectedCard = null;
             missMatch = false;
             isGameActive = true;
-            int count;
+            int count = 0;
 
-            if(isHardMode) {
-                gridStyle = "grid-template-columns: repeat(8, 81px);";
-                changeIcon = true;
-                count = 16;
-            } else {
-                gridStyle = "grid-template-columns: repeat(4, 81px);";
-                changeIcon = false;
-                count = 8;
+            switch (CurrentDifficulty)
+            {
+                case Difficulty.Easy:
+                    {
+                        gridStyle = "grid-template-columns: repeat(4, 81px);";
+                        changeIcon = false;
+                        count = 8;
+                        break;
+                    }
+                case Difficulty.Medium:
+                    {
+                        gridStyle = "grid-template-columns: repeat(8, 81px);";
+                        changeIcon = true;
+                        count = 16;
+                        break;
+                    }
+                case Difficulty.Hard:
+                    {
+                        gridStyle = "grid-template-columns: repeat(8, 81px);";
+                        changeIcon = false;
+                        count = 24;
+                        break;
+                    }
             }
-            
+
+
             cards = GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
             TimerService.Start(1800);
 
