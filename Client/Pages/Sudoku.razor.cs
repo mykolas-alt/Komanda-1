@@ -91,7 +91,7 @@ namespace Projektas.Client.Pages {
 
             IsGameActive = true;
             IsLoading = false;
-            TimerService.Start(1800);
+            TimerService.Start(180000);
             StateHasChanged();
         }
 
@@ -171,7 +171,7 @@ namespace Projektas.Client.Pages {
         public string FormatTime(int totalSeconds) {
             int minutes = totalSeconds / 60;
             int seconds = totalSeconds % 60;
-            return $"{minutes: D2}:{seconds: D2}";
+            return $"{minutes:D2}:{seconds:D2}";
         }
       
         private bool IsCellDisabled(int row, int col) {
