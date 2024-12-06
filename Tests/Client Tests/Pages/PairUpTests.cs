@@ -10,16 +10,20 @@ namespace Projektas.Tests.Client_Tests.Pages {
     public class PairUpTests : TestContext {
         private readonly Mock<IPairUpService> _mockPairUpService;
 		private readonly Mock<IAccountAuthStateProvider> _mockAuthStateProvider;
+        private readonly Mock<ITimerService> _mockTimerService;
 
-		public PairUpTests() {
+        public PairUpTests() {
 			_mockPairUpService = new Mock<IPairUpService>();
 			_mockAuthStateProvider = new Mock<IAccountAuthStateProvider>();
+            _mockTimerService = new Mock<ITimerService>();
 
-			Services.AddSingleton(_mockPairUpService.Object);
+
+            Services.AddSingleton(_mockPairUpService.Object);
 			Services.AddSingleton(_mockAuthStateProvider.Object);
+            Services.AddSingleton(_mockTimerService.Object);
 
-			// setup
-			_mockPairUpService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(Task.CompletedTask);
+            // setup
+            _mockPairUpService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(Task.CompletedTask);
 			_mockPairUpService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<PairUpData> {
                 Username = "User",
                 GameData = new PairUpData {
@@ -58,43 +62,12 @@ namespace Projektas.Tests.Client_Tests.Pages {
         public void ResetGame_ShouldStartGame() {
             var cut = RenderComponent<PairUp>();
 
-            Assert.Equal(0, cut.Instance.attempts);
+            Assert.Equal(0, cut.Instance.mistakes);
             Assert.Equal(0, cut.Instance.matchedPairsCount);
             Assert.Null(cut.Instance.firstSelectedCard);
             Assert.Null(cut.Instance.secondSelectedCard);
             Assert.False(cut.Instance.missMatch);
             Assert.True(cut.Instance.isGameActive);
-            Assert.Equal("grid-template-columns: repeat(4, 81px);", cut.Instance.gridStyle);
-            Assert.False(cut.Instance.changeIcon);
-        }
-
-        [Fact]
-        public void OnDifficultyChanged_ShouldSetHardMode() {
-            var cut = RenderComponent<PairUp>();
-            var changeEventArgs = new ChangeEventArgs {Value = "Hard"};
-
-            cut.Instance.OnDifficultyChanged(changeEventArgs);
-
-            Assert.True(cut.Instance.isHardMode);
-        }
-
-        [Fact]
-        public void ResetGame_ShouldStartGameInHardMode() {
-            var cut = RenderComponent<PairUp>();
-            var changeEventArgs = new ChangeEventArgs {Value = "Hard"};
-            cut.Instance.OnDifficultyChanged(changeEventArgs);
-
-            cut.Instance.ResetGame();
-
-            Assert.True(cut.Instance.isHardMode);
-
-            Assert.Equal(0, cut.Instance.attempts);
-            Assert.Equal(0, cut.Instance.matchedPairsCount);
-            Assert.Null(cut.Instance.firstSelectedCard);
-            Assert.Null(cut.Instance.secondSelectedCard);
-            Assert.False(cut.Instance.missMatch);
-            Assert.True(cut.Instance.isGameActive);
-
             Assert.Equal("grid-template-columns: repeat(8, 81px);", cut.Instance.gridStyle);
             Assert.True(cut.Instance.changeIcon);
         }
@@ -114,7 +87,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             Assert.Null(pairUp.Instance.firstSelectedCard);
             Assert.Null(pairUp.Instance.secondSelectedCard);
             Assert.Equal(1, pairUp.Instance.matchedPairsCount);
-            Assert.Equal(1, pairUp.Instance.attempts);
+            Assert.Equal(0, pairUp.Instance.mistakes);
         }
 
         [Fact]

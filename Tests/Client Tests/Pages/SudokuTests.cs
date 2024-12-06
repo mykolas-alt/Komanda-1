@@ -159,7 +159,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.IsCorrect();
 
             Assert.False(cut.Instance.IsGameActive);
-            Assert.Equal($"Correct solution. Solved in {cut.Instance.FormatTime(0)}", cut.Instance.Message);
+            Assert.Equal($"Correct solution. Solved in {Sudoku.FormatTime(0)}", cut.Instance.Message);
         }
 
         [Fact]

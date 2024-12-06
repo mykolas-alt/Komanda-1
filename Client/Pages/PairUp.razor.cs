@@ -1,21 +1,32 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
+using Projektas.Client.Services;
+using System;
 
 namespace Projektas.Client.Pages {
     public partial class PairUp : ComponentBase {
+
+        [Inject]
+        public required ITimerService TimerService { get; set; }
         public List<Card> cards {get; set;}
         public Card? firstSelectedCard {get; private set;}
         public Card? secondSelectedCard {get; private set;}
         public bool isGameActive {get; set;}
         public bool missMatch {get; private set;}
         public int matchedPairsCount {get; private set;}
-        public int attempts {get; private set;}
-        public bool isHardMode {get; private set;}
+        public int mistakes {get; private set;}
+        public enum Difficulty
+        {
+            Easy,
+            Medium,
+            Hard
+        }
+        private Difficulty CurrentDifficulty { get; set; }
         public string gridStyle {get; private set;}
         public bool changeIcon {get; private set;}
+        public int ElapsedTime = 0;
 
-        
-		public string? username = null;
+        public string? username = null;
 
         string[] cardIcons = new string[] {
             "\u2660",  // Spade: ♠
@@ -37,7 +48,7 @@ namespace Projektas.Client.Pages {
         };
 
         public PairUp() {
-            ResetGame();
+
         }
 
         [Inject]
@@ -46,10 +57,13 @@ namespace Projektas.Client.Pages {
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider {get; set;}
 
-		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
 
-			await LoadUsernameAsync();
+        protected override async Task OnInitializedAsync() {
+			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
+            TimerService.OnTick += TimerTick;
+            CurrentDifficulty = Difficulty.Medium;
+            ResetGame();
+            await LoadUsernameAsync();
 		}
 
 		private async Task LoadUsernameAsync() {
@@ -62,31 +76,65 @@ namespace Projektas.Client.Pages {
 			StateHasChanged();
 		}
 
-        public void OnDifficultyChanged(ChangeEventArgs e) {
-            isHardMode = e.Value?.ToString() == "Hard";
-            Console.WriteLine(isHardMode);
+        public void OnDifficultyChanged(ChangeEventArgs e)
+        {
+            if (Enum.TryParse(e.Value?.ToString(), true, out Difficulty parsedDifficulty))
+            {
+                CurrentDifficulty = parsedDifficulty;
+            }
         }
 
         public void ResetGame() {
-            attempts = 0;
+            ElapsedTime = 0;
+            TimerService.Stop();
+            mistakes = 0;
             matchedPairsCount = 0;
             firstSelectedCard = null;
             secondSelectedCard = null;
             missMatch = false;
             isGameActive = true;
-            int count;
+            int count = 0;
 
-            if(isHardMode) {
-                gridStyle = "grid-template-columns: repeat(8, 81px);";
-                changeIcon = true;
-                count = 16;
-            } else {
-                gridStyle = "grid-template-columns: repeat(4, 81px);";
-                changeIcon = false;
-                count = 8;
+            switch (CurrentDifficulty)
+            {
+                case Difficulty.Easy:
+                    {
+                        gridStyle = "grid-template-columns: repeat(4, 81px);";
+                        changeIcon = false;
+                        count = 8;
+                        break;
+                    }
+                case Difficulty.Medium:
+                    {
+                        gridStyle = "grid-template-columns: repeat(8, 81px);";
+                        changeIcon = true;
+                        count = 16;
+                        break;
+                    }
+                case Difficulty.Hard:
+                    {
+                        gridStyle = "grid-template-columns: repeat(8, 81px);";
+                        changeIcon = false;
+                        count = 24;
+                        break;
+                    }
             }
-            
+
+
             cards = GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
+            TimerService.Start(1800);
+
+        }
+
+        public void TimerTick()
+        {
+            ElapsedTime++;
+            if (TimerService.RemainingTime == 0)
+            {
+                ResetGame();
+            }
+
+            InvokeAsync(StateHasChanged);
         }
 
         private List<Card> GenerateCardDeck(int count) {
@@ -107,7 +155,6 @@ namespace Projektas.Client.Pages {
                 firstSelectedCard = selectedCard;
             } else if(secondSelectedCard == null) {
                 secondSelectedCard = selectedCard;
-                attempts++;
 
                 if((int)firstSelectedCard.Value == (int)secondSelectedCard.Value) {
                     firstSelectedCard.IsMatched = true;
@@ -117,12 +164,19 @@ namespace Projektas.Client.Pages {
                     secondSelectedCard = null;
 
                     if(cards.All(c => c.IsMatched)) {
-                        if(username != null) {
-                            PairUpService.SaveScoreAsync(username, 0, attempts);
+                        TimerService.Stop();
+                        if (username != null) {
+                            PairUpService.SaveScoreAsync(username, 0, mistakes);
                         }
                         isGameActive = false;
                     }
                 } else {
+                    if(firstSelectedCard.HasBeenSeen || secondSelectedCard.HasBeenSeen)
+                    {
+                        mistakes++;
+                    }
+                    firstSelectedCard.HasBeenSeen = secondSelectedCard.HasBeenSeen = true;
+
                     var first = firstSelectedCard;
                     var second = secondSelectedCard;
                     missMatch = true;
@@ -146,6 +200,7 @@ namespace Projektas.Client.Pages {
 
         public class Card {
             public required object Value {get; set;}
+            public bool HasBeenSeen = false;
             public bool IsMatched {get; set;}
             public bool IsSelected {get; set;}
         }
