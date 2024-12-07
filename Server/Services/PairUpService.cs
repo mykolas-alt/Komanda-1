@@ -10,7 +10,7 @@ namespace Projektas.Server.Services {
         }
 
         public async Task AddScoreToDbAsync(UserScoreDto<PairUpData> data) {
-            await _scoreRepository.AddScoreToUserAsync<PairUpData>(data.Username, data.GameData);
+            await _scoreRepository.AddScoreToUserAsync<PairUpData>(data.Username, data.GameData, data.Timestamp);
         }
 
         public async Task<UserScoreDto<PairUpData>> GetUserHighscoreAsync(string username) {

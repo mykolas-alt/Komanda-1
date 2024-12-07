@@ -36,10 +36,10 @@ namespace Projektas.Client.Services
             var data = new UserScoreDto<MathGameData>
             {
                 Username = username,
+                Timestamp = DateTime.UtcNow.ToLocalTime(),
                 GameData = new MathGameData
                 {
-                    Scores = score,
-                    Timestamp = DateTime.UtcNow.ToLocalTime()
+                    Scores = score
                 }
             };
             await _httpClient.PostAsJsonAsync("api/mathgame/save-score", data);

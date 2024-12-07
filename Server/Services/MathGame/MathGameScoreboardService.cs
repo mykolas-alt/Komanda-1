@@ -15,7 +15,7 @@ namespace Projektas.Server.Services.MathGame
 
         public async Task AddScoreToDbAsync(UserScoreDto<MathGameData> data)
         {
-            await _scoreRepository.AddScoreToUserAsync<MathGameData>(data.Username, data.GameData);
+            await _scoreRepository.AddScoreToUserAsync<MathGameData>(data.Username, data.GameData, data.Timestamp);
         }
 
         public async Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username)

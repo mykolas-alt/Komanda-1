@@ -14,9 +14,9 @@ namespace Projektas.Client.Services {
         public async Task SaveScoreAsync(string username, int score, GameDifficulty difficulty) {
             var data = new UserScoreDto<AimTrainerData> {
                 Username = username,
+                Timestamp = DateTime.UtcNow.ToLocalTime(),
                 GameData = new AimTrainerData {
                     Scores = score,
-                    Timestamp = DateTime.UtcNow.ToLocalTime(),
                     Difficulty = difficulty
                 }
             };

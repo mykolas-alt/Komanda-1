@@ -14,10 +14,10 @@ namespace Projektas.Client.Services {
         public async Task SaveScoreAsync(string username, int score, int fails, GameDifficulty difficulty) {
             var data = new UserScoreDto<PairUpData> {
                 Username = username,
+                Timestamp = DateTime.UtcNow.ToLocalTime(),
                 GameData = new PairUpData {
                     TimeInSeconds = score,
                     Fails = fails,
-                    Timestamp = DateTime.UtcNow.ToLocalTime(),
                     Difficulty = difficulty
                 }
             };

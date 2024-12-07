@@ -72,7 +72,7 @@ namespace Projektas.Server.Services {
         }
 
         public async Task AddScoreToDbAsync(UserScoreDto<SudokuData> data) {
-            await _scoreRepository.AddScoreToUserAsync<SudokuData>(data.Username, data.GameData);
+            await _scoreRepository.AddScoreToUserAsync<SudokuData>(data.Username, data.GameData, data.Timestamp);
         }
 
         public async Task<UserScoreDto<SudokuData>> GetUserHighscoreAsync(string username) {

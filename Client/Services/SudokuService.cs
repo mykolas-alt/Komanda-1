@@ -52,12 +52,12 @@ namespace Projektas.Client.Services {
             var data = new UserScoreDto<SudokuData>
             {
                 Username = username,
+                Timestamp = DateTime.UtcNow.ToLocalTime(),
                 GameData = new SudokuData
                 {
                     TimeInSeconds = score,
                     Difficulty = difficulty,
-                    Mode = gameMode,
-                    Timestamp = DateTime.UtcNow.ToLocalTime()
+                    Mode = gameMode
                 }
             };
             await _httpClient.PostAsJsonAsync("api/sudoku/save-score", data);

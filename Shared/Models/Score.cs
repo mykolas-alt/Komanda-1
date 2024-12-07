@@ -9,5 +9,7 @@ namespace Projektas.Shared.Models {
 		public T GameData {get; set;}
 
 		public User User {get; set;}
-	}
+
+        public DateTime Timestamp {get; set;}
+    }
 }
