@@ -1,16 +1,16 @@
 ﻿namespace Projektas.Shared.Models
 {
     public class User {
-        public int Id {get;set;}
+        public int Id {get; set;}
 
-        public string Name {get;set;}="";
-        public string Surname {get;set;}="";
-        public string Username {get;set;}="";
-        public string Password {get;set;}="";
+        public string Name {get; set;} = "";
+        public string Surname {get; set;} = "";
+        public string Username {get; set;} = "";
+        public string Password {get; set;} = "";
 
-        public List<Score<MathGameM>> MathGameScores {get;set;}=new List<Score<MathGameM>>();
-        public List<Score<SudokuM>> SudokuScores {get;set;}=new List<Score<SudokuM>>();
-        public List<Score<AimTrainerM>> AimTrainerScores {get;set;}=new List<Score<AimTrainerM>>();
-        public List<Score<PairUpM>> PairUpScores {get;set;}=new List<Score<PairUpM>>();
+        public List<Score<MathGameData>> MathGameScores {get; set;} = new List<Score<MathGameData>>();
+        public List<Score<SudokuData>> SudokuScores {get; set;} = new List<Score<SudokuData>>();
+        public List<Score<AimTrainerData>> AimTrainerScores {get; set;} = new List<Score<AimTrainerData>>();
+        public List<Score<PairUpData>> PairUpScores {get; set;} = new List<Score<PairUpData>>();
     }
 }

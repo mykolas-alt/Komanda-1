@@ -9,22 +9,22 @@ namespace Projektas.Server.Controllers {
 		private readonly IUserService _userService;
 
 		public UserController(IUserService userService) {
-			_userService=userService;
+			_userService = userService;
 		}
 		
 		[HttpPost("create_user")]
-		public async Task<IActionResult> CreateUser([FromBody] User newUser) {
-			await _userService.CreateUser(newUser);
+		public async Task<IActionResult> CreateUserAsync([FromBody] User newUser) {
+			await _userService.CreateUserAsync(newUser);
 			return Ok();
 		}
 
 		[HttpPost("login")]
-		public async Task<IActionResult> LogIn([FromBody]User user) {
-			var response=_userService.LogInToUser(user);
+		public async Task<IActionResult> LogInAsync([FromBody]User user) {
+			var response = await _userService.LogInToUserAsync(user);
 
-			if(response.Result) {
-				var token=_userService.GenerateJwtToken(user);
-				return Ok(new {Token=token});
+			if(response) {
+				var token = _userService.GenerateJwtToken(user);
+				return Ok(new {Token = token});
 			}
 
 			return Unauthorized();
@@ -36,7 +36,7 @@ namespace Projektas.Server.Controllers {
 		}
 
 		[HttpGet("usernames")]
-		public async Task<ActionResult<List<string>>> GetUsernames() {
+		public async Task<ActionResult<List<string>>> GetUsernamesAsync() {
 			return await _userService.GetUsernamesAsync();
 		}
 	}

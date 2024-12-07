@@ -1,12 +1,4 @@
-﻿.grid {
-    display: grid;
-    grid-template-columns: repeat(9, 60px);
-    grid-template-rows: repeat(9, 60px);
-    border-collapse: collapse;
-    justify-content: center;
-}
-
-.grid-row {
+﻿.grid-row {
     display: contents;
 }
 
@@ -45,12 +37,4 @@
 
 .grid-row .cell:last-child {
     border-right: 1px solid black;
-}
-
-.grid-row:nth-child(3n):not(:last-child) .cell {
-    border-bottom: 2px solid black;
-}
-
-.cell:nth-child(3n) {
-    border-right: 2px solid black;
 }

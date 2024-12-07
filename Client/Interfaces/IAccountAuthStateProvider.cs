@@ -5,7 +5,7 @@ namespace Projektas.Client.Interfaces {
         string? Username {get;}
         Task<AuthenticationState> GetAuthenticationStateAsync();
         IEnumerable<Claim> ParseClaimsFromJWT(string jwt);
-        Task MarkUserAsAuthenticated(string token);
+        Task MarkUserAsAuthenticatedAsync(string token);
         void MarkUserAsLoggedOut();
         Task<string?> GetUsernameAsync();
 		event AuthenticationStateChangedHandler? AuthenticationStateChanged;

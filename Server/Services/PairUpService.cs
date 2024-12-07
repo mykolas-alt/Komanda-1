@@ -1,29 +1,38 @@
-﻿using Projektas.Shared.Models;
+﻿using Projektas.Server.Interfaces;
+using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services {
     public class PairUpService {
-        private readonly IScoreRepository<PairUpM> _scoreRepository;
+        private readonly IScoreRepository _scoreRepository;
 
-        public PairUpService (IScoreRepository<PairUpM> scoreRepository) {
-            _scoreRepository=scoreRepository;
+        public PairUpService (IScoreRepository scoreRepository) {
+            _scoreRepository = scoreRepository;
         }
 
-        public async Task AddScoreToDb(UserScoreDto data) {
-            await _scoreRepository.AddScoreToUserAsync(data.Username,data.Score, data.Difficulty);
+        public async Task AddScoreToDbAsync(UserScoreDto<PairUpData> data) {
+            var gameData = new PairUpData() {
+                TimeInSeconds = data.GameData.TimeInSeconds,
+                Fails = data.GameData.Fails
+            };
+
+            await _scoreRepository.AddScoreToUserAsync<PairUpData>(data.Username, gameData);
         }
 
-        public async Task<int?> GetUserHighscore(string username) {
-            return await _scoreRepository.GetHighscoreFromUserAsync(username);
+        public async Task<UserScoreDto<PairUpData>> GetUserHighscoreAsync(string username) {
+            var scores = await _scoreRepository.GetHighscoreFromUserAsync<PairUpData>(username);
+
+            return scores.OrderBy(s => s.GameData.TimeInSeconds).ThenBy(s => s.GameData.Fails).First();
         }
 
-        public async Task<List<UserScoreDto>> GetTopScores(int topCount)
-        {
-            List<UserScoreDto> userScores = await _scoreRepository.GetAllScoresAsync();
-            List<UserScoreDto> topScores = userScores
-            .OrderByDescending(score => score.Score)
-            .Take(topCount)
-            .ToList();
-
+        public async Task<List<UserScoreDto<PairUpData>>> GetTopScoresAsync(int topCount) {
+            List<UserScoreDto<PairUpData>> userScores = await _scoreRepository.GetAllScoresAsync<PairUpData>();
+            List<UserScoreDto<PairUpData>> orderedScores = userScores.OrderByDescending(s => s.GameData.TimeInSeconds).ThenBy(s => s.GameData.Fails).ToList();
+            List<UserScoreDto<PairUpData>> topScores = new List<UserScoreDto<PairUpData>>();
+            
+            for(int i = 0; i < topCount && i < orderedScores.Count; i++) {
+                topScores.Add(orderedScores[i]);
+            }
+            
             return topScores;
         }
     }

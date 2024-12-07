@@ -2,27 +2,34 @@
 using Projektas.Client.Interfaces;
 using Projektas.Client.Services;
 using Projektas.Shared.Enums;
+using System;
 
-namespace Projektas.Client.Pages
-{
-    public partial class PairUp : ComponentBase
-    {
-        public List<Card> cards {get;set;}
-        public Card? firstSelectedCard {get;private set;}
-        public Card? secondSelectedCard {get;private set;}
-        public bool isGameActive {get;set;}
-        public bool missMatch {get;private set;}
-        public int matchedPairsCount {get;private set;}
-        public int attempts {get;private set;}
-        public bool isHardMode {get;private set;}
-        public string gridStyle {get;private set;}
-        public bool changeIcon {get;private set;}
+namespace Projektas.Client.Pages {
+    public partial class PairUp : ComponentBase {
 
-        public GameDifficulty? Difficulty {get;set;} = GameDifficulty.Normal;
-        
-		public string? username=null;
+        [Inject]
+        public required ITimerService TimerService { get; set; }
+        public List<Card> cards {get; set;}
+        public Card? firstSelectedCard {get; private set;}
+        public Card? secondSelectedCard {get; private set;}
+        public bool isGameActive {get; set;}
+        public bool missMatch {get; private set;}
+        public int matchedPairsCount {get; private set;}
+        public int mistakes {get; private set;}
+        public enum Difficulty
+        {
+            Easy,
+            Medium,
+            Hard
+        }
+        private Difficulty CurrentDifficulty { get; set; }
+        public string gridStyle {get; private set;}
+        public bool changeIcon {get; private set;}
+        public int ElapsedTime = 0;
 
-        string[] cardIcons=new string[] {
+        public string? username = null;
+
+        string[] cardIcons = new string[] {
             "\u2660",  // Spade: ♠
             "\u2663",  // Club: ♣
             "\u25A1",  // Square: □ 
@@ -42,98 +49,144 @@ namespace Projektas.Client.Pages
         };
 
         public PairUp() {
-            ResetGame();
+
         }
 
         [Inject]
-        public IAccountAuthStateProvider AuthStateProvider {get;set;}
+        public IPairUpService PairUpService {get; set;}
 
-		protected override async Task OnInitializedAsync() {
-			AuthStateProvider.AuthenticationStateChanged+=OnAuthenticationStateChanged;
+        [Inject]
+        public IAccountAuthStateProvider AuthStateProvider {get; set;}
 
-			await LoadUsernameAsync();
+
+        protected override async Task OnInitializedAsync() {
+			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
+            TimerService.OnTick += TimerTick;
+            CurrentDifficulty = Difficulty.Medium;
+            ResetGame();
+            await LoadUsernameAsync();
 		}
 
 		private async Task LoadUsernameAsync() {
-			username=await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
+			username = await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
 			StateHasChanged();
 		}
 
-		private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+		private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
 			await InvokeAsync(LoadUsernameAsync);
 			StateHasChanged();
 		}
 
-        public void OnDifficultyChanged(ChangeEventArgs e) {
-            isHardMode=e.Value?.ToString()=="Hard";
-            Difficulty = GameDifficulty.Hard;
+        public void OnDifficultyChanged(ChangeEventArgs e)
+        {
+            if (Enum.TryParse(e.Value?.ToString(), true, out Difficulty parsedDifficulty))
+            {
+                CurrentDifficulty = parsedDifficulty;
+            }
         }
 
         public void ResetGame() {
-            attempts=0;
-            matchedPairsCount=0;
-            firstSelectedCard=null;
-            secondSelectedCard=null;
-            missMatch=false;
-            isGameActive=true;
-            int count;
+            ElapsedTime = 0;
+            TimerService.Stop();
+            mistakes = 0;
+            matchedPairsCount = 0;
+            firstSelectedCard = null;
+            secondSelectedCard = null;
+            missMatch = false;
+            isGameActive = true;
+            int count = 0;
 
-            if(isHardMode) {
-                gridStyle="grid-template-columns: repeat(8, 81px);";
-                changeIcon=true;
-                count=16;
-            } else {
-                gridStyle="grid-template-columns: repeat(4, 81px);";
-                changeIcon=false;
-                count=8;
+            switch (CurrentDifficulty)
+            {
+                case Difficulty.Easy:
+                    {
+                        gridStyle = "grid-template-columns: repeat(4, 81px);";
+                        changeIcon = false;
+                        count = 8;
+                        break;
+                    }
+                case Difficulty.Medium:
+                    {
+                        gridStyle = "grid-template-columns: repeat(8, 81px);";
+                        changeIcon = true;
+                        count = 16;
+                        break;
+                    }
+                case Difficulty.Hard:
+                    {
+                        gridStyle = "grid-template-columns: repeat(8, 81px);";
+                        changeIcon = false;
+                        count = 24;
+                        break;
+                    }
             }
-            
-            cards=GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
+
+
+            cards = GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
+            TimerService.Start(1800);
+
+        }
+
+        public void TimerTick()
+        {
+            ElapsedTime++;
+            if (TimerService.RemainingTime == 0)
+            {
+                ResetGame();
+            }
+
+            InvokeAsync(StateHasChanged);
         }
 
         private List<Card> GenerateCardDeck(int count) {
-            var cardValues=Enumerable.Range(1, count).ToList(); 
-            var allCards=cardValues.Concat(cardValues)
-                .Select(value => new Card {Value=(object)value,IsMatched=false,IsSelected=false})
+            var cardValues = Enumerable.Range(1, count).ToList(); 
+            var allCards = cardValues.Concat(cardValues)
+                .Select(value => new Card {Value = (object)value, IsMatched = false, IsSelected = false})
                 .ToList();
             return allCards;
         }
 
         public void OnCardSelected(Card selectedCard) {
-            if(!isGameActive || selectedCard.IsMatched || selectedCard==firstSelectedCard || missMatch)
+            if(!isGameActive || selectedCard.IsMatched || selectedCard == firstSelectedCard || missMatch)
                 return;
 
-            selectedCard.IsSelected=true;
+            selectedCard.IsSelected = true;
 
-            if(firstSelectedCard==null) {
-                firstSelectedCard=selectedCard;
-            } else if(secondSelectedCard==null) {
-                secondSelectedCard=selectedCard;
-                attempts++;
+            if(firstSelectedCard == null) {
+                firstSelectedCard = selectedCard;
+            } else if(secondSelectedCard == null) {
+                secondSelectedCard = selectedCard;
 
-                if((int)firstSelectedCard.Value==(int)secondSelectedCard.Value) {
-                    firstSelectedCard.IsMatched=true;
-                    secondSelectedCard.IsMatched=true;
+                if((int)firstSelectedCard.Value == (int)secondSelectedCard.Value) {
+                    firstSelectedCard.IsMatched = true;
+                    secondSelectedCard.IsMatched = true;
                     matchedPairsCount++;
-                    firstSelectedCard=null;
-                    secondSelectedCard=null;
+                    firstSelectedCard = null;
+                    secondSelectedCard = null;
 
                     if(cards.All(c => c.IsMatched)) {
-                        if(username!=null) {
-                            PairUpService.SaveScoreAsync(username,attempts,Difficulty.ToString());
+                        TimerService.Stop();
+                        if (username != null) {
+                            PairUpService.SaveScoreAsync(username, 0, mistakes);
                         }
-                        isGameActive=false;
+                        isGameActive = false;
                     }
                 } else {
-                    var first=firstSelectedCard;
-                    var second=secondSelectedCard;
-                    missMatch=true;
+                    if(firstSelectedCard.HasBeenSeen || secondSelectedCard.HasBeenSeen)
+                    {
+                        mistakes++;
+                    }
+                    firstSelectedCard.HasBeenSeen = secondSelectedCard.HasBeenSeen = true;
+
+                    var first = firstSelectedCard;
+                    var second = secondSelectedCard;
+                    missMatch = true;
                     Task.Delay(1000).ContinueWith(_ => {
-                        first.IsSelected=false;
-                        second.IsSelected=false;
-                        firstSelectedCard=null;
-                        secondSelectedCard=null;
-                        missMatch=false;
+                        first.IsSelected = false;
+                        second.IsSelected = false;
+                        firstSelectedCard = null;
+                        secondSelectedCard = null;
+                        missMatch = false;
 						InvokeAsync(StateHasChanged);
 					});
                 }
@@ -143,13 +196,14 @@ namespace Projektas.Client.Pages
         }
 
         public void Dispose() {
-            AuthStateProvider.AuthenticationStateChanged-=OnAuthenticationStateChanged;
+            AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
         }
 
         public class Card {
-            public required object Value {get;set;}
-            public bool IsMatched {get;set;}
-            public bool IsSelected {get;set;}
+            public required object Value {get; set;}
+            public bool HasBeenSeen = false;
+            public bool IsMatched {get; set;}
+            public bool IsSelected {get; set;}
         }
     }
 }

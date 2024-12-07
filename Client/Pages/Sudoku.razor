@@ -1,18 +1,29 @@
 ﻿@page "/sudoku"
-@using Projektas.Client.Services
 
 <PageTitle>Sudoku</PageTitle>
 <div style="text-align: center;">
     <h1>Sudoku</h1>
     <div>
-        <h4 class="timer-text">Time: @FormatTime(TimerService.RemainingTime)</h4>
+        <h4 class="timer-text">Time: @FormatTime(ElapsedTime)</h4>
+    </div>
+
+    <div>
+        <label>
+            <input type="radio" name="size" value=4 @onchange="OnSizeChanged" /> 4x4
+        </label>
+        <label>
+            <input type="radio" name="size" value=9 checked @onchange="OnSizeChanged" /> 9x9
+        </label>
+        <label>
+            <input type="radio" name="size" value=16 @onchange="OnSizeChanged" /> 16x16
+        </label>
     </div>
     <div>
         <label>
-            <input type="radio" name="difficulty" value="Easy" checked @onchange="OnDifficultyChanged" /> Easy
+            <input type="radio" name="difficulty" value="Easy"  @onchange="OnDifficultyChanged" /> Easy
         </label>
         <label>
-            <input type="radio" name="difficulty" value="Medium" @onchange="OnDifficultyChanged" /> Medium
+            <input type="radio" name="difficulty" value="Medium" checked @onchange="OnDifficultyChanged" /> Medium
         </label>
         <label>
             <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" /> Hard
@@ -47,7 +58,7 @@
         </div>
 
     }
-    <button class="btn btn-primary mt-3" @onclick="GenerateSudokuGame">Generate Sudoku</button>
+    <button class="btn btn-primary mt-3" @onclick="GenerateSudokuGameAsync">Generate Sudoku</button>
     <button class="btn btn-primary mt-3" @onclick="IsCorrect">Submit</button>
     @if (Message != null)
     {
@@ -58,3 +69,29 @@
 
 
 </div>
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat( @GridSize, 60px);
+        grid-template-rows: repeat( @GridSize, 60px);
+        border-collapse: collapse;
+        justify-content: center;
+    }
+
+    @GridStyles
+</style>
+
+@code {
+    private string GridStyles =>
+        $@"
+    .grid-row:nth-child({InternalGridSize}n):not(:last-child) .cell {{
+        border-bottom: 2px solid black;
+    }}
+
+    .cell:nth-child({InternalGridSize}n) {{
+        border-right: 2px solid black;
+    }}
+    ";
+}
+
