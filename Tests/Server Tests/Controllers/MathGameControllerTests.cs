@@ -5,7 +5,6 @@ using System.Net.Http.Json;
 using Projektas.Tests.Server_Tests;
 using Projektas.Server.Database;
 using Microsoft.EntityFrameworkCore;
-using Projektas.Shared.Interfaces;
 
 namespace Projektas.Tests.Controllers {
 	public class MathGameControllerTests : IClassFixture<CustomWebApplicationFactory<Program>> {
@@ -78,7 +77,7 @@ namespace Projektas.Tests.Controllers {
 				Assert.Equal(userScore.Username,newUserScore.User.Username);
 			}
 		}
-		/*
+		
 		[Fact]
 		public async Task GetUserHighscore_ReturnsHighscore() {
 			using(var scope = _factory.Services.CreateScope()) {
@@ -109,10 +108,13 @@ namespace Projektas.Tests.Controllers {
 					})
 					.OrderByDescending(s => s.GameData.Scores)
 					.FirstOrDefaultAsync();
-				
-				Assert.Equal(actualUserHighscore, highscore);
-			}
-		}*/
+
+                Assert.NotNull(actualUserHighscore);
+                Assert.Equal(actualUserHighscore.Username, highscore.Username);
+				Assert.Equal(actualUserHighscore.GameData.Scores, highscore.GameData.Scores);
+
+            }
+		}
 
 		[Fact]
 		public async Task GetTopScores_ReturnsTopList() {
