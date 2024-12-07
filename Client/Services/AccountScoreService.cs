@@ -1,5 +1,4 @@
-﻿using Projektas.Client.Pages;
-using Projektas.Shared.Models;
+﻿using Projektas.Shared.Models;
 using System.Net.Http.Json;
 
 namespace Projektas.Client.Services
@@ -13,22 +12,22 @@ namespace Projektas.Client.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<UserScoreDto>> GetUsersMathGameScoreAsync(string username)
+        public async Task<List<UserScoreDto<MathGameData>>> GetUsersMathGameScoreAsync(string username)
         {
             var url = $"api/accountscore/math-game-scores?username={username}";
-            return await _httpClient.GetFromJsonAsync<List<UserScoreDto>>(url);
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto<MathGameData>>>(url);
         }
 
-        public async Task<List<UserScoreDto>> GetUsersAimTrainerScoreAsync(string username)
+        public async Task<List<UserScoreDto<AimTrainerData>>> GetUsersAimTrainerScoreAsync(string username)
         {
             var url = $"api/accountscore/aim-trainer-scores?username={username}";
-            return await _httpClient.GetFromJsonAsync<List<UserScoreDto>>(url);
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto<AimTrainerData>>>(url);
         }
 
-        public async Task<List<UserScoreDto>> GetUsersPairUpScoreAsync(string username)
+        public async Task<List<UserScoreDto<PairUpData>>> GetUsersPairUpScoreAsync(string username)
         {
             var url = $"api/accountscore/pair-up-scores?username={username}";
-            return await _httpClient.GetFromJsonAsync<List<UserScoreDto>>(url);
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto<PairUpData>>>(url);
         }
 
         public async Task<int?> GetMathGameHighscoreAsync(string username)

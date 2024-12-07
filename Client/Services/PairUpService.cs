@@ -11,12 +11,14 @@ namespace Projektas.Client.Services {
             _httpClient = httpClient;
         }
 
-        public async Task SaveScoreAsync(string username, int score, int fails) {
+        public async Task SaveScoreAsync(string username, int score, int fails, GameDifficulty difficulty) {
             var data = new UserScoreDto<PairUpData> {
                 Username = username,
                 GameData = new PairUpData {
                     TimeInSeconds = score,
-                    Fails = fails
+                    Fails = fails,
+                    Timestamp = DateTime.UtcNow.ToLocalTime(),
+                    Difficulty = difficulty
                 }
             };
             await _httpClient.PostAsJsonAsync("api/pairup/save-score", data);

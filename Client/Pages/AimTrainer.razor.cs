@@ -17,7 +17,7 @@
         public int score {get; private set;}
         public int moveCounter {get; private set;}
         public int moveDirection {get; set;} // 0 = left, 1 = right, 2 = up, 3 = down
-        public GameDifficulty? Difficulty {get; set;} = GameDifficulty.Normal;
+        public GameDifficulty Difficulty {get; set;} = GameDifficulty.Normal;
 
         [Inject]
         public Random _random {get; set;}
@@ -91,10 +91,11 @@
                 InvokeAsync(StateHasChanged);
             }
         }
-
-        private async Task EndGame() {
-            if(username != null) {
-                await AimTrainerService.SaveScoreAsync(username,score, Difficulty.ToString());
+        private async Task EndGameAsync()
+        {
+            if (username != null)
+            {
+                await AimTrainerService.SaveScoreAsync(username, score, Difficulty);
             }
             isGameActive = false;
             isGameOver = true;

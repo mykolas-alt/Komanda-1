@@ -13,9 +13,9 @@ namespace Projektas.Client.Pages
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider { get; set; }
 
-        public List<UserScoreDto> MathGameScores { get; set; }
-        public List<UserScoreDto> AimTrainerScores { get; set; }
-        public List<UserScoreDto> PairUpScores { get; set; }
+        public List<UserScoreDto<MathGameData>> MathGameScores { get; set; }
+        public List<UserScoreDto<AimTrainerData>> AimTrainerScores { get; set; }
+        public List<UserScoreDto<PairUpData>> PairUpScores { get; set; }
 
         public int? MathGameHighscore { get; set; }
         public int? AimTrainerHighscoreNormalMode { get; set; }

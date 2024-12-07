@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
+using Projektas.Shared.Enums;
 
 namespace Projektas.Client.Pages
 {
@@ -11,20 +12,14 @@ namespace Projektas.Client.Pages
         public required ITimerService TimerService { get; set; }
 
         private static Random _random = new Random();
-        public enum Difficulty
-        {
-            Easy,
-            Medium,
-            Hard
-        }
 
-        private Difficulty CurrentDifficulty { get; set; }
+        private GameDifficulty CurrentDifficulty { get; set; }
+        private GameMode GameMode {get; set;} // nextGridSize
 
         public bool IsGameActive { get; set; }
         public bool IsLoading { get; set; }
 
         public int GridSize { get; set; }
-        public int NextGridSize { get; set; }
         public int InternalGridSize { get; set; }
         public int[,]? GridValues { get; set; }
         public int[,]? Solution { get; set; }
@@ -63,8 +58,8 @@ namespace Projektas.Client.Pages
 
         protected override void OnInitialized()
         {
-            NextGridSize = 9;
-            CurrentDifficulty = Difficulty.Medium;
+            GameMode = GameMode.NineByNine; 
+            CurrentDifficulty = GameDifficulty.Medium;
             TimerService.OnTick += TimerTick;
             IsGameActive = false;
             GenerateSudokuGameAsync();
@@ -78,7 +73,7 @@ namespace Projektas.Client.Pages
                 return;
             }
             IsLoading = true;
-            GridSize = NextGridSize;
+            GridSize = (int)GameMode;
             int toHide = SudokuDifficulty();
             InternalGridSize = (int)Math.Sqrt(GridSize);
             PossibleValues = Enumerable.Range(1, GridSize).ToList();
@@ -110,23 +105,23 @@ namespace Projektas.Client.Pages
             {
                 4 => CurrentDifficulty switch
                 {
-                    Difficulty.Easy => _random.Next(7, 8),
-                    Difficulty.Medium => _random.Next(9, 10),
-                    Difficulty.Hard => _random.Next(11, 12),
+                    GameDifficulty.Easy => _random.Next(7, 8),
+                    GameDifficulty.Medium => _random.Next(9, 10),
+                    GameDifficulty.Hard => _random.Next(11, 12),
                     _ => 0,
                 },
                 9 => CurrentDifficulty switch
                 {
-                    Difficulty.Easy => _random.Next(30, 35),
-                    Difficulty.Medium => _random.Next(45, 48),
-                    Difficulty.Hard => _random.Next(53, 57),
+                    GameDifficulty.Easy => _random.Next(30, 35),
+                    GameDifficulty.Medium => _random.Next(45, 48),
+                    GameDifficulty.Hard => _random.Next(53, 57),
                     _ => 0,
                 },
                 16 => CurrentDifficulty switch
                 {
-                    Difficulty.Easy => _random.Next(30, 50),
-                    Difficulty.Medium => _random.Next(100, 130),
-                    Difficulty.Hard => _random.Next(140, 150),
+                    GameDifficulty.Easy => _random.Next(30, 50),
+                    GameDifficulty.Medium => _random.Next(100, 130),
+                    GameDifficulty.Hard => _random.Next(140, 150),
                     _ => 0,
                 },
                 _ => throw new ArgumentException("Unsupported grid size"),
@@ -150,7 +145,7 @@ namespace Projektas.Client.Pages
             IsGameActive = false;
             if (username != null)
             {
-                SudokuService.SaveScoreAsync(username, TimerService.RemainingTime);
+                SudokuService.SaveScoreAsync(username, ElapsedTime, CurrentDifficulty, GameMode);
             }
             TimerService.Stop();
             if (won)
@@ -182,7 +177,7 @@ namespace Projektas.Client.Pages
 
         public void OnDifficultyChanged(ChangeEventArgs e)
         {
-            if (Enum.TryParse(e.Value?.ToString(), true, out Difficulty parsedDifficulty))
+            if (Enum.TryParse(e.Value?.ToString(), true, out GameDifficulty parsedDifficulty))
             {
                 CurrentDifficulty = parsedDifficulty;
             }
@@ -192,7 +187,7 @@ namespace Projektas.Client.Pages
         {
             if (int.TryParse(e.Value?.ToString(), out int size))
             {
-                NextGridSize = size;
+                GameMode = (GameMode)size;
             }
         }
 

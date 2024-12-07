@@ -11,11 +11,13 @@ namespace Projektas.Client.Services {
             _httpClient = httpClient;
         }
 
-        public async Task SaveScoreAsync(string username, int score) {
+        public async Task SaveScoreAsync(string username, int score, GameDifficulty difficulty) {
             var data = new UserScoreDto<AimTrainerData> {
                 Username = username,
                 GameData = new AimTrainerData {
-                    Scores = score
+                    Scores = score,
+                    Timestamp = DateTime.UtcNow.ToLocalTime(),
+                    Difficulty = difficulty
                 }
             };
             await _httpClient.PostAsJsonAsync("api/aimtrainer/save-score", data);
