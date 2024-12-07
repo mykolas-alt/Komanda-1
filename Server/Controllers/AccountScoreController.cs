@@ -2,6 +2,7 @@
 using Projektas.Server.Services;
 using Projektas.Shared.Models;
 using Projektas.Server.Interfaces;
+using Projektas.Shared.Enums;
 
 namespace Projektas.Server.Controllers
 {
@@ -49,34 +50,42 @@ namespace Projektas.Server.Controllers
         }
 
         [HttpGet("aim-trainer-highscore-normal-mode")]
-        public async Task<ActionResult<int?>> GetAimTrainerHighscoreNormalMode([FromQuery] string username)
+        public async Task<ActionResult<GameScore>> GetAimTrainerHighscoreNormalMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var highscore = await _accountScoreService.GetHighscore<AimTrainerData>(user, "Normal");
+            var highscore = await _accountScoreService.GetHighscore<AimTrainerData>(user, GameDifficulty.Normal);
             return Ok(highscore);
         }
 
         [HttpGet("aim-trainer-highscore-hard-mode")]
-        public async Task<ActionResult<int?>> GetAimTrainerHighscoreHardMode([FromQuery] string username)
+        public async Task<ActionResult<GameScore>> GetAimTrainerHighscoreHardMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var highscore = await _accountScoreService.GetHighscore<AimTrainerData>(user, "Hard");
+            var highscore = await _accountScoreService.GetHighscore<AimTrainerData>(user, GameDifficulty.Hard);
             return Ok(highscore);
         }
 
-        [HttpGet("pair-up-highscore-normal-mode")]
-        public async Task<ActionResult<int?>> GetPairUpHighscoreNormalMode([FromQuery] string username)
+        [HttpGet("pair-up-highscore-easy-mode")]
+        public async Task<ActionResult<GameScore>> GetPairUpHighscoreEasyMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var highscore = await _accountScoreService.GetHighscore<PairUpData>(user, "Normal");
+            var highscore = await _accountScoreService.GetHighscore<PairUpData>(user, GameDifficulty.Easy);
+            return Ok(highscore);
+        }
+
+        [HttpGet("pair-up-highscore-medium-mode")]
+        public async Task<ActionResult<GameScore>> GetPairUpHighscoreMediumMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var highscore = await _accountScoreService.GetHighscore<PairUpData>(user, GameDifficulty.Medium);
             return Ok(highscore);
         }
 
         [HttpGet("pair-up-highscore-hard-mode")]
-        public async Task<ActionResult<int?>> GetPairUpHighscoreHardMode([FromQuery] string username)
+        public async Task<ActionResult<GameScore>> GetPairUpHighscoreHardMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var highscore = await _accountScoreService.GetHighscore<PairUpData>(user, "Hard");
+            var highscore = await _accountScoreService.GetHighscore<PairUpData>(user, GameDifficulty.Hard);
             return Ok(highscore);
         }
 
@@ -92,7 +101,7 @@ namespace Projektas.Server.Controllers
         public async Task<ActionResult<int>> GetAimTrainerMatchesPlayedNormalMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var totalMatches = await _accountScoreService.GetMatchesPlayed<AimTrainerData>(user, "Normal");
+            var totalMatches = await _accountScoreService.GetMatchesPlayed<AimTrainerData>(user, GameDifficulty.Normal);
             return Ok(totalMatches);
         }
 
@@ -100,15 +109,23 @@ namespace Projektas.Server.Controllers
         public async Task<ActionResult<int>> GetAimTrainerMatchesPlayedHardMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var totalMatches = await _accountScoreService.GetMatchesPlayed<AimTrainerData>(user, "Hard");
+            var totalMatches = await _accountScoreService.GetMatchesPlayed<AimTrainerData>(user, GameDifficulty.Hard);
             return Ok(totalMatches);
         }
 
-        [HttpGet("pair-up-matches-played-normal-mode")]
-        public async Task<ActionResult<int>> GetPairUpMatchesPlayedNormalMode([FromQuery] string username)
+        [HttpGet("pair-up-matches-played-easy-mode")]
+        public async Task<ActionResult<int>> GetPairUpMatchesPlayedEasyMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var totalMatches = await _accountScoreService.GetMatchesPlayed<PairUpData>(user, "Normal");
+            var totalMatches = await _accountScoreService.GetMatchesPlayed<PairUpData>(user, GameDifficulty.Easy);
+            return Ok(totalMatches);
+        }
+
+        [HttpGet("pair-up-matches-played-medium-mode")]
+        public async Task<ActionResult<int>> GetPairUpMatchesPlayedMediumMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var totalMatches = await _accountScoreService.GetMatchesPlayed<PairUpData>(user, GameDifficulty.Medium);
             return Ok(totalMatches);
         }
 
@@ -116,7 +133,7 @@ namespace Projektas.Server.Controllers
         public async Task<ActionResult<int>> GetPairUpMatchesPlayedHardMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var totalMatches = await _accountScoreService.GetMatchesPlayed<PairUpData>(user, "Hard");
+            var totalMatches = await _accountScoreService.GetMatchesPlayed<PairUpData>(user, GameDifficulty.Hard);
             return Ok(totalMatches);
         }
 
@@ -129,34 +146,42 @@ namespace Projektas.Server.Controllers
         }
 
         [HttpGet("aim-trainer-average-score-normal-mode")]
-        public async Task<ActionResult<int>> GetAimTrainerAllTimeAverageScoreNormalMode([FromQuery] string username)
+        public async Task<ActionResult<GameScore>> GetAimTrainerAllTimeAverageScoreNormalMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScore = await _accountScoreService.GetAllTimeAverageScore<AimTrainerData>(user, "Normal");
+            var averageScore = await _accountScoreService.GetAllTimeAverageScore<AimTrainerData>(user, GameDifficulty.Normal);
             return Ok(averageScore);
         }
 
         [HttpGet("aim-trainer-average-score-hard-mode")]
-        public async Task<ActionResult<int>> GetAimTrainerAllTimeAverageScoreHardMode([FromQuery] string username)
+        public async Task<ActionResult<GameScore>> GetAimTrainerAllTimeAverageScoreHardMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScore = await _accountScoreService.GetAllTimeAverageScore<AimTrainerData>(user, "Hard");
+            var averageScore = await _accountScoreService.GetAllTimeAverageScore<AimTrainerData>(user, GameDifficulty.Hard);
             return Ok(averageScore);
         }
 
-        [HttpGet("pair-up-average-score-normal-mode")]
-        public async Task<ActionResult<int>> GetPairUpAllTimeAverageScoreNormalMode([FromQuery] string username)
+        [HttpGet("pair-up-average-score-easy-mode")]
+        public async Task<ActionResult<GameScore>> GetPairUpAllTimeAverageScoreEasyMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScore = await _accountScoreService.GetAllTimeAverageScore<PairUpData>(user, "Normal");
+            var averageScore = await _accountScoreService.GetAllTimeAverageScore<PairUpData>(user, GameDifficulty.Easy);
+            return Ok(averageScore);
+        }
+
+        [HttpGet("pair-up-average-score-medium-mode")]
+        public async Task<ActionResult<GameScore>> GetPairUpAllTimeAverageScoreMediumMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScore = await _accountScoreService.GetAllTimeAverageScore<PairUpData>(user, GameDifficulty.Medium);
             return Ok(averageScore);
         }
 
         [HttpGet("pair-up-average-score-hard-mode")]
-        public async Task<ActionResult<int>> GetPairUpAllTimeAverageScoreHardMode([FromQuery] string username)
+        public async Task<ActionResult<GameScore>> GetPairUpAllTimeAverageScoreHardMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScore = await _accountScoreService.GetAllTimeAverageScore<PairUpData>(user, "Hard");
+            var averageScore = await _accountScoreService.GetAllTimeAverageScore<PairUpData>(user, GameDifficulty.Hard);
             return Ok(averageScore);
         }
 
@@ -172,7 +197,7 @@ namespace Projektas.Server.Controllers
         public async Task<ActionResult<List<AverageScoreDto>>> GetAimTrainerAverageScoreLast7DaysNormalMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<AimTrainerData>(user, "Normal");
+            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<AimTrainerData>(user, GameDifficulty.Normal);
             return Ok(averageScoreLast7days);
         }
 
@@ -180,15 +205,23 @@ namespace Projektas.Server.Controllers
         public async Task<ActionResult<List<AverageScoreDto>>> GetAimTrainerAverageScoreLast7DaysHardMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<AimTrainerData>(user, "Hard");
+            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<AimTrainerData>(user, GameDifficulty.Hard);
             return Ok(averageScoreLast7days);
         }
 
-        [HttpGet("pair-up-average-score-last-7days-normal-mode")]
-        public async Task<ActionResult<List<AverageScoreDto>>> GetPairUpAverageScoreLast7DaysNormalMode([FromQuery] string username)
+        [HttpGet("pair-up-average-score-last-7days-easy-mode")]
+        public async Task<ActionResult<List<AverageScoreDto>>> GetPairUpAverageScoreLast7DaysEasyMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<PairUpData>(user, "Normal");
+            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<PairUpData>(user, GameDifficulty.Easy);
+            return Ok(averageScoreLast7days);
+        }
+
+        [HttpGet("pair-up-average-score-last-7days-medium-mode")]
+        public async Task<ActionResult<List<AverageScoreDto>>> GetPairUpAverageScoreLast7DaysMediumMode([FromQuery] string username)
+        {
+            var user = new User { Username = username };
+            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<PairUpData>(user, GameDifficulty.Medium);
             return Ok(averageScoreLast7days);
         }
 
@@ -196,7 +229,7 @@ namespace Projektas.Server.Controllers
         public async Task<ActionResult<List<AverageScoreDto>>> GetPairUpAverageScoreLast7DaysHardMode([FromQuery] string username)
         {
             var user = new User { Username = username };
-            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<PairUpData>(user, "Hard");
+            var averageScoreLast7days = await _accountScoreService.GetAverageScoreLast7Days<PairUpData>(user, GameDifficulty.Hard);
             return Ok(averageScoreLast7days);
         }
     }

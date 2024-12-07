@@ -3,6 +3,6 @@
     public class AverageScoreDto
     {
         public DateTime Date { get; set; }
-        public int AverageScore { get; set; }
+        public GameScore Score { get; set; }
     }
 }
