@@ -3,6 +3,11 @@
 namespace Projektas.Client.Shared {
 	public partial class MainLayout {
 		public string? username = null;
+		private bool isSidebarCollapsed = false;
+
+		private void ToggleSidebar() {
+			isSidebarCollapsed = !isSidebarCollapsed;
+		}
 
 		protected override async Task OnInitializedAsync() {
 			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;

@@ -9,30 +9,11 @@ main {
     flex: 1;
 }
 
-.title {
-    color: black;
-    font-size: 1.5rem;
-}
-
-.account {
-    margin-left: auto;
-    margin-right: 1rem;
-}
-
-.account_text {
-    color: black;
-    font-size: 1rem;
-}
-
-.sidebar {
-    background: #b8b8b8;
-    border-right: 3px solid #7d7c7c;
-}
-
 .top-row {
     background: #c9c9c9;
     border-bottom: 3px solid #6b6b6b;
-    justify-content: flex-start;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    justify-content: space-between;
     height: 3.5rem;
     display: flex;
     align-items: center;
@@ -40,7 +21,7 @@ main {
 
     .top-row ::deep a, .top-row ::deep .btn-link {
         white-space: nowrap;
-        margin-left: 1rem;
+        margin-left: 0rem;
         text-decoration: none;
     }
 
@@ -53,6 +34,71 @@ main {
             text-overflow: ellipsis;
         }
 
+.toggle-sidebar {
+    background: none;
+    width: 40px;
+    height: 35px;
+    border: solid;
+    border-radius: 4px;
+    border-color: #7a7a7a;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+    .toggle-sidebar:hover {
+        transform: scale(1.1);
+    }
+
+.title {
+    color: black;
+    font-weight: bold;
+    font-size: 1.75rem;
+    letter-spacing: 1px;
+}
+
+.account {
+    margin-left: auto;
+    margin-right: 1rem;
+}
+
+.account_text {
+    color: black;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+    .account_text:hover {
+        text-decoration: underline;
+    }
+
+.sidebar {
+    background: #b8b8b8;
+    border-right: 3px solid #7d7c7c;
+    transition: width 0.3s ease;
+}
+
+    .sidebar.collapsed {
+        width: 0px;
+    }
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.sidebar.show {
+    animation: slideIn 0.3s ease-in-out;
+}
+
 .bottom-row {
     background: #c9c9c9;
     border-top: 3px solid #6b6b6b;
@@ -62,7 +108,7 @@ main {
     align-items: center;
 }
 
-@media (max-width: 640.98px) {
+@media (max-width: 640px) {
     .top-row.auth {
         justify-content: space-between;
     }
@@ -71,6 +117,24 @@ main {
         margin-right: 0;
         margin-left: 3rem;
     }
+
+    .top-row {
+        flex-direction: row;
+        text-align: center;
+    }
+
+    .sidebar {
+        position: fixed;
+        z-index: 1000;
+        width: 80%;
+        height: 100%;
+        left: -100%;
+        transition: left 0.3s ease;
+    }
+
+        .sidebar.show {
+            left: 0;
+        }
 }
 
 @media (min-width: 641px) {
