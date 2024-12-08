@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 
 namespace Projektas.Client.Components
 {
-    public partial class ScoreChart
+    public partial class TimeScoreChart
     {
         [Parameter] public string ChartId { get; set; }
         [Parameter] public string ChartType { get; set; } = "line";
@@ -16,7 +16,7 @@ namespace Projektas.Client.Components
         {
             if (firstRender)
             {
-                await JSRuntime.InvokeVoidAsync("createChart", ChartId, ChartType, Labels, Datasets);
+                await JSRuntime.InvokeVoidAsync("createTimeChart", ChartId, ChartType, Labels, Datasets);
             }
         }
     }

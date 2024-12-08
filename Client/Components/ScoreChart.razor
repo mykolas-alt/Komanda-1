@@ -3,8 +3,9 @@
 </div>
 
 <script>
-    window.createChart = (chartId, chartType, labels, datasets) => {
+    window.createChart = (chartId, chartType, labels, datasets, yAxisLabel) => {
         var ctx = document.getElementById(chartId).getContext('2d');
+        var yAxisLabel = datasets[0].yAxisLabel;
         new Chart(ctx, {
             type: chartType,
             data: {
@@ -20,7 +21,11 @@
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: yAxisLabel
+                        }
                     }
                 }
             }

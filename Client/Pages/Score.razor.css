@@ -6,6 +6,9 @@
 .tab-content {
     margin-top: 30px;
 }
+.last10GamesTable{
+    margin-bottom: 30px;
+}
 
 .last10GamesTable th, .last10GamesTable td {
     padding: 8px;
@@ -26,9 +29,23 @@
     color: #daf9db;
 }
 
+.statsTable, .statsTable9x9, .statsTable16x16 {
+    margin-bottom: 30px;
+}
+
 .statsTable th {
     background-color: #85c1e9;
     color: #ebf5fb;
+}
+
+.statsTable9x9 th {
+    background-color: #4c9ae3;
+    color: #cee7fe;
+}
+
+.statsTable16x16 th {
+    background-color: #2e70dd;
+    color: #c5dbff;
 }
 
 .nav-item .nav-link:hover {

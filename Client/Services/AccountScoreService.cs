@@ -1,4 +1,5 @@
-﻿using Projektas.Shared.Models;
+﻿using Projektas.Shared.Enums;
+using Projektas.Shared.Models;
 using System.Net.Http.Json;
 
 namespace Projektas.Client.Services
@@ -12,149 +13,127 @@ namespace Projektas.Client.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<UserScoreDto<MathGameData>>> GetUsersMathGameScoreAsync(string username)
+        private string ConstructUrl(string endpoint, string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/math-game-scores?username={username}";
+            return $"api/accountscore/{endpoint}?username={username}&difficulty={difficulty}&mode={mode}";
+        }
+
+        public async Task<List<UserScoreDto<MathGameData>>> GetMathGameScoresAsync(string username)
+        {
+            var url = $"api/accountscore/scores/math?username={username}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<MathGameData>>>(url);
         }
 
-        public async Task<List<UserScoreDto<AimTrainerData>>> GetUsersAimTrainerScoreAsync(string username)
+        public async Task<List<UserScoreDto<AimTrainerData>>> GetAimTrainerScoresAsync(string username)
         {
-            var url = $"api/accountscore/aim-trainer-scores?username={username}";
+            var url = $"api/accountscore/scores/aim?username={username}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<AimTrainerData>>>(url);
         }
 
-        public async Task<List<UserScoreDto<PairUpData>>> GetUsersPairUpScoreAsync(string username)
+        public async Task<List<UserScoreDto<PairUpData>>> GetPairUpScoresAsync(string username)
         {
-            var url = $"api/accountscore/pair-up-scores?username={username}";
+            var url = $"api/accountscore/scores/pairup?username={username}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<PairUpData>>>(url);
         }
 
-        public async Task<int?> GetMathGameHighscoreAsync(string username)
+        public async Task<List<UserScoreDto<SudokuData>>> GetSudokuScoresAsync(string username)
         {
-            var url = $"api/accountscore/math-game-highscore?username={username}";
-            return await _httpClient.GetFromJsonAsync<int?>(url);
+            var url = $"api/accountscore/scores/sudoku?username={username}";
+            return await _httpClient.GetFromJsonAsync<List<UserScoreDto<SudokuData>>>(url);
         }
-        public async Task<GameScore> GetAimTrainerHighscoreNormalModeAsync(string username)
+        public async Task<GameScore> GetMathGameHighscoreAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/aim-trainer-highscore-normal-mode?username={username}";
+            var url = ConstructUrl("highscore/math", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
-        public async Task<GameScore> GetAimTrainerHighscoreHardModeAsync(string username)
+
+        public async Task<GameScore> GetAimTrainerHighscoreAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/aim-trainer-highscore-hard-mode?username={username}";
+            var url = ConstructUrl("highscore/aim", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
-        public async Task<GameScore> GetPairUpHighscoreEasyModeAsync(string username)
+
+        public async Task<GameScore> GetPairUpHighscoreAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/pair-up-highscore-easy-mode?username={username}";
+            var url = ConstructUrl("highscore/pairup", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
-        public async Task<GameScore> GetPairUpHighscoreMediumModeAsync(string username)
+
+        public async Task<GameScore> GetSudokuHighscoreAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/pair-up-highscore-medium-mode?username={username}";
+            var url = ConstructUrl("highscore/sudoku", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
-        public async Task<GameScore> GetPairUpHighscoreHardModeAsync(string username)
+
+        public async Task<GameScore> GetMathGameAverageScoreAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/pair-up-highscore-hard-mode?username={username}";
+            var url = ConstructUrl("average-score/math", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
-        public async Task<int?> GetMathGameAllTimeAverageAsync(string username)
+
+        public async Task<GameScore> GetAimTrainerAverageScoreAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/math-game-average-score?username={username}";
-            return await _httpClient.GetFromJsonAsync<int?>(url);
-        }
-        public async Task<GameScore> GetAimTrainerAllTimeAverageNormalModeAsync(string username)
-        {
-            var url = $"api/accountscore/aim-trainer-average-score-normal-mode?username={username}";
+            var url = ConstructUrl("average-score/aim", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
-        public async Task<GameScore> GetAimTrainerAllTimeAverageHardModeAsync(string username)
+
+        public async Task<GameScore> GetPairUpAverageScoreAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/aim-trainer-average-score-hard-mode?username={username}";
+            var url = ConstructUrl("average-score/pairup", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
-        public async Task<GameScore> GetPairUpAllTimeAverageEasyModeAsync(string username)
+
+        public async Task<GameScore> GetSudokuAverageScoreAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/pair-up-average-score-Easy-mode?username={username}";
+            var url = ConstructUrl("average-score/sudoku", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
-        public async Task<GameScore> GetPairUpAllTimeAverageMediumModeAsync(string username)
+
+        public async Task<int> GetMathGameMatchesPlayedAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/pair-up-average-score-medium-mode?username={username}";
-            return await _httpClient.GetFromJsonAsync<GameScore>(url);
-        }
-        public async Task<GameScore> GetPairUpAllTimeAverageHardModeAsync(string username)
-        {
-            var url = $"api/accountscore/pair-up-average-score-hard-mode?username={username}";
-            return await _httpClient.GetFromJsonAsync<GameScore>(url);
-        }
-        public async Task<int> GetMathGameMatchesPlayedAsync(string username)
-        {
-            var url = $"api/accountscore/math-game-matches-played?username={username}";
+            var url = ConstructUrl("matches-played/math", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
 
-        public async Task<int> GetAimTrainerMatchesPlayedNormalModeAsync(string username)
+        public async Task<int> GetAimTrainerMatchesPlayedAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/aim-trainer-matches-played-normal-mode?username={username}";
+            var url = ConstructUrl("matches-played/aim", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
 
-        public async Task<int> GetAimTrainerMatchesPlayedHardModeAsync(string username)
+        public async Task<int> GetPairUpMatchesPlayedAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/aim-trainer-matches-played-hard-mode?username={username}";
+            var url = ConstructUrl("matches-played/pairup", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
 
-        public async Task<int> GetPairUpMatchesPlayedEasyModeAsync(string username)
+        public async Task<int> GetSudokuMatchesPlayedAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/pair-up-matches-played-easy-mode?username={username}";
+            var url = ConstructUrl("matches-played/sudoku", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
 
-        public async Task<int> GetPairUpMatchesPlayedMediumModeAsync(string username)
+        public async Task<List<AverageScoreDto>> GetMathGameAverageScoreLast7DaysAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/pair-up-matches-played-medium-mode?username={username}";
-            return await _httpClient.GetFromJsonAsync<int>(url);
-        }
-
-        public async Task<int> GetPairUpMatchesPlayedHardModeAsync(string username)
-        {
-            var url = $"api/accountscore/pair-up-matches-played-hard-mode?username={username}";
-            return await _httpClient.GetFromJsonAsync<int>(url);
-        }
-
-        public async Task<List<AverageScoreDto>> GetMathGameAverageScoreLast7Days(string username)
-        {
-            var url = $"api/accountscore/math-game-average-score-last-7days?username={username}";
+            var url = ConstructUrl("average-score-last-7days/math", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
         }
 
-        public async Task<List<AverageScoreDto>> GetAimTrainerAverageScoreLast7DaysNormalMode(string username)
+        public async Task<List<AverageScoreDto>> GetAimTrainerAverageScoreLast7DaysAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/aim-trainer-average-score-last-7days-normal-mode?username={username}";
+            var url = ConstructUrl("average-score-last-7days/aim", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
         }
-        public async Task<List<AverageScoreDto>> GetAimTrainerAverageScoreLast7DaysHardMode(string username)
+
+        public async Task<List<AverageScoreDto>> GetPairUpAverageScoreLast7DaysAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/aim-trainer-average-score-last-7days-hard-mode?username={username}";
+            var url = ConstructUrl("average-score-last-7days/pairup", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
         }
-        public async Task<List<AverageScoreDto>> GetPairUpAverageScoreLast7DaysEasyMode(string username)
+
+        public async Task<List<AverageScoreDto>> GetSudokuAverageScoreLast7DaysAsync(string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
-            var url = $"api/accountscore/pair-up-average-score-last-7days-easy-mode?username={username}";
-            return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
-        }
-        public async Task<List<AverageScoreDto>> GetPairUpAverageScoreLast7DaysMediumMode(string username)
-        {
-            var url = $"api/accountscore/pair-up-average-score-last-7days-medium-mode?username={username}";
-            return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
-        }
-        public async Task<List<AverageScoreDto>> GetPairUpAverageScoreLast7DaysHardMode(string username)
-        {
-            var url = $"api/accountscore/pair-up-average-score-last-7days-hard-mode?username={username}";
+            var url = ConstructUrl("average-score-last-7days/sudoku", username, difficulty, mode);
             return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
         }
     }

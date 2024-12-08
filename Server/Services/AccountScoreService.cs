@@ -29,18 +29,19 @@ namespace Projektas.Server.Services
                                      .ToList();
         }
 
-        public async Task<int?> GetHighscore<T>(User user) where T : IGame
+        public async Task<GameScore> GetHighscore<T>(User user) where T : IGame
         {
             var userSpecificScores = await GetUserSpecificScores<T>(user);
             if (userSpecificScores.Count == 0)
             {
-                return 0;
+                return new GameScore { Scores = 0 }; 
             }
             if (typeof(T) == typeof(MathGameData))
             {
-                return userSpecificScores.Max(score => (int?)((MathGameData)(object)score.GameData).Scores);
+                int score = userSpecificScores.Max(score => ((MathGameData)(object)score.GameData).Scores);
+                return new GameScore { Scores = score };
             }
-            return 0;
+            return new GameScore { Scores = 0 };
         }
 
         public async Task<GameScore> GetHighscore<T>(User user, GameDifficulty difficulty) where T : IGame, IGameWithDifficulty
@@ -67,18 +68,37 @@ namespace Projektas.Server.Services
             return new GameScore { Scores = 0, TimeSpent = 0 };
         }
 
-        public async Task<int> GetAllTimeAverageScore<T>(User user) where T : IGame
+        public async Task<GameScore> GetHighscore<T>(User user, GameDifficulty difficulty, GameMode mode) where T : IGame, IGameWithDifficulty, IGameWithModes
+        {
+            var userSpecificScores = await GetUserSpecificScores<T>(user);
+            var filteredScores = userSpecificScores.Where(score => score.GameData.Difficulty == difficulty && score.GameData.Mode == mode).ToList();
+
+            if (filteredScores.Count == 0)
+            {
+                return new GameScore { Scores = 0, TimeSpent = 0 };
+            }
+
+            if (typeof(T) == typeof(SudokuData))
+            {
+                int? time = filteredScores.Min(score => ((SudokuData)(object)score.GameData).TimeInSeconds);
+                return new GameScore { TimeSpent = time };
+            }
+            return new GameScore { Scores = 0, TimeSpent = 0 };
+        }
+
+        public async Task<GameScore> GetAllTimeAverageScore<T>(User user) where T : IGame
         {
             var userSpecificScores = await GetUserSpecificScores<T>(user);
             if (userSpecificScores.Count == 0)
             {
-                return 0;
+                return new GameScore { Scores = 0 };
             }
             if (typeof(T) == typeof(MathGameData))
             {
-                return (int)userSpecificScores.Average(score => ((MathGameData)(object)score.GameData).Scores);
+                int average = (int)userSpecificScores.Average(score => ((MathGameData)(object)score.GameData).Scores);
+                return new GameScore { Scores = average };
             }
-            return 0;
+            return new GameScore { Scores = 0 };
         }
 
         public async Task<GameScore> GetAllTimeAverageScore<T>(User user, GameDifficulty difficulty) where T : IGame, IGameWithDifficulty
@@ -105,6 +125,24 @@ namespace Projektas.Server.Services
             return new GameScore { Scores = 0, TimeSpent = 0 };
         }
 
+        public async Task<GameScore> GetAllTimeAverageScore<T>(User user, GameDifficulty difficulty, GameMode mode) where T : IGame, IGameWithDifficulty, IGameWithModes
+        {
+            var userSpecificScores = await GetUserSpecificScores<T>(user);
+            var filteredScores = userSpecificScores.Where(score => score.GameData.Difficulty == difficulty && score.GameData.Mode == mode).ToList();
+
+            if (filteredScores.Count == 0)
+            {
+                return new GameScore { Scores = 0, TimeSpent = 0 };
+            }
+
+            if (typeof(T) == typeof(SudokuData))
+            {
+                int averageTime = (int)filteredScores.Average(score => ((SudokuData)(object)score.GameData).TimeInSeconds);
+                return new GameScore { TimeSpent = averageTime };
+            }
+            return new GameScore { Scores = 0, TimeSpent = 0 };
+        }
+
         public async Task<int> GetMatchesPlayed<T>(User user) where T : IGame
         {
             var userSpecificScores = await GetUserSpecificScores<T>(user);
@@ -115,6 +153,12 @@ namespace Projektas.Server.Services
         {
             var userSpecificScores = await GetUserSpecificScores<T>(user);
             return userSpecificScores.Count(score => score.GameData.Difficulty == difficulty);
+        }
+
+        public async Task<int> GetMatchesPlayed<T>(User user, GameDifficulty difficulty, GameMode mode) where T : IGame, IGameWithDifficulty, IGameWithModes
+        {
+            var userSpecificScores = await GetUserSpecificScores<T>(user);
+            return userSpecificScores.Count(score => score.GameData.Difficulty == difficulty && score.GameData.Mode == mode);
         }
 
         public async Task<List<AverageScoreDto>> GetAverageScoreLast7Days<T>(User user) where T : IGame
@@ -176,6 +220,40 @@ namespace Projektas.Server.Services
                     {
                         int averageScore = (int)scoresForDate.Average(score => ((AimTrainerData)(object)score.GameData).Scores);
                         average = new GameScore { Scores = averageScore };
+                    }
+                    averageScores.Add(new AverageScoreDto { Score = average, Date = date });
+
+                }
+                else
+                {
+                    averageScores.Add(new AverageScoreDto { Score = new GameScore { Scores = 0, TimeSpent = 0 }, Date = date });
+                }
+            }
+
+            averageScores.Reverse();
+            return averageScores;
+        }
+
+        public async Task<List<AverageScoreDto>> GetAverageScoreLast7Days<T>(User user, GameDifficulty difficulty, GameMode mode) where T : IGame, IGameWithDifficulty, IGameWithModes
+        {
+            var userSpecificScores = await GetUserSpecificScores<T>(user);
+            DateTime today = DateTime.Today;
+            var last7DaysScores = userSpecificScores.Where(score => score.GameData.Difficulty == difficulty && score.GameData.Mode == mode && score.Timestamp.Date >= today.AddDays(-6)).ToList();
+            var groupedScores = last7DaysScores.GroupBy(score => score.Timestamp.Date).OrderBy(group => group.Key).ToList();
+
+            var averageScores = new List<AverageScoreDto>();
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime date = today.AddDays(-i);
+                var scoresForDate = groupedScores.FirstOrDefault(group => group.Key == date);
+
+                if (scoresForDate != null)
+                {
+                    GameScore average = new GameScore();
+                    if (typeof(T) == typeof(SudokuData))
+                    {
+                        int averageTime = (int)scoresForDate.Average(score => ((SudokuData)(object)score.GameData).TimeInSeconds);
+                        average = new GameScore { TimeSpent = averageTime };
                     }
                     averageScores.Add(new AverageScoreDto { Score = average, Date = date });
 

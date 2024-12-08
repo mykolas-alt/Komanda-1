@@ -2,7 +2,7 @@
 {
     public class GameScore
     {
-        public int Scores { get; set; }
+        public int? Scores { get; set; }
         public int? TimeSpent { get; set; }
         public string GetFormattedTimeSpent()
         {
