@@ -14,7 +14,7 @@ namespace Projektas.Client.Pages
         private static Random _random = new Random();
 
         private GameDifficulty CurrentDifficulty { get; set; }
-        private GameMode GameMode {get; set;} // nextGridSize
+        public GameMode mode {get; set;} // nextGridSize
 
         public bool IsGameActive { get; set; }
         public bool IsLoading { get; set; }
@@ -58,7 +58,7 @@ namespace Projektas.Client.Pages
 
         protected override void OnInitialized()
         {
-            GameMode = GameMode.NineByNine; 
+            mode = GameMode.NineByNine; 
             CurrentDifficulty = GameDifficulty.Medium;
             TimerService.OnTick += TimerTick;
             IsGameActive = false;
@@ -73,7 +73,7 @@ namespace Projektas.Client.Pages
                 return;
             }
             IsLoading = true;
-            GridSize = (int)GameMode;
+            GridSize = (int)mode;
             int toHide = SudokuDifficulty();
             InternalGridSize = (int)Math.Sqrt(GridSize);
             PossibleValues = Enumerable.Range(1, GridSize).ToList();
@@ -145,7 +145,7 @@ namespace Projektas.Client.Pages
             IsGameActive = false;
             if (username != null)
             {
-                SudokuService.SaveScoreAsync(username, ElapsedTime, CurrentDifficulty, GameMode);
+                SudokuService.SaveScoreAsync(username, ElapsedTime, CurrentDifficulty, mode);
             }
             TimerService.Stop();
             if (won)
@@ -187,7 +187,7 @@ namespace Projektas.Client.Pages
         {
             if (int.TryParse(e.Value?.ToString(), out int size))
             {
-                GameMode = (GameMode)size;
+                mode = (GameMode)size;
             }
         }
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Projektas.Client.Interfaces;
 using Projektas.Client.Pages;
+using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Client_Tests.Pages {
@@ -23,7 +24,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             Services.AddSingleton(_mockTimerService.Object);
 
             // setup
-            _mockPairUpService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(Task.CompletedTask);
+            _mockPairUpService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<GameDifficulty>())).Returns(Task.CompletedTask);
 			_mockPairUpService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<PairUpData> {
                 Username = "User",
                 GameData = new PairUpData {

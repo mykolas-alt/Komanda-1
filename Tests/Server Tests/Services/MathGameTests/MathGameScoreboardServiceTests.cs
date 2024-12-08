@@ -28,8 +28,9 @@ namespace Projektas.Tests.Services.MathGameTests {
 			_mockScoreRepository.Verify(
 				repo => repo.AddScoreToUserAsync(
 					userScore.Username,
-					It.Is<MathGameData>(m => m.Scores == userScore.GameData.Scores)
-					),
+					It.Is<MathGameData>(m => m.Scores == userScore.GameData.Scores),
+                    It.IsAny<DateTime>()
+                    ),
 				Times.Once
 				);
 		}

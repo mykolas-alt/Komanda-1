@@ -3,20 +3,23 @@ using Projektas.Server.Interfaces;
 using Projektas.Server.Services;
 using Projektas.Shared.Models;
 
-namespace Projektas.Tests.Server_Tests.Services {
-    public class SudokuServiceTests {
+namespace Projektas.Tests.Server_Tests.Services
+{
+    public class SudokuServiceTests
+    {
         private readonly Mock<IScoreRepository> _mockScoreRepository;
         private readonly SudokuService _sudokuService;
-        private readonly IScoreRepository<SudokuM> _scoreRepository;
 
-        public SudokuServiceTests() {
-            
+        public SudokuServiceTests()
+        {
+
             _mockScoreRepository = new Mock<IScoreRepository>();
             _sudokuService = new SudokuService(_mockScoreRepository.Object);
         }
 
         [Fact]
-        public void HasMultipleSolutions_ValidGrid_ReturnsTrueForMultipleSolutions() {
+        public void HasMultipleSolutions_ValidGrid_ReturnsTrueForMultipleSolutions()
+        {
             int[,] grid = new int[9, 9] {
                 {5, 3, 4, 6, 7, 8, 9, 1, 2},
                 {6, 7, 2, 1, 9, 5, 3, 4, 8},
@@ -36,7 +39,8 @@ namespace Projektas.Tests.Server_Tests.Services {
         }
 
         [Fact]
-        public void HideNumbers_ValidGrid_ReturnsGridWithHiddenNumbers() {
+        public void HideNumbers_ValidGrid_ReturnsGridWithHiddenNumbers()
+        {
             int gridSize = 9;
             int[,] grid = new int[9, 9] {
                 {5, 3, 4, 6, 7, 8, 9, 1, 2},
@@ -57,8 +61,10 @@ namespace Projektas.Tests.Server_Tests.Services {
             int hiddenNumbers = result.Cast<int>().Count(value => value == 0);
             Assert.Equal(numbersToRemove, hiddenNumbers);
 
-            for(int row = 0; row < gridSize; row++) {
-                for(int col = 0; col < gridSize; col++) {
+            for (int row = 0; row < gridSize; row++)
+            {
+                for (int col = 0; col < gridSize; col++)
+                {
                     int val = result[row, col];
                     Assert.InRange(val, 0, gridSize);
                 }
@@ -66,7 +72,8 @@ namespace Projektas.Tests.Server_Tests.Services {
         }
 
         [Fact]
-        public void GenerateSolvedSudoku_ValidGridSize_ReturnsSolvedGrid() {
+        public void GenerateSolvedSudoku_ValidGridSize_ReturnsSolvedGrid()
+        {
             int gridSize = 9;
 
             var result = _sudokuService.GenerateSolvedSudoku(gridSize);
@@ -78,7 +85,8 @@ namespace Projektas.Tests.Server_Tests.Services {
         }
 
         [Fact]
-        public void SolveSudoku_ValidGrid_ReturnsSolvedGrid()  {
+        public void SolveSudoku_ValidGrid_ReturnsSolvedGrid()
+        {
             int[,] grid = new int[9, 9] {
                 {5, 3, 4, 6, 7, 8, 9, 1, 2},
                 {6, 7, 2, 1, 9, 5, 3, 4, 8},
