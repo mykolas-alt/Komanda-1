@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Projektas.Client.Components;
 using Projektas.Client.Interfaces;
-using Projektas.Client.Services;
 using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
 
@@ -10,56 +9,56 @@ namespace Projektas.Client.Pages
     partial class Score : IDisposable
     {
         [Inject]
-        public AccountScoreService accountScoreService { get; set; }
+        public required IAccountScoreService accountScoreService { get; set; }
         [Inject]
-        public IAccountAuthStateProvider AuthStateProvider { get; set; }
+        public required IAccountAuthStateProvider AuthStateProvider { get; set; }
 
-        public List<UserScoreDto<MathGameData>> MathGameScores { get; set; }
-        public List<UserScoreDto<AimTrainerData>> AimTrainerScores { get; set; }
-        public List<UserScoreDto<PairUpData>> PairUpScores { get; set; }
-        public List<UserScoreDto<SudokuData>> SudokuScores { get; set; }
+        public required List<UserScoreDto<MathGameData>> MathGameScores { get; set; }
+        public required List<UserScoreDto<AimTrainerData>> AimTrainerScores { get; set; }
+        public required List<UserScoreDto<PairUpData>> PairUpScores { get; set; }
+        public required List<UserScoreDto<SudokuData>> SudokuScores { get; set; }
 
-        public GameScore MathGameHighscore { get; set; }
+        public required GameScore MathGameHighscore { get; set; }
 
-        public GameScore AimTrainerHighscoreNormalMode { get; set; }
-        public GameScore AimTrainerHighscoreHardMode { get; set; }
+        public required GameScore AimTrainerHighscoreNormalMode { get; set; }
+        public required GameScore AimTrainerHighscoreHardMode { get; set; }
 
-        public GameScore PairUpHighscoreEasyMode { get; set; }
-        public GameScore PairUpHighscoreMediumMode { get; set; }
-        public GameScore PairUpHighscoreHardMode { get; set; }
+        public required GameScore PairUpHighscoreEasyMode { get; set; }
+        public required GameScore PairUpHighscoreMediumMode { get; set; }
+        public required GameScore PairUpHighscoreHardMode { get; set; }
 
-        public GameScore SudokuHighscoreEasyMode4x4 { get; set; }
-        public GameScore SudokuHighscoreMediumMode4x4 { get; set; }
-        public GameScore SudokuHighscoreHardMode4x4 { get; set; }
+        public required GameScore SudokuHighscoreEasyMode4x4 { get; set; }
+        public required GameScore SudokuHighscoreMediumMode4x4 { get; set; }
+        public required GameScore SudokuHighscoreHardMode4x4 { get; set; }
 
-        public GameScore SudokuHighscoreEasyMode9x9 { get; set; }
-        public GameScore SudokuHighscoreMediumMode9x9 { get; set; }
-        public GameScore SudokuHighscoreHardMode9x9 { get; set; }
+        public required GameScore SudokuHighscoreEasyMode9x9 { get; set; }
+        public required GameScore SudokuHighscoreMediumMode9x9 { get; set; }
+        public required GameScore SudokuHighscoreHardMode9x9 { get; set; }
 
-        public GameScore SudokuHighscoreEasyMode16x16 { get; set; }
-        public GameScore SudokuHighscoreMediumMode16x16 { get; set; }
-        public GameScore SudokuHighscoreHardMode16x16 { get; set; }
+        public required GameScore SudokuHighscoreEasyMode16x16 { get; set; }
+        public required GameScore SudokuHighscoreMediumMode16x16 { get; set; }
+        public required GameScore SudokuHighscoreHardMode16x16 { get; set; }
 
-        public GameScore MathGameAllTimeAverage { get; set; }
+        public required GameScore MathGameAllTimeAverage { get; set; }
 
-        public GameScore AimTrainerAllTimeAverageNormalMode { get; set; }
-        public GameScore AimTrainerAllTimeAverageHardMode { get; set; }
+        public required GameScore AimTrainerAllTimeAverageNormalMode { get; set; }
+        public required GameScore AimTrainerAllTimeAverageHardMode { get; set; }
 
-        public GameScore PairUpAllTimeAverageEasyMode { get; set; }
-        public GameScore PairUpAllTimeAverageMediumMode { get; set; }
-        public GameScore PairUpAllTimeAverageHardMode { get; set; }
+        public required GameScore PairUpAllTimeAverageEasyMode { get; set; }
+        public required GameScore PairUpAllTimeAverageMediumMode { get; set; }
+        public required GameScore PairUpAllTimeAverageHardMode { get; set; }
 
-        public GameScore SudokuAllTimeAverageEasyMode4x4 { get; set; }
-        public GameScore SudokuAllTimeAverageMediumMode4x4 { get; set; }
-        public GameScore SudokuAllTimeAverageHardMode4x4 { get; set; }
+        public required GameScore SudokuAllTimeAverageEasyMode4x4 { get; set; }
+        public required GameScore SudokuAllTimeAverageMediumMode4x4 { get; set; }
+        public required GameScore SudokuAllTimeAverageHardMode4x4 { get; set; }
 
-        public GameScore SudokuAllTimeAverageEasyMode9x9 { get; set; }
-        public GameScore SudokuAllTimeAverageMediumMode9x9 { get; set; }
-        public GameScore SudokuAllTimeAverageHardMode9x9 { get; set; }
+        public required GameScore SudokuAllTimeAverageEasyMode9x9 { get; set; }
+        public required GameScore SudokuAllTimeAverageMediumMode9x9 { get; set; }
+        public required GameScore SudokuAllTimeAverageHardMode9x9 { get; set; }
 
-        public GameScore SudokuAllTimeAverageEasyMode16x16 { get; set; }
-        public GameScore SudokuAllTimeAverageMediumMode16x16 { get; set; }
-        public GameScore SudokuAllTimeAverageHardMode16x16 { get; set; }
+        public required GameScore SudokuAllTimeAverageEasyMode16x16 { get; set; }
+        public required GameScore SudokuAllTimeAverageMediumMode16x16 { get; set; }
+        public required GameScore SudokuAllTimeAverageHardMode16x16 { get; set; }
 
         public int MathGameMatchesPlayes { get; set; }
 
@@ -82,37 +81,37 @@ namespace Projektas.Client.Pages
         public int SudokuMatchesPlayedMediumMode16x16 { get; set; }
         public int SudokuMatchesPlayedHardMode16x16 { get; set; }
 
-        public List<AverageScoreDto> MathGameAverageScoreLast7Days { get; set; }
+        public required List<AverageScoreDto> MathGameAverageScoreLast7Days { get; set; }
 
-        public List<AverageScoreDto> AimTrainerAverageScoreLast7DaysNormalMode { get; set; }
-        public List<AverageScoreDto> AimTrainerAverageScoreLast7DaysHardMode { get; set; }
+        public required List<AverageScoreDto> AimTrainerAverageScoreLast7DaysNormalMode { get; set; }
+        public required List<AverageScoreDto> AimTrainerAverageScoreLast7DaysHardMode { get; set; }
 
-        public List<AverageScoreDto> PairUpAverageScoreLast7DaysEasyMode { get; set; }
-        public List<AverageScoreDto> PairUpAverageScoreLast7DaysMediumMode { get; set; }
-        public List<AverageScoreDto> PairUpAverageScoreLast7DaysHardMode { get; set; }
+        public required List<AverageScoreDto> PairUpAverageScoreLast7DaysEasyMode { get; set; }
+        public required List<AverageScoreDto> PairUpAverageScoreLast7DaysMediumMode { get; set; }
+        public required List<AverageScoreDto> PairUpAverageScoreLast7DaysHardMode { get; set; }
 
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysEasyMode4x4 { get; set; }
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysMediumMode4x4 { get; set; }
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysHardMode4x4 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysEasyMode4x4 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysMediumMode4x4 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysHardMode4x4 { get; set; }
 
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysEasyMode9x9 { get; set; }
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysMediumMode9x9 { get; set; }
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysHardMode9x9 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysEasyMode9x9 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysMediumMode9x9 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysHardMode9x9 { get; set; }
 
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysEasyMode16x16 { get; set; }
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysMediumMode16x16 { get; set; }
-        public List<AverageScoreDto> SudokuAverageScoreLast7DaysHardMode16x16 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysEasyMode16x16 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysMediumMode16x16 { get; set; }
+        public required List<AverageScoreDto> SudokuAverageScoreLast7DaysHardMode16x16 { get; set; }
         
-        public Dataset[] MathGameAverageScoreLast7DaysDataset { get; set; }
+        public required Dataset[] MathGameAverageScoreLast7DaysDataset { get; set; }
 
-        public Dataset[] AimTrainerAverageScoreLast7DaysDataset { get; set; }
+        public required Dataset[] AimTrainerAverageScoreLast7DaysDataset { get; set; }
 
-        public Dataset[] PairUpAverageScoreLast7DaysDataset { get; set; }
-        public Dataset[] PairUpAverageTimeSpentLast7DaysDataset { get; set; }
+        public required Dataset[] PairUpAverageScoreLast7DaysDataset { get; set; }
+        public required Dataset[] PairUpAverageTimeSpentLast7DaysDataset { get; set; }
 
-        public Dataset[] SudokuAverageTimeSpentIn4x4 { get; set; }
-        public Dataset[] SudokuAverageTimeSpentIn9x9 { get; set; }
-        public Dataset[] SudokuAverageTimeSpentIn16x16 { get; set; }
+        public required Dataset[] SudokuAverageTimeSpentIn4x4 { get; set; }
+        public required Dataset[] SudokuAverageTimeSpentIn9x9 { get; set; }
+        public required Dataset[] SudokuAverageTimeSpentIn16x16 { get; set; }
 
         private string activeTab = "MathGame";
 
@@ -129,13 +128,13 @@ namespace Projektas.Client.Pages
             }
         }
 
-        private async Task LoadUsernameAsync()
+        public async Task LoadUsernameAsync()
         {
             username = await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
             StateHasChanged();
         }
 
-        private async Task LoadScoresAsync()
+        public async Task LoadScoresAsync()
         {
             await LoadMathGameScores();
             await LoadAimTrainerScores();

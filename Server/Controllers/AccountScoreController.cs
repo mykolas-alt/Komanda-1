@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Projektas.Server.Services;
+using Projektas.Server.Interfaces;
 using Projektas.Shared.Models;
 using Projektas.Shared.Enums;
 
@@ -9,9 +9,9 @@ namespace Projektas.Server.Controllers
     [Route("api/[controller]")]
     public class AccountScoreController : ControllerBase
     {
-        private readonly AccountScoreService _accountScoreService;
+        private readonly IAccountScoreService _accountScoreService;
 
-        public AccountScoreController(AccountScoreService accountScoreService)
+        public AccountScoreController(IAccountScoreService accountScoreService)
         {
             _accountScoreService = accountScoreService;
         }

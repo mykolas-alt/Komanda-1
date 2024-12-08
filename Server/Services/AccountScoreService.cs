@@ -5,7 +5,7 @@ using Projektas.Shared.Enums;
 
 namespace Projektas.Server.Services
 {
-    public class AccountScoreService
+    public class AccountScoreService : IAccountScoreService
     {
         const int lastGamesCount = 10;
         private readonly IScoreRepository repository;

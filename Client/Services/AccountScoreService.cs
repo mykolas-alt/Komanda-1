@@ -1,10 +1,11 @@
 ﻿using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
 using System.Net.Http.Json;
+using Projektas.Client.Interfaces;
 
 namespace Projektas.Client.Services
 {
-    public class AccountScoreService
+    public class AccountScoreService : IAccountScoreService
     {
         private readonly HttpClient _httpClient;
 
