@@ -186,7 +186,7 @@ namespace Projektas.Client.Pages
 
             // average scores for the last 7 days
             AimTrainerAverageScoreLast7DaysNormalMode = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Normal);
-            AimTrainerAverageScoreLast7DaysHardMode = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Easy);
+            AimTrainerAverageScoreLast7DaysHardMode = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Hard);
         }
 
         public async Task LoadPairUpScores()
