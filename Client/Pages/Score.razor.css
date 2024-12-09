@@ -20,7 +20,7 @@
     background-color: #f2f2f2;
 }
 
-.last10GamesTable tr:hover, .statsTable tr:hover {
+.last10GamesTable tr:hover, .statsTable tr:hover, .statsTable9x9 tr:hover, .statsTable16x16 tr:hover {
     background-color: #ddd;
 }
 
