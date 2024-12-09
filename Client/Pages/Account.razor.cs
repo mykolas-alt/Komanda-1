@@ -17,6 +17,7 @@ namespace Projektas.Client.Pages {
 		public bool isUsernameNew {get; private set;} = true;
 		public bool isFieldsFilled {get; private set;} = true;
 		public bool isNewFieldsFilled {get; private set;} = true;
+		public bool incorectLogIn {get; private set;} = false;
 
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider {get; set;}
@@ -39,8 +40,11 @@ namespace Projektas.Client.Pages {
 				if(!string.IsNullOrEmpty(token)) {
 					await AuthStateProvider.MarkUserAsAuthenticatedAsync(token);
 					Navigation.NavigateTo("/");
+				} else {
+					incorectLogIn = true;
 				}
 			}
+			StateHasChanged();
 		}
 
 		public void LogOffEvent() {

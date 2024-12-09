@@ -10,8 +10,8 @@
     display: flex;
     position: relative;
     align-items: center;
-    background: #c9c9c9;
-    border: 3px solid #858585;
+    background: #adadad;
+    border: 3px solid #3f5970;
     border-radius: 10px;
     width: 35rem;
     height: 20rem;
@@ -21,18 +21,20 @@
     padding-left: 1rem;
     padding-right: 1rem;
     padding-bottom: 0rem;
-    margin-left: auto;
-    margin-right: 1.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
     margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     top: -1px;
+    z-index: 4;
 }
 
 .singup {
     display: flex;
     position: relative;
     align-items: center;
-    background: #c9c9c9;
-    border: 3px solid #858585;
+    background: #adadad;
+    border: 3px solid #3f5970;
     border-radius: 10px;
     width: 35rem;
     height: 28rem;
@@ -42,15 +44,17 @@
     padding-left: 1rem;
     padding-right: 1rem;
     padding-bottom: 1rem;
-    margin-left: auto;
-    margin-right: 1.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
     margin-top: 0.5rem;
+    margin-bottom: 1rem;
     top: -1px;
+    z-index: 4;
 }
 
 .type {
-    background: #b8b8b8;
-    border: 3px solid #858585;
+    background: #bfbfbf;
+    border: 3px solid #3f5970;
     border-radius: 10px;
     width: 30rem;
     height: 3rem;
@@ -60,8 +64,8 @@
 }
 
 .textbox {
-    background: #c7c7c7;
-    border: 3px solid #858585;
+    background: #bfbfbf;
+    border: 3px solid #3f5970;
     border-radius: 10px;
     align-items: center;
     text-align: right;
@@ -77,18 +81,28 @@
 }
 
 input[type=text] {
-    background: #d9d9d9;
-    border: 3px solid #858585;
+    background: #dedede;
+    border: 3px solid #3f5970;
     border-radius: 5px;
 }
 
     input[type=text]:hover {
-        background: #cfcfcf;
+        background: #f0f0f0;
+    }
+
+input[type=password] {
+    background: #dedede;
+    border: 3px solid #3f5970;
+    border-radius: 5px;
+}
+
+    input[type=password]:hover {
+        background: #f0f0f0;
     }
 
 .submit {
-    background: #b8b8b8;
-    border: 3px solid #858585;
+    background: #bfbfbf;
+    border: 3px solid #3f5970;
     border-radius: 10px;
     align-items: center;
     font-size: 2rem;
@@ -97,13 +111,15 @@ input[type=text] {
     margin-left: auto;
     margin-right: auto;
     margin-top: 1rem;
+    transition: background 0.3s ease, transform 0.3s ease;
 }
 
     .submit:hover {
-        background: #c2c2c2;
+        background: #d4d4d4;
+        transform: scale(1.05);
     }
 
-.new-account-warning {
+.warning {
     font-size: 1.2rem;
     font-weight: bold;
     color: #7a0800;
