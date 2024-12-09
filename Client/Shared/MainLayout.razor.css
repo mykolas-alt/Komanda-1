@@ -1,3 +1,10 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .page {
     background: #f7f7f7;
     position: relative;
@@ -10,13 +17,16 @@ main {
 }
 
 .top_row {
+    align-items: center;
     background: #999999;
     border-bottom: 3px solid #374c94;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    justify-content: flex-start;
-    height: 3.5rem;
     display: flex;
-    align-items: center;
+    height: 3.5rem;
+    justify-content: flex-start;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .toggle_sidebar {
@@ -78,9 +88,15 @@ main {
     transform: scale(1.1);
 }
 
+.middle {
+    display: flex;
+    flex-direction: column;
+    min-height: 79.5vh;
+    flex: 1;
+}
+
 .sidebar {
     background: #bfbfbf;
-    border-top: 3px solid #3f5970;
     border-right: 3px solid #3f5970;
     box-shadow: 0 4px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 20px 0 rgba(0, 0, 0, 0.19);
     transition: width 0.3s ease;
@@ -107,12 +123,13 @@ main {
 }
 
 .bottom_row {
+    align-items: center;
     background: #999999;
     border-top: 3px solid #374c94;
+    display: flex;
     justify-content: flex-start;
     height: 2.5rem;
-    display: flex;
-    align-items: center;
+    z-index: 1;
 }
 
 @media (max-width: 640px) {
@@ -128,8 +145,10 @@ main {
     .sidebar {
         position: fixed;
         transition: left 0.3s ease;
-        top: 3.5rem;
+        top: 0;
         transition: width 0.3s ease;
+        padding-top: 3.5rem;
+        z-index: 5;
     }
 
         .sidebar.show {
@@ -138,12 +157,6 @@ main {
 }
 
 @media (min-width: 641px) {
-    .top_row {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-
     .top_row, article {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;

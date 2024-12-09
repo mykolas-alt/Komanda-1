@@ -9,8 +9,7 @@
 .nav-item {
     text-align: center;
     font-size: 0.9rem;
-    padding-top: 0rem;
-    padding-bottom: 1rem;
+    z-index: 4;
 }
 
     .nav-item ::deep .nav-link {
@@ -24,6 +23,8 @@
         width: 35rem;
         margin-left: auto;
         margin-right: auto;
+        margin-top: 0;
+        margin-bottom: 1rem;
         transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
@@ -45,19 +46,26 @@
 
 .name {
     background: #bfbfbf;
-    border: 2px solid #3f5970;
+    border: 3px solid #3f5970;
     border-radius: 6px;
     color: #262626;
     font-size: 40px;
     margin-top: -2.5rem;
     margin-bottom: 0.5rem;
+    transition: background-color 0.3s ease;
 }
 
 .desc {
     background: #bfbfbf;
-    border: 2px solid #3f5970;
+    border: 3px solid #3f5970;
     border-radius: 6px;
     color: #262626;
     font-size: 20px;
     height: 19rem;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover .name, .nav-link:hover .desc {
+    background: #e0e0e0;
+    color: black;
 }

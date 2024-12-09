@@ -15,16 +15,20 @@
 				Username: <input type="text" name="accUsername" @bind="@accountUsername"/>
 			</label>
 			<label class="textbox" for="accPassword">
-				Password: <input type="text" name="accPassword" @bind="@accountPassword"/>
+				Password: <input type="password" name="accPassword" @bind="@accountPassword" />
 			</label>
 			<button class="submit" @onclick="LogInEventAsync">Submit</button>
 			@if(isFieldsFilled==false) {
-				<div class="new-account-warning">
+				<div class="warning">
 					Not all fields are filled!
+				</div>
+			} else if(incorectLogIn) {
+				<div class="warning">
+					Incorect Usename or Password!
 				</div>
 			}
 			@if(username!=null) {
-				<div class="new-account-warning">
+				<div class="warning">
 					Logged In
 				</div>
 			}
@@ -43,15 +47,15 @@
 				Username: <input type="text" name="accUsername" @bind="@newAccountUsername" @oninput="UsernameChangeAsync"/>
 			</label>
 			<label class="textbox" for="accPassword">
-				Password: <input type="text" name="accPassword" @bind="@newAccountPassword"/>
+				Password: <input type="password" name="accPassword" @bind="@newAccountPassword" />
 			</label>
 			<button class="submit" @onclick="SignUpEventAsync">Submit</button>
 			@if(isUsernameNew==false) {
-				<div class="new-account-warning">
+				<div class="warning">
 					This username is in use
 				</div>
 			} else if(isNewFieldsFilled==false) {
-				<div class="new-account-warning">
+				<div class="warning">
 					Not all fields are filled!
 				</div>
 			}
