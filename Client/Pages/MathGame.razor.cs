@@ -13,7 +13,7 @@ namespace Projektas.Client.Pages
         public List<UserScoreDto<MathGameData>>? topScores { get; private set; }
         public string? username = null;
         public int score { get; private set; } = 0;
-        private UserScoreDto<MathGameData> highscore { get; set; } = new UserScoreDto<MathGameData>();
+        private UserScoreDto<MathGameData>? highscore { get; set; }
 
         [Inject]
         public IMathGameService MathGameService { get; set; }
@@ -94,7 +94,7 @@ namespace Projektas.Client.Pages
 
         public async void OnTimerTick()
         {
-            await InvokeAsync(async () => {
+                await InvokeAsync(async () => {
                 if (TimerService.RemainingTime == 0)
                 {
                     isTimesUp = true;

@@ -45,7 +45,15 @@
                 </div>
                 @if(username!=null) {
                     <div class="highscore-after-game">
-                        <b>Your highscore: @highscore.GameData.Scores</b>
+                        @if(highscore != null)
+                        {
+                            <b>Your highscore: @highscore.GameData.Scores</b>
+                        }
+                        else
+                        {
+                            <b>Your highscore: Loading...</b>
+                        }
+
                     </div>
                 }
             </div>
