@@ -3,7 +3,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
 main {
@@ -81,9 +80,12 @@ main {
 
 .sidebar {
     background: #bfbfbf;
+    border-top: 3px solid #3f5970;
     border-right: 3px solid #3f5970;
     box-shadow: 0 4px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 20px 0 rgba(0, 0, 0, 0.19);
     transition: width 0.3s ease;
+    width: 250px;
+    bottom: 0;
 }
 
     .sidebar.collapsed {
@@ -125,10 +127,8 @@ main {
 
     .sidebar {
         position: fixed;
-        width: 250px;
         transition: left 0.3s ease;
-        top: 2.8rem;
-        bottom: 0;
+        top: 3.5rem;
         transition: width 0.3s ease;
     }
 
@@ -154,8 +154,6 @@ main {
     }
 
     .sidebar {
-        width: 250px;
-        height: 100%;
         position: sticky;
         top: 0;
     }
