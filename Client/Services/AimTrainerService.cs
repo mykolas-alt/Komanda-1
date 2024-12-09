@@ -1,3 +1,4 @@
+using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
 using System.Net.Http.Json;
 using Projektas.Client.Interfaces;
@@ -10,11 +11,13 @@ namespace Projektas.Client.Services {
             _httpClient = httpClient;
         }
 
-        public async Task SaveScoreAsync(string username, int score) {
+        public async Task SaveScoreAsync(string username, int score, GameDifficulty difficulty) {
             var data = new UserScoreDto<AimTrainerData> {
                 Username = username,
+                Timestamp = DateTime.UtcNow.ToLocalTime(),
                 GameData = new AimTrainerData {
-                    Scores = score
+                    Scores = score,
+                    Difficulty = difficulty
                 }
             };
             await _httpClient.PostAsJsonAsync("api/aimtrainer/save-score", data);

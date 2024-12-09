@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Projektas.Shared.Enums;
 using Projektas.Shared.Interfaces;
 using Projektas.Shared.Models;
 
@@ -27,8 +29,12 @@ namespace Projektas.Server.Database
 			ConfigureScoreTable<AimTrainerData>(modelBuilder,"aimTrainerScores", score => {
 				score.OwnsOne(s => s.GameData, gameData => {
 					gameData.Property(g => g.Scores).HasColumnName("score");
-				});
-				score.HasOne(s => s.User)
+					gameData.Property(g => g.Difficulty)
+						.HasColumnName("difficulty")
+                        .HasConversion(new EnumToStringConverter<GameDifficulty>());
+                });
+                score.Property(s => s.Timestamp).HasColumnName("timestamp").IsRequired();
+                score.HasOne(s => s.User)
 					.WithMany(u => u.AimTrainerScores)
 					.HasForeignKey(s => s.UserId)
 					.OnDelete(DeleteBehavior.Cascade);
@@ -37,8 +43,9 @@ namespace Projektas.Server.Database
 			ConfigureScoreTable<MathGameData>(modelBuilder,"mathGameScores", score => {
 				score.OwnsOne(s => s.GameData, gameData => {
 					gameData.Property(g => g.Scores).HasColumnName("score");
-				});
-				score.HasOne(s => s.User)
+                });
+                score.Property(s => s.Timestamp).HasColumnName("timestamp").IsRequired();
+                score.HasOne(s => s.User)
 					.WithMany(u => u.MathGameScores)
 					.HasForeignKey(s => s.UserId)
 					.OnDelete(DeleteBehavior.Cascade);
@@ -48,8 +55,12 @@ namespace Projektas.Server.Database
 				score.OwnsOne(s => s.GameData, gameData => {
 					gameData.Property(g => g.TimeInSeconds).HasColumnName("timeInSeconds");
 					gameData.Property(g => g.Fails).HasColumnName("fails");
-				});
-				score.HasOne(s => s.User)
+                    gameData.Property(g => g.Difficulty)
+						.HasColumnName("difficulty")
+						.HasConversion(new EnumToStringConverter<GameDifficulty>());
+                });
+                score.Property(s => s.Timestamp).HasColumnName("timestamp").IsRequired();
+                score.HasOne(s => s.User)
 					.WithMany(u => u.PairUpScores)
 					.HasForeignKey(s => s.UserId)
 					.OnDelete(DeleteBehavior.Cascade);
@@ -58,8 +69,15 @@ namespace Projektas.Server.Database
 			ConfigureScoreTable<SudokuData>(modelBuilder,"sudokuScores", score => {
 				score.OwnsOne(s => s.GameData, gameData => {
 					gameData.Property(g => g.TimeInSeconds).HasColumnName("timeInSeconds");
-				});
-				score.HasOne(s => s.User)
+                    gameData.Property(g => g.Difficulty)
+						.HasColumnName("difficulty")
+						.HasConversion(new EnumToStringConverter<GameDifficulty>());
+                    gameData.Property(g => g.Mode)
+						.HasColumnName("mode")
+						.HasConversion(new EnumToStringConverter<GameMode>());
+                });
+                score.Property(s => s.Timestamp).HasColumnName("timestamp").IsRequired();
+                score.HasOne(s => s.User)
 					.WithMany(u => u.SudokuScores)
 					.HasForeignKey(s => s.UserId)
 					.OnDelete(DeleteBehavior.Cascade);

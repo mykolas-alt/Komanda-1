@@ -1,4 +1,5 @@
-﻿using Projektas.Shared.Models;
+﻿using Projektas.Shared.Enums;
+using Projektas.Shared.Models;
 using System.Net.Http.Json;
 using Projektas.Client.Interfaces;
 
@@ -10,12 +11,14 @@ namespace Projektas.Client.Services {
             _httpClient = httpClient;
         }
 
-        public async Task SaveScoreAsync(string username, int score, int fails) {
+        public async Task SaveScoreAsync(string username, int score, int fails, GameDifficulty difficulty) {
             var data = new UserScoreDto<PairUpData> {
                 Username = username,
+                Timestamp = DateTime.UtcNow.ToLocalTime(),
                 GameData = new PairUpData {
                     TimeInSeconds = score,
-                    Fails = fails
+                    Fails = fails,
+                    Difficulty = difficulty
                 }
             };
             await _httpClient.PostAsJsonAsync("api/pairup/save-score", data);

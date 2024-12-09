@@ -1,6 +1,7 @@
 ﻿using Projektas.Shared.Models;
 ﻿using Projektas.Client.Interfaces;
 using System.Net.Http.Json;
+using Projektas.Shared.Enums;
 
 namespace Projektas.Client.Services {
     public class SudokuService : ISudokuService {
@@ -47,11 +48,16 @@ namespace Projektas.Client.Services {
             return grid;
         }
 
-        public async Task SaveScoreAsync(string username, int score) {
-            var data = new UserScoreDto<SudokuData> {
+        public async Task SaveScoreAsync(string username, int score, GameDifficulty difficulty, GameMode gameMode) {
+            var data = new UserScoreDto<SudokuData>
+            {
                 Username = username,
-                GameData = new SudokuData {
-                    TimeInSeconds = score
+                Timestamp = DateTime.UtcNow.ToLocalTime(),
+                GameData = new SudokuData
+                {
+                    TimeInSeconds = score,
+                    Difficulty = difficulty,
+                    Mode = gameMode
                 }
             };
             await _httpClient.PostAsJsonAsync("api/sudoku/save-score", data);
