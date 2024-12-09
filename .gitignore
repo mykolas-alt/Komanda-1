@@ -18,3 +18,5 @@
 /Tests/obj/Projektas.Tests.csproj.nuget.dgspec.json
 /Tests/obj/project.assets.json
 /Tests/obj/Projektas.Tests.csproj.nuget.g.props
+/Server/Database/usersdb.db-shm
+/Server/Database/usersdb.db-wal

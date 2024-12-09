@@ -4,8 +4,8 @@
 @implements IDisposable
 
 <div class="page">
-	<div class="top-row px-4">
-		<button class="toggle-sidebar" @onclick="ToggleSidebar">☰</button>
+	<div class="top_row px-4">
+		<button class="toggle_sidebar" @onclick="ToggleSidebar">☰</button>
 		<a class="title" href="">Projektas</a>
 		<div class="account">
 			@if(username==null) {
@@ -16,7 +16,7 @@
 		</div>
 	</div>
 	<div class="page middle">
-		<div class="sidebar @(isSidebarCollapsed ? "collapsed" : "")">
+		<div class="@SidebarCssClass sidebar">
 			<NavMenu/>
 		</div>
 		<main>
@@ -25,5 +25,5 @@
 			</article>
 		</main>
 	</div>
-	<div class="bottom-row px-4"></div>
+	<div class="bottom_row px-4"></div>
 </div>

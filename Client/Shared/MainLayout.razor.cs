@@ -4,6 +4,7 @@ namespace Projektas.Client.Shared {
 	public partial class MainLayout {
 		public string? username = null;
 		private bool isSidebarCollapsed = false;
+		private string? SidebarCssClass => isSidebarCollapsed ? "collapsed" : "";
 
 		private void ToggleSidebar() {
 			isSidebarCollapsed = !isSidebarCollapsed;
