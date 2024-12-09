@@ -1,6 +1,7 @@
 ﻿namespace Projektas.Client.Pages {
     using Microsoft.AspNetCore.Components;
     using Projektas.Client.Interfaces;
+    using Projektas.Shared.Enums;
     using System;
     using System.Threading.Tasks;
 
@@ -12,10 +13,11 @@
 
         public string? username = null;
 
-        public (int x, int y) TargetPosition {get; set;}
+        public (int x,int y) TargetPosition {get; set;}
         public int score {get; private set;}
         public int moveCounter {get; private set;}
         public int moveDirection {get; set;} // 0 = left, 1 = right, 2 = up, 3 = down
+        public GameDifficulty Difficulty {get; set;} = GameDifficulty.Normal;
 
         [Inject]
         public Random _random {get; set;}
@@ -47,7 +49,8 @@
 
         public void OnDifficultyChanged(ChangeEventArgs e) {
             if(!isGameActive) {
-                isHardMode = e.Value?.ToString() == "Hard";
+                isHardMode = e.Value?.ToString()=="Hard";
+                Difficulty = GameDifficulty.Hard;
             }
         }
 
@@ -88,10 +91,11 @@
                 InvokeAsync(StateHasChanged);
             }
         }
-
-        private async Task EndGameAsync() {
-            if(username != null) {
-                await AimTrainerService.SaveScoreAsync(username, score);
+        private async Task EndGameAsync()
+        {
+            if (username != null)
+            {
+                await AimTrainerService.SaveScoreAsync(username, score, Difficulty);
             }
             isGameActive = false;
             isGameOver = true;

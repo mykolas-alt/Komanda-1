@@ -1,0 +1,34 @@
+﻿<div>
+    <canvas id="@ChartId" width="400" height="50"></canvas>
+</div>
+
+<script>
+    window.createChart = (chartId, chartType, labels, datasets, yAxisLabel) => {
+        var ctx = document.getElementById(chartId).getContext('2d');
+        var yAxisLabel = datasets[0].yAxisLabel;
+        new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: datasets.map(dataset => ({
+                    label: dataset.label,
+                    data: dataset.data,
+                    borderColor: dataset.borderColor,
+                    borderWidth: 2,
+                    tension: 0.4
+                }))
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: yAxisLabel
+                        }
+                    }
+                }
+            }
+        });
+    };
+</script>

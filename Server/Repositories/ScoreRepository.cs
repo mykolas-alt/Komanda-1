@@ -5,6 +5,7 @@ using Projektas.Server.Exceptions;
 using Projektas.Server.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Projektas.Shared.Interfaces;
+using Projektas.Shared.Enums;
 
 namespace Projektas.Server.Repositories {
     public class ScoreRepository : IScoreRepository {
@@ -14,7 +15,7 @@ namespace Projektas.Server.Repositories {
 			_userDbContext = userDbContext;
 		}
 
-		public async Task AddScoreToUserAsync<T>(string username, T gameData) where T : IGame {
+		public async Task AddScoreToUserAsync<T>(string username, T gameData, DateTime timestamp) where T : IGame {
 			try {
 				var user=await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username==username);
 				if(user==null) {
@@ -24,7 +25,8 @@ namespace Projektas.Server.Repositories {
 				var score=new Score<T> {
 					UserId=user.Id,
 					User=user,
-					GameData=gameData
+					GameData=gameData,
+					Timestamp = timestamp
 				};
 
 				_userDbContext.Set<Score<T>>().Add(score);
@@ -66,7 +68,8 @@ namespace Projektas.Server.Repositories {
 					.Include(s => s.User)
 					.Select(s => new UserScoreDto<T> {
 						Username = s.User.Username,
-						GameData = (T)(IGame)s.GameData
+						GameData = (T)(IGame)s.GameData,
+						Timestamp = s.Timestamp
 					})
 					.ToListAsync();
 			} catch(DbUpdateException dbEx) {

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Projektas.Client.Interfaces;
 using Projektas.Client.Pages;
+using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
 
 namespace Projektas.Tests.Client_Tests.Pages {
@@ -24,7 +25,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             Services.AddSingleton(_mockTimerService.Object);
 			Services.AddSingleton(_mockAuthStateProvider.Object);
 
-			_mockSudokuService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>())).Returns(Task.CompletedTask);
+			_mockSudokuService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>(), It.IsAny<GameDifficulty>(), It.IsAny<GameMode>())).Returns(Task.CompletedTask);
 			_mockSudokuService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<SudokuData> {
                 Username = "User",
                 GameData = new SudokuData {
@@ -188,16 +189,16 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
             var changeArgs = new ChangeEventArgs { Value = "9" };
             cut.Instance.OnSizeChanged(changeArgs);
-            Assert.Equal(9, cut.Instance.NextGridSize);
+            Assert.Equal(9, (int)cut.Instance.mode);
 
             changeArgs = new ChangeEventArgs { Value = "16" };
             cut.Instance.OnSizeChanged(changeArgs);
-            Assert.Equal(16, cut.Instance.NextGridSize);
+            Assert.Equal(16, (int)cut.Instance.mode);
 
 
             changeArgs = new ChangeEventArgs { Value = "invalid" };
             cut.Instance.OnSizeChanged(changeArgs);
-            Assert.Equal(16, cut.Instance.NextGridSize);
+            Assert.Equal(16, (int)cut.Instance.mode);
 
         }
 
