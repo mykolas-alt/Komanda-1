@@ -8,17 +8,35 @@
     @if(MathGameScores==null) {
         <div class="loader"></div>
     } else {
-        <div class="place_row game_score @(IsActive ? "active" : "")">
+        <div class="place_col game_score @(IsMathGameActive ? "active" : "")">
             @if(MathGameScores.Count==0) {
                 <div class="no_scores">No scores available.</div>
             } else {
-                <div class="text_section @(IsActive ? "column_layout" : "row_layout")">
-                    <span class="score_words" style="--order: 0;">Matches Played: @MathGameMatchesPlayes</span>
-                    <span class="score_words" style="--order: 1;">High Score: @MathGameHighscore.Scores points</span>
-                    <span class="score_words" style="--order: 2;">Average Score: @MathGameAllTimeAverage.Scores points</span>
-                </div>
-                <div class="game_info">
-                    <button class="toggle_game_info" @onclick="ToggleGameInfo">☰</button>
+                <span class="game_title">Math Game</span>
+                <div class="sub_game_score">
+                    <div class="text_section @(IsMathGameActive ? "column_layout" : "row_layout")">
+                        <span class="score_words" style="--order: 0;">Matches Played: @MathGameMatchesPlayes</span>
+                        <span class="score_words" style="--order: 1;">High Score: @MathGameHighscore.Scores points</span>
+                        <span class="score_words" style="--order: 2;">Average Score: @MathGameAllTimeAverage.Scores points</span>
+                    </div>
+                    <div class="place_col game_info">
+                        <div class="place_row">
+                            <button class="stats_button @(activeTabMathGame == "lastGames" ? "active" : "")" @onclick='() => SetActiveTabMathGame("lastGames")'>Last games</button>
+                            <button class="stats_button @(activeTabMathGame == "average" ? "active" : "")" @onclick='() => SetActiveTabMathGame("average")'>Average score</button>
+                        </div>
+                        <div class="game_stats">
+                            @if(activeTabMathGame == "lastGames") {
+                                <div>
+                                    Last games
+                                </div>
+                            } else if(activeTabMathGame =="average") {
+                                <div>
+                                    Average
+                                </div>
+                            }
+                        </div>
+                        <button class="toggle_game_info" @onclick="ToggleGameInfo">☰</button>
+                    </div>
                 </div>
             }
         </div>

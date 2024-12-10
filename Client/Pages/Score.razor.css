@@ -3,7 +3,6 @@
 }
 
 .place_row {
-    display: flex;
     flex-direction: row;
 }
 
@@ -31,14 +30,12 @@
 }
 
 .game_score {
-    background: #999999;
+    background: #808080;
     border: 3px solid #374c94;
-    border-radius: 10px;
+    border-radius: 14px;
     color: #262626;
     display: flex;
-    font-weight: bold;
-    font-size: 1.2rem;
-    height: 4rem;
+    height: 6rem;
     width: 70rem;
     margin-top: 1rem;
     margin-left: auto;
@@ -47,11 +44,41 @@
     transition: height 0.5s ease;
 }
     .game_score.active {
-        height: 20rem;
+        height: 22rem;
     }
+
+.game_title {
+    color: #f0f0f0;
+    height: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: 1rem;
+}
+
+.sub_game_score {
+    background: #999999;
+    border: 3px solid #374c94;
+    border-radius: 10px;
+    color: #262626;
+    display: flex;
+    height: 4rem;
+    width: 68rem;
+    margin-top: auto;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: 0;
+    padding-left: 1rem;
+    transition: height 0.5s ease;
+}
+
+.game_score.active .sub_game_score {
+    height: 20rem;
+}
 
 .text_section {
     display: flex;
+    font-weight: bold;
+    font-size: 1.2rem;
     justify-items: center;
     align-items: center;
     position: relative;
@@ -90,12 +117,12 @@
 }
 
 .game_info {
-    align-items: center;
     background: #b8b8b8;
     border: 3px solid #374c94;
     border-radius: 8px;
     display: flex;
-    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
     right: 0;
     position: relative;
     margin-left: auto;
@@ -103,11 +130,48 @@
     width: 60px;
     height: 60px;
     transition: width 0.5s ease, height 0.5s ease;
+    overflow: clip;
 }
 
 .game_score.active .game_info {
     width: 60rem;
     height: 19.7rem;
+}
+
+.stats_button {
+    background: #d1d1d1;
+    border: 2px solid #374c94;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-top: 0.4rem;
+    margin-bottom: 0;
+    margin-left: 0.5rem;
+    margin-right: auto;
+    z-index: 0;
+    transition: all 0.5s ease;
+}
+
+    .stats_button.active {
+        background: #f0f0f0;
+    }
+
+    .stats_button:hover {
+        background: #e8e8e8;
+    }
+
+.game_stats {
+    background: #e3e3e3;
+    border: 4px solid #374c94;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-left: auto;
+    margin-right: 0;
+    margin-top: auto;
+    margin-bottom: 0;
+    width: 49.72rem;
+    height: 17.2rem;
+    flex: none;
+    z-index: 1;
 }
 
 .toggle_game_info {
@@ -124,7 +188,13 @@
     top: -2.5px;
     left: auto;
     right: -2.5px;
+    transition: all 0.5s ease;
+    z-index: 9
 }
+
+    .toggle_game_info:hover {
+        background: #e6e6e6;
+    }
 
 .game_score.active .toggle_game_info {
     top: -2.5px;
@@ -152,27 +222,6 @@
     margin: auto;
 }
 
-/*
-
-
-
-
-
-.game_score.active {
-    height: 300px;
-}
-
-    .game_score.active .game_info {
-        width: 300px;
-        height: auto;
-    }
-
-
-
-
-
-
-*/
 /*.table {
     width: 100%;
     border-collapse: collapse;

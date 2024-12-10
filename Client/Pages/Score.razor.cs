@@ -113,14 +113,14 @@ namespace Projektas.Client.Pages
         public required Dataset[] SudokuAverageTimeSpentIn9x9 { get; set; }
         public required Dataset[] SudokuAverageTimeSpentIn16x16 { get; set; }
 
-        private string activeTab = "MathGame";
+        private string activeTabMathGame = "lastGames";
 
         public string? username = null;
 
-        private bool IsActive {get; set;} = false;
+        private bool IsMathGameActive {get; set;} = false;
 
         private void ToggleGameInfo() {
-            IsActive = !IsActive;
+            IsMathGameActive = !IsMathGameActive;
         }
         protected override async Task OnInitializedAsync()
         {
@@ -443,9 +443,9 @@ namespace Projektas.Client.Pages
             StateHasChanged();
         }
 
-        private void SetActiveTab(string tabName)
+        private void SetActiveTabMathGame(string tabName)
         {
-            activeTab = tabName;
+            activeTabMathGame = tabName;
         }
 
         public void Dispose()
