@@ -27,11 +27,26 @@
                         <div class="game_stats">
                             @if(activeTabMathGame == "lastGames") {
                                 <div>
-                                    Last games
+                                    <table class="table table-striped game_stats_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach(var score in MathGameScores) {
+                                                <tr>
+                                                    <td>@score.ShowOtherDateTimeFormat()</td>
+                                                    <td>@score.GameData.Scores points</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
                                 </div>
                             } else if(activeTabMathGame =="average") {
                                 <div>
-                                    Average
+                                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGameAverageScoreLast7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="MathGameAverageScoreLast7DaysDataset" />
                                 </div>
                             }
                         </div>

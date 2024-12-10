@@ -172,6 +172,22 @@
     height: 17.2rem;
     flex: none;
     z-index: 1;
+    overflow-y: auto;
+}
+
+.game_stats_table th, .game_stats_table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.game_stats_table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.game_stats_table th {
+    background-color: #2e2e2e;
+    color: #daf9db;
 }
 
 .toggle_game_info {
@@ -234,24 +250,7 @@
     margin-bottom: 30px;
 }
 
-.last10GamesTable th, .last10GamesTable td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
 
-.last10GamesTable tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.last10GamesTable tr:hover, .statsTable tr:hover, .statsTable9x9 tr:hover, .statsTable16x16 tr:hover {
-    background-color: #ddd;
-}
-
-.last10GamesTable th {
-    background-color: #4CAF50;
-    color: #daf9db;
-}
 
 .statsTable, .statsTable9x9, .statsTable16x16 {
     margin-bottom: 30px;
