@@ -117,6 +117,11 @@ namespace Projektas.Client.Pages
 
         public string? username = null;
 
+        private bool IsActive {get; set;} = false;
+
+        private void ToggleGameInfo() {
+            IsActive = !IsActive;
+        }
         protected override async Task OnInitializedAsync()
         {
             AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;

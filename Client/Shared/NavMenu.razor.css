@@ -22,6 +22,7 @@
         align-items: center;
         line-height: 3rem;
         transition: background-color 0.3s ease, transform 0.3s ease;
+        overflow: clip;
     }
 
         .nav_item ::deep a.active {
@@ -38,5 +39,5 @@
 .nav_scrollable {
     display: block;
     height: calc(100vh - 6rem);
-    overflow-x: auto;
+    overflow-x: clip;
 }

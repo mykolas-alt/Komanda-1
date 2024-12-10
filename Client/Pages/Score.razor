@@ -4,7 +4,30 @@
 
 <PageTitle>Score</PageTitle>
 
-@if (username != null)
+@if(username!=null) {
+    @if(MathGameScores==null) {
+        <div class="loader"></div>
+    } else {
+        <div class="place_row game_score @(IsActive ? "active" : "")">
+            @if(MathGameScores.Count==0) {
+                <div class="no_scores">No scores available.</div>
+            } else {
+                <div class="text_section @(IsActive ? "column_layout" : "row_layout")">
+                    <span class="score_words" style="--order: 0;">Matches Played: @MathGameMatchesPlayes</span>
+                    <span class="score_words" style="--order: 1;">High Score: @MathGameHighscore.Scores points</span>
+                    <span class="score_words" style="--order: 2;">Average Score: @MathGameAllTimeAverage.Scores points</span>
+                </div>
+                <div class="game_info">
+                    <button class="toggle_game_info" @onclick="ToggleGameInfo">☰</button>
+                </div>
+            }
+        </div>
+    }
+} else {
+    <div class="no_account">Create an account to track your scores!</div>
+}
+
+<!--@if (username != null)
 {
     <ul class="nav nav-tabs">
         <li class="nav-item tabs">
@@ -375,7 +398,4 @@
         }
     </div>
 }
-else
-{
-    <h3 class="text-center">Create an account to track your scores!</h3>
-}
+-->
