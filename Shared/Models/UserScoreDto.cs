@@ -6,8 +6,7 @@ namespace Projektas.Shared.Models {
         public DateTime Timestamp {get; set;}
         public T GameData {get; set;}
 
-        public string ShowOtherDateTimeFormat()
-        {
+        public string ShowOtherDateTimeFormat() {
             return Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
         }
     }

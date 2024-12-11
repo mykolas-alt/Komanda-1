@@ -5,9 +5,56 @@
 <PageTitle>Score</PageTitle>
 
 @if(username!=null) {
-    @if(MathGameScores==null) {
+    @if(AimTrainerScores==null || MathGameScores==null) {
         <div class="loader"></div>
     } else {
+        <div class="place_col game_score @(IsAimTrainerActive ? "active" : "")">
+            @if(AimTrainerScores.Count==0) {
+                <div class="no_scores">No scores available.</div>
+            } else {
+                <span class="game_title">Aim Trainer</span>
+                <div class="sub_game_score">
+                    <div class="text_section @(IsAimTrainerActive ? "column_layout" : "row_layout")">
+                        <span class="score_words" style="--order: 0;">Matches Played: @AimTrainer_Played_Normal</span>
+                        <span class="score_words" style="--order: 1;">High Score: @AimTrainer_Highscore_Normal.Scores points</span>
+                        <span class="score_words" style="--order: 2;">Average Score: @AimTrainer_AllTimeAverage_Normal.Scores points</span>
+                    </div>
+                    <div class="place_col game_info">
+                        <div class="place_row">
+                            <button class="stats_button @(activeTab_AimTrainer == "lastGames" ? "active" : "")" @onclick='() => SetActiveTabAimTrainer("lastGames")'>Last games</button>
+                            <button class="stats_button @(activeTab_AimTrainer == "average" ? "active" : "")" @onclick='() => SetActiveTabAimTrainer("average")'>Average score</button>
+                        </div>
+                        <div class="game_stats">
+                            @if(activeTab_AimTrainer=="lastGames") {
+                                <div>
+                                    <table class="table table-striped game_stats_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach(var score in AimTrainerScores) {
+                                                <tr>
+                                                    <td>@score.ShowOtherDateTimeFormat()</td>
+                                                    <td>@score.GameData.Scores points</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            } else if(activeTab_AimTrainer=="average") {
+                                <div>
+                                    <ScoreChart ChartId="aimTrainerChart" Labels="@(AimTrainer_Average_Last7Days_Normal.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="AimTrainer_Average_Last7Days_Dataset"/>
+                                </div>
+                            }
+                        </div>
+                        <button class="toggle_game_info" @onclick="ToggleAimTrainerInfo">☰</button>
+                    </div>
+                </div>
+            }
+        </div>
         <div class="place_col game_score @(IsMathGameActive ? "active" : "")">
             @if(MathGameScores.Count==0) {
                 <div class="no_scores">No scores available.</div>
@@ -15,17 +62,17 @@
                 <span class="game_title">Math Game</span>
                 <div class="sub_game_score">
                     <div class="text_section @(IsMathGameActive ? "column_layout" : "row_layout")">
-                        <span class="score_words" style="--order: 0;">Matches Played: @MathGameMatchesPlayes</span>
-                        <span class="score_words" style="--order: 1;">High Score: @MathGameHighscore.Scores points</span>
-                        <span class="score_words" style="--order: 2;">Average Score: @MathGameAllTimeAverage.Scores points</span>
+                        <span class="score_words" style="--order: 0;">Matches Played: @MathGame_Played</span>
+                        <span class="score_words" style="--order: 1;">High Score: @MathGame_Highscore.Scores points</span>
+                        <span class="score_words" style="--order: 2;">Average Score: @MathGame_AllTimeAverage.Scores points</span>
                     </div>
                     <div class="place_col game_info">
                         <div class="place_row">
-                            <button class="stats_button @(activeTabMathGame == "lastGames" ? "active" : "")" @onclick='() => SetActiveTabMathGame("lastGames")'>Last games</button>
-                            <button class="stats_button @(activeTabMathGame == "average" ? "active" : "")" @onclick='() => SetActiveTabMathGame("average")'>Average score</button>
+                            <button class="stats_button @(activeTab_MathGame == "lastGames" ? "active" : "")" @onclick='() => SetActiveTabMathGame("lastGames")'>Last games</button>
+                            <button class="stats_button @(activeTab_MathGame == "average" ? "active" : "")" @onclick='() => SetActiveTabMathGame("average")'>Average score</button>
                         </div>
                         <div class="game_stats">
-                            @if(activeTabMathGame == "lastGames") {
+                            @if(activeTab_MathGame=="lastGames") {
                                 <div>
                                     <table class="table table-striped game_stats_table">
                                         <thead>
@@ -44,13 +91,13 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            } else if(activeTabMathGame =="average") {
+                            } else if(activeTab_MathGame=="average") {
                                 <div>
-                                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGameAverageScoreLast7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="MathGameAverageScoreLast7DaysDataset" />
+                                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGame_Average_Last7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="MathGame_Average_Last7Days_Dataset" />
                                 </div>
                             }
                         </div>
-                        <button class="toggle_game_info" @onclick="ToggleGameInfo">☰</button>
+                        <button class="toggle_game_info" @onclick="ToggleMathGameInfo">☰</button>
                     </div>
                 </div>
             }
@@ -78,65 +125,7 @@
     </ul>
 
     <div class="tab-content">
-        @if (activeTab == "MathGame" && username != null)
-        {
-            <div class="tab-pane fade show active">
-                @if (MathGameScores == null)
-                {
-                    <h5 class="text-center">Loading...</h5>
-                }
-                else if (MathGameScores.Count == 0)
-                {
-                    <h5 class="text-center">No scores available.</h5>
-                }
-                else
-                {
-                    <table class="table table-striped statsTable">
-                        <thead>
-                            <tr>
-                                <th colspan="2" class="text-center">Statistics</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Matches Played:</strong></td>
-                                <td>@MathGameMatchesPlayes</td>
-                            </tr>
-                            <tr>
-                                <td><strong>High Score:</strong></td>
-                                <td>@MathGameHighscore.Scores points</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Average Score:</strong></td>
-                                <td>@MathGameAllTimeAverage.Scores points</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h4 class="text-center">Last 10 games:</h4>
-                    <table class="table table-striped last10GamesTable">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Score</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var score in MathGameScores)
-                            {
-                                <tr>
-                                    <td>@score.ShowOtherDateTimeFormat()</td>
-                                    <td>@score.GameData.Scores points</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <h4 class ="text-center">Average Scores for the Last 7 Days:</h4>
-                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGameAverageScoreLast7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="MathGameAverageScoreLast7DaysDataset" />
-                    
-                }
-            </div>
-        }
-        else if (activeTab == "AimTrainer" && username != null)
+        @if (activeTab == "AimTrainer" && username != null)
         {
             <div class="tab-pane fade show active">
                 @if (AimTrainerScores == null)

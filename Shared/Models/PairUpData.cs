@@ -7,8 +7,7 @@ namespace Projektas.Shared.Models {
         public int TimeInSeconds {get; set;}
         public int Fails {get; set;}
         public GameDifficulty Difficulty {get; set;}
-        public string GetFormattedTimeSpent()
-        {
+        public string GetFormattedTimeSpent() {
             int minutes = TimeInSeconds / 60;
             int seconds = TimeInSeconds % 60;
             return $"{minutes:D2}:{seconds:D2}";
