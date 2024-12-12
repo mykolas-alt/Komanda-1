@@ -121,6 +121,13 @@ namespace Projektas.Client.Pages {
         private string activeTab_PairUp = "lastGames";
         private string activeTab_Sudoku = "lastGames";
 
+        
+        private string activeDifficulty_AimTrainer = "normal";
+        private string activeDifficulty_PairUp = "easy";
+        private string activeDifficulty_Sudoku = "easy";
+        
+        private string activeSize_Sudoku = "4x4";
+
         public string? username = null;
         
         private bool IsAimTrainerActive {get; set;} = false;
@@ -154,8 +161,22 @@ namespace Projektas.Client.Pages {
             activeTab_Sudoku = tabName;
         }
 
+        private void SetActiveDifficultyAimTrainer(string difficulty) {
+            activeDifficulty_AimTrainer = difficulty;
+        }
+        private void SetActiveDifficultyPairUp(string difficulty) {
+            activeDifficulty_PairUp = difficulty;
+        }
+        private void SetActiveDifficultySudoku(string difficulty) {
+            activeDifficulty_Sudoku = difficulty;
+        }
+
+        private void SetActiveSizeSudoku(string size) {
+            activeSize_Sudoku = size;
+        }
+
         protected override async Task OnInitializedAsync() {
-            AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+            AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
 
             await LoadUsernameAsync();
             if(username != null) {
@@ -168,316 +189,276 @@ namespace Projektas.Client.Pages {
             StateHasChanged();
         }
 
-        private async void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+        private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
             await InvokeAsync(LoadUsernameAsync);
-            if (username != null) {
+            if(username != null) {
                 await InvokeAsync(LoadScoresAsync);
             }
             StateHasChanged();
         }
-        
-        public void Dispose() {
-            AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
-        }
-    }
-}
 
-/*
-       
-
-        
-
-        public async Task LoadScoresAsync()
-        {
-            await LoadMathGameScores();
-            await LoadAimTrainerScores();
-            await LoadPairUpScores();
-            await LoadSudokuScores();
-
-            LoadMathGameDatasets();
+        public async Task LoadScoresAsync() {
+            await LoadAimTrainerScoresAsync();
+            await LoadMathGameScoresAsync();
+            await LoadPairUpScoresAsync();
+            await LoadSudokuScoresAsync();
+            
             LoadAimTrainerDatasets();
+            LoadMathGameDatasets();
             LoadPairUpDatasets();
             LoadSudokuDatasets();
 
             StateHasChanged();
         }
 
-        public async Task LoadMathGameScores()
-        {
-            // last 10 games
-            MathGameScores = await accountScoreService.GetMathGameScoresAsync(username);
-
-            // matches played
-            MathGameMatchesPlayes = await accountScoreService.GetMathGameMatchesPlayedAsync(username);
-
-            // highscore
-            MathGameHighscore = await accountScoreService.GetMathGameHighscoreAsync(username);
-
-            // average score
-            MathGameAllTimeAverage = await accountScoreService.GetMathGameAverageScoreAsync(username);
-
-            // average score for the last 7 days
-            MathGameAverageScoreLast7Days = await accountScoreService.GetMathGameAverageScoreLast7DaysAsync(username);
-        }
-
-        public async Task LoadAimTrainerScores()
-        {
+        public async Task LoadAimTrainerScoresAsync() {
             // last 10 games
             AimTrainerScores = await accountScoreService.GetAimTrainerScoresAsync(username);
 
             // matches played
-            AimTrainerMatchesPlayedNormalMode = await accountScoreService.GetAimTrainerMatchesPlayedAsync(username, GameDifficulty.Normal);
-            AimTrainerMatchesPlayedHardMode = await accountScoreService.GetAimTrainerMatchesPlayedAsync(username, GameDifficulty.Hard);
+            AimTrainer_Played_Normal = await accountScoreService.GetAimTrainerMatchesPlayedAsync(username, GameDifficulty.Normal);
+            AimTrainer_Played_Hard = await accountScoreService.GetAimTrainerMatchesPlayedAsync(username, GameDifficulty.Hard);
             
             // highscore
-            AimTrainerHighscoreNormalMode = await accountScoreService.GetAimTrainerHighscoreAsync(username, GameDifficulty.Normal);
-            AimTrainerHighscoreHardMode = await accountScoreService.GetAimTrainerHighscoreAsync(username, GameDifficulty.Hard);
+            AimTrainer_Highscore_Normal = await accountScoreService.GetAimTrainerHighscoreAsync(username, GameDifficulty.Normal);
+            AimTrainer_Highscore_Hard = await accountScoreService.GetAimTrainerHighscoreAsync(username, GameDifficulty.Hard);
 
             // average scores
-            AimTrainerAllTimeAverageNormalMode = await accountScoreService.GetAimTrainerAverageScoreAsync(username, GameDifficulty.Normal);
-            AimTrainerAllTimeAverageHardMode = await accountScoreService.GetAimTrainerAverageScoreAsync(username, GameDifficulty.Hard);
+            AimTrainer_AllTimeAverage_Normal = await accountScoreService.GetAimTrainerAverageScoreAsync(username, GameDifficulty.Normal);
+            AimTrainer_AllTimeAverage_Hard = await accountScoreService.GetAimTrainerAverageScoreAsync(username, GameDifficulty.Hard);
 
             // average scores for the last 7 days
-            AimTrainerAverageScoreLast7DaysNormalMode = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Normal);
-            AimTrainerAverageScoreLast7DaysHardMode = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Hard);
+            AimTrainer_Average_Last7Days_Normal = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Normal);
+            AimTrainer_Average_Last7Days_Hard = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Hard);
         }
 
-        public async Task LoadPairUpScores()
-        {
+        public async Task LoadMathGameScoresAsync() {
+            // last 10 games
+            MathGameScores = await accountScoreService.GetMathGameScoresAsync(username);
+
+            // matches played
+            MathGame_Played = await accountScoreService.GetMathGameMatchesPlayedAsync(username);
+
+            // highscore
+            MathGame_Highscore = await accountScoreService.GetMathGameHighscoreAsync(username);
+
+            // average score
+            MathGame_AllTimeAverage = await accountScoreService.GetMathGameAverageScoreAsync(username);
+
+            // average score for the last 7 days
+            MathGame_Average_Last7Days = await accountScoreService.GetMathGameAverageScoreLast7DaysAsync(username);
+        }
+
+        public async Task LoadPairUpScoresAsync() {
             // last 10 games
             PairUpScores = await accountScoreService.GetPairUpScoresAsync(username);
 
             // matches played
-            PairUpMatchesPlayedEasyMode = await accountScoreService.GetPairUpMatchesPlayedAsync(username, GameDifficulty.Easy);
-            PairUpMatchesPlayedMediumMode = await accountScoreService.GetPairUpMatchesPlayedAsync(username, GameDifficulty.Medium);
-            PairUpMatchesPlayedHardMode = await accountScoreService.GetPairUpMatchesPlayedAsync(username, GameDifficulty.Hard);
+            PairUp_Played_Easy = await accountScoreService.GetPairUpMatchesPlayedAsync(username, GameDifficulty.Easy);
+            PairUp_Played_Normal = await accountScoreService.GetPairUpMatchesPlayedAsync(username, GameDifficulty.Normal);
+            PairUp_Played_Hard = await accountScoreService.GetPairUpMatchesPlayedAsync(username, GameDifficulty.Hard);
 
             // highscore
-            PairUpHighscoreEasyMode = await accountScoreService.GetPairUpHighscoreAsync(username, GameDifficulty.Easy);
-            PairUpHighscoreMediumMode = await accountScoreService.GetPairUpHighscoreAsync(username, GameDifficulty.Medium);
-            PairUpHighscoreHardMode = await accountScoreService.GetPairUpHighscoreAsync(username, GameDifficulty.Hard);
+            PairUp_Highscore_Easy = await accountScoreService.GetPairUpHighscoreAsync(username, GameDifficulty.Easy);
+            PairUp_Highscore_Normal = await accountScoreService.GetPairUpHighscoreAsync(username, GameDifficulty.Normal);
+            PairUp_Highscore_Hard = await accountScoreService.GetPairUpHighscoreAsync(username, GameDifficulty.Hard);
 
             // average scores
-            PairUpAllTimeAverageEasyMode = await accountScoreService.GetPairUpAverageScoreAsync(username, GameDifficulty.Easy);
-            PairUpAllTimeAverageMediumMode = await accountScoreService.GetPairUpAverageScoreAsync(username, GameDifficulty.Medium);
-            PairUpAllTimeAverageHardMode = await accountScoreService.GetPairUpAverageScoreAsync(username, GameDifficulty.Hard);
+            PairUp_AllTimeAverage_Easy = await accountScoreService.GetPairUpAverageScoreAsync(username, GameDifficulty.Easy);
+            PairUp_AllTimeAverage_Normal = await accountScoreService.GetPairUpAverageScoreAsync(username, GameDifficulty.Normal);
+            PairUp_AllTimeAverage_Hard = await accountScoreService.GetPairUpAverageScoreAsync(username, GameDifficulty.Hard);
 
             // average scores for the last 7 days
-            PairUpAverageScoreLast7DaysEasyMode = await accountScoreService.GetPairUpAverageScoreLast7DaysAsync(username, GameDifficulty.Easy);
-            PairUpAverageScoreLast7DaysMediumMode = await accountScoreService.GetPairUpAverageScoreLast7DaysAsync(username, GameDifficulty.Medium);
-            PairUpAverageScoreLast7DaysHardMode = await accountScoreService.GetPairUpAverageScoreLast7DaysAsync(username, GameDifficulty.Hard);
+            PairUp_Average_Last7Days_Easy = await accountScoreService.GetPairUpAverageScoreLast7DaysAsync(username, GameDifficulty.Easy);
+            PairUp_Average_Last7Days_Normal = await accountScoreService.GetPairUpAverageScoreLast7DaysAsync(username, GameDifficulty.Normal);
+            PairUp_Average_Last7Days_Hard = await accountScoreService.GetPairUpAverageScoreLast7DaysAsync(username, GameDifficulty.Hard);
         }
 
-        public async Task LoadSudokuScores()
-        {
+        public async Task LoadSudokuScoresAsync() {
             // last 10 games
             SudokuScores = await accountScoreService.GetSudokuScoresAsync(username);
 
             // Matches played
-            SudokuMatchesPlayedEasyMode4x4 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Easy, GameMode.FourByFour);
-            SudokuMatchesPlayedMediumMode4x4 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Medium, GameMode.FourByFour);
-            SudokuMatchesPlayedHardMode4x4 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Hard, GameMode.FourByFour);
+            Sudoku_Played_Easy_4x4 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Easy, GameMode.FourByFour);
+            Sudoku_Played_Normal_4x4 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Normal, GameMode.FourByFour);
+            Sudoku_Played_Hard_4x4 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Hard, GameMode.FourByFour);
 
-            SudokuMatchesPlayedEasyMode9x9 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Easy, GameMode.NineByNine);
-            SudokuMatchesPlayedMediumMode9x9 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Medium, GameMode.NineByNine);
-            SudokuMatchesPlayedHardMode9x9 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Hard, GameMode.NineByNine);
+            Sudoku_Played_Easy_9x9 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Easy, GameMode.NineByNine);
+            Sudoku_Played_Normal_9x9 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Normal, GameMode.NineByNine);
+            Sudoku_Played_Hard_9x9 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Hard, GameMode.NineByNine);
 
-            SudokuMatchesPlayedEasyMode16x16 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Easy, GameMode.SixteenBySixteen);
-            SudokuMatchesPlayedMediumMode16x16 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Medium, GameMode.SixteenBySixteen);
-            SudokuMatchesPlayedHardMode16x16 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Hard, GameMode.SixteenBySixteen);
+            Sudoku_Played_Easy_16x16 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Easy, GameMode.SixteenBySixteen);
+            Sudoku_Played_Normal_16x16 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Normal, GameMode.SixteenBySixteen);
+            Sudoku_Played_Hard_16x16 = await accountScoreService.GetSudokuMatchesPlayedAsync(username, GameDifficulty.Hard, GameMode.SixteenBySixteen);
 
             // Higscore
-            SudokuHighscoreEasyMode4x4 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Easy, GameMode.FourByFour);
-            SudokuHighscoreMediumMode4x4 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Medium, GameMode.FourByFour);
-            SudokuHighscoreHardMode4x4 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Hard, GameMode.FourByFour);
+            Sudoku_Highscore_Easy_4x4 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Easy, GameMode.FourByFour);
+            Sudoku_Highscore_Normal_4x4 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Normal, GameMode.FourByFour);
+            Sudoku_Highscore_Hard_4x4 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Hard, GameMode.FourByFour);
 
-            SudokuHighscoreEasyMode9x9 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Easy, GameMode.NineByNine);
-            SudokuHighscoreMediumMode9x9 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Medium, GameMode.NineByNine);
-            SudokuHighscoreHardMode9x9 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Hard, GameMode.NineByNine);
+            Sudoku_Highscore_Easy_9x9 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Easy, GameMode.NineByNine);
+            Sudoku_Highscore_Normal_9x9 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Normal, GameMode.NineByNine);
+            Sudoku_Highscore_Hard_9x9 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Hard, GameMode.NineByNine);
 
-            SudokuHighscoreEasyMode16x16 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Easy, GameMode.SixteenBySixteen);
-            SudokuHighscoreMediumMode16x16 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Medium, GameMode.SixteenBySixteen);
-            SudokuHighscoreHardMode16x16 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Hard, GameMode.SixteenBySixteen);
+            Sudoku_Highscore_Easy_16x16 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Easy, GameMode.SixteenBySixteen);
+            Sudoku_Highscore_Normal_16x16 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Normal, GameMode.SixteenBySixteen);
+            Sudoku_Highscore_Hard_16x16 = await accountScoreService.GetSudokuHighscoreAsync(username, GameDifficulty.Hard, GameMode.SixteenBySixteen);
 
             // Average scores
-            SudokuAllTimeAverageEasyMode4x4 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Easy, GameMode.FourByFour);
-            SudokuAllTimeAverageMediumMode4x4 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Medium, GameMode.FourByFour);
-            SudokuAllTimeAverageHardMode4x4 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Hard, GameMode.FourByFour);
+            Sudoku_AllTimeAverage_Easy_4x4 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Easy, GameMode.FourByFour);
+            Sudoku_AllTimeAverage_Normal_4x4 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Normal, GameMode.FourByFour);
+            Sudoku_AllTimeAverage_Hard_4x4 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Hard, GameMode.FourByFour);
 
-            SudokuAllTimeAverageEasyMode9x9 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Easy, GameMode.NineByNine);
-            SudokuAllTimeAverageMediumMode9x9 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Medium, GameMode.NineByNine);
-            SudokuAllTimeAverageHardMode9x9 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Hard, GameMode.NineByNine);
+            Sudoku_AllTimeAverage_Easy_9x9 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Easy, GameMode.NineByNine);
+            Sudoku_AllTimeAverage_Normal_9x9 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Normal, GameMode.NineByNine);
+            Sudoku_AllTimeAverage_Hard_9x9 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Hard, GameMode.NineByNine);
 
-            SudokuAllTimeAverageEasyMode16x16 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Easy, GameMode.SixteenBySixteen);
-            SudokuAllTimeAverageMediumMode16x16 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Medium, GameMode.SixteenBySixteen);
-            SudokuAllTimeAverageHardMode16x16 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Hard, GameMode.SixteenBySixteen);
+            Sudoku_AllTimeAverage_Easy_16x16 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Easy, GameMode.SixteenBySixteen);
+            Sudoku_AllTimeAverage_Normal_16x16 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Normal, GameMode.SixteenBySixteen);
+            Sudoku_AllTimeAverage_Hard_16x16 = await accountScoreService.GetSudokuAverageScoreAsync(username, GameDifficulty.Hard, GameMode.SixteenBySixteen);
 
             // Average scores in last 7 days
-            SudokuAverageScoreLast7DaysEasyMode4x4 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Easy, GameMode.FourByFour);
-            SudokuAverageScoreLast7DaysMediumMode4x4 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Medium, GameMode.FourByFour);
-            SudokuAverageScoreLast7DaysHardMode4x4 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Hard, GameMode.FourByFour);
+            Sudoku_Average_Last7Days_Easy_4x4 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Easy, GameMode.FourByFour);
+            Sudoku_Average_Last7Days_Normal_4x4 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Normal, GameMode.FourByFour);
+            Sudoku_Average_Last7Days_Hard_4x4 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Hard, GameMode.FourByFour);
 
-            SudokuAverageScoreLast7DaysEasyMode9x9 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Easy, GameMode.NineByNine);
-            SudokuAverageScoreLast7DaysMediumMode9x9 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Medium, GameMode.NineByNine);
-            SudokuAverageScoreLast7DaysHardMode9x9 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Hard, GameMode.NineByNine);
+            Sudoku_Average_Last7Days_Easy_9x9 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Easy, GameMode.NineByNine);
+            Sudoku_Average_Last7Days_Normal_9x9 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Normal, GameMode.NineByNine);
+            Sudoku_Average_Last7Days_Hard_9x9 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Hard, GameMode.NineByNine);
 
-            SudokuAverageScoreLast7DaysEasyMode16x16 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Easy, GameMode.SixteenBySixteen);
-            SudokuAverageScoreLast7DaysMediumMode16x16 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Medium, GameMode.SixteenBySixteen);
-            SudokuAverageScoreLast7DaysHardMode16x16 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Hard, GameMode.SixteenBySixteen);
+            Sudoku_Average_Last7Days_Easy_16x16 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Easy, GameMode.SixteenBySixteen);
+            Sudoku_Average_Last7Days_Normal_16x16 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Normal, GameMode.SixteenBySixteen);
+            Sudoku_Average_Last7Days_Hard_16x16 = await accountScoreService.GetSudokuAverageScoreLast7DaysAsync(username, GameDifficulty.Hard, GameMode.SixteenBySixteen);
         }
 
-        public void LoadMathGameDatasets()
-        {
-            MathGameAverageScoreLast7DaysDataset = new Dataset[]
-            {
-                new Dataset
-                {
-                    Label = "Scores",
-                    Data = MathGameAverageScoreLast7Days.Select(s => s.Score.Scores ?? 0).ToArray(),
-                    BorderColor = "rgba(75, 192, 192, 1)", // Green
-                    yAxisLabel = "Points"
-                }
-            };
-        }
-
-        public void LoadAimTrainerDatasets()
-        {
-            AimTrainerAverageScoreLast7DaysDataset = new Dataset[]
-            {
-                new Dataset
-                {
+        public void LoadAimTrainerDatasets() {
+            AimTrainer_Average_Last7Days_Dataset = new Dataset[] {
+                new Dataset {
                     Label = "Normal difficulty",
-                    Data = AimTrainerAverageScoreLast7DaysNormalMode.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    Data = AimTrainer_Average_Last7Days_Normal.Select(s => s.Score.Scores ?? 0).ToArray(),
                     BorderColor = "rgba(54, 162, 235, 1)", // Blue
                     yAxisLabel = "Points"
                 },
-                new Dataset
-                {
+                new Dataset {
                     Label = "Hard difficulty",
-                    Data = AimTrainerAverageScoreLast7DaysHardMode.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    Data = AimTrainer_Average_Last7Days_Hard.Select(s => s.Score.Scores ?? 0).ToArray(),
                     BorderColor = "rgba(255, 99, 132, 1)" // Red
                 }
             };
         }
 
-        public void LoadPairUpDatasets()
-        {
-            PairUpAverageScoreLast7DaysDataset = new Dataset[]
-            {
-                new Dataset
-                {
+        public void LoadMathGameDatasets() {
+            MathGame_Average_Last7Days_Dataset = new Dataset[] {
+                new Dataset {
+                    Label = "Scores",
+                    Data = MathGame_Average_Last7Days.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    BorderColor = "rgba(75, 192, 192, 1)", // Green
+                    yAxisLabel = "Points"
+                }
+            };
+        }
+
+        public void LoadPairUpDatasets() {
+            PairUp_Average_Score_Last7Days_Dataset = new Dataset[] {
+                new Dataset {
                     Label = "Easy difficulty",
-                    Data = PairUpAverageScoreLast7DaysEasyMode.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    Data = PairUp_Average_Last7Days_Easy.Select(s => s.Score.Scores ?? 0).ToArray(),
                     BorderColor = "rgba(255, 206, 86, 1)", // Yellow
                     yAxisLabel = "Mistakes"
                 },
-                new Dataset
-                {
-                    Label = "Medium difficulty",
-                    Data = PairUpAverageScoreLast7DaysMediumMode.Select(s => s.Score.Scores ?? 0).ToArray(),
+                new Dataset {
+                    Label = "Normal difficulty",
+                    Data = PairUp_Average_Last7Days_Normal.Select(s => s.Score.Scores ?? 0).ToArray(),
                     BorderColor = "rgba(153, 102, 255, 1)" // Purple
                 },
-                new Dataset
-                {
+                new Dataset {
                     Label = "Hard difficulty",
-                    Data = PairUpAverageScoreLast7DaysHardMode.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    Data = PairUp_Average_Last7Days_Hard.Select(s => s.Score.Scores ?? 0).ToArray(),
                     BorderColor = "rgba(255, 159, 64, 1)" // Orange
                 }
             };
 
-            PairUpAverageTimeSpentLast7DaysDataset = new Dataset[]
-            {
-                new Dataset
-                {
+            PairUp_Average_Time_Last7Days_Dataset = new Dataset[] {
+                new Dataset {
                     Label = "Easy difficulty",
-                    Data = PairUpAverageScoreLast7DaysEasyMode.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                    Data = PairUp_Average_Last7Days_Easy.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(75, 192, 192, 1)", // Green
                     yAxisLabel = "Solution time"
                 },
-                new Dataset
-                {
-                    Label = "Medium difficulty",
-                    Data = PairUpAverageScoreLast7DaysMediumMode.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                new Dataset {
+                    Label = "Normal difficulty",
+                    Data = PairUp_Average_Last7Days_Normal.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(255, 99, 132, 1)" // Red
                 },
-                new Dataset
-                {
+                new Dataset {
                     Label = "Hard difficulty",
-                    Data = PairUpAverageScoreLast7DaysHardMode.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                    Data = PairUp_Average_Last7Days_Hard.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(255, 159, 64, 1)" // Orange
                 }
             };
         }
 
-        public void LoadSudokuDatasets()
-        {
-            SudokuAverageTimeSpentIn4x4 = new Dataset[]
-            {
-                new Dataset
-                {
+        public void LoadSudokuDatasets() {
+            Sudoku_Average_Time_Last7Days_4x4_Dataset = new Dataset[] {
+                new Dataset {
                     Label = "Easy difficulty",
-                    Data = SudokuAverageScoreLast7DaysEasyMode4x4.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                    Data = Sudoku_Average_Last7Days_Easy_4x4.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(255, 165, 0, 1)", // Orange
                     yAxisLabel = "Solution Time"
                 },
-                new Dataset
-                {
-                    Label = "Medium difficulty",
-                    Data = SudokuAverageScoreLast7DaysMediumMode4x4.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                new Dataset {
+                    Label = "Normal difficulty",
+                    Data = Sudoku_Average_Last7Days_Normal_4x4.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(75, 0, 130, 1)" // Indigo
                 },
-                new Dataset
-                {
+                new Dataset {
                     Label = "Hard difficulty",
-                    Data = SudokuAverageScoreLast7DaysHardMode4x4.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                    Data = Sudoku_Average_Last7Days_Hard_4x4.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(255, 20, 147, 1)" // Deep Pink
                 }
             };
 
-            SudokuAverageTimeSpentIn9x9 = new Dataset[]
-            {
-                new Dataset
-                {
+            Sudoku_Average_Time_Last7Days_9x9_Dataset = new Dataset[] {
+                new Dataset {
                     Label = "Easy difficulty",
-                    Data = SudokuAverageScoreLast7DaysEasyMode9x9.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                    Data = Sudoku_Average_Last7Days_Easy_9x9.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(238, 130, 238, 1)", // Pink
                     yAxisLabel = "Solution time"
                 },
-                new Dataset
-                {
-                    Label = "Medium difficulty",
-                    Data = SudokuAverageScoreLast7DaysMediumMode9x9.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                new Dataset {
+                    Label = "Normal difficulty",
+                    Data = Sudoku_Average_Last7Days_Normal_9x9.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(60, 179, 113, 1)" // Green
                 },
-                new Dataset
-                {
+                new Dataset {
                     Label = "Hard difficulty",
-                    Data = SudokuAverageScoreLast7DaysHardMode9x9.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                    Data = Sudoku_Average_Last7Days_Hard_9x9.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(255, 165, 0, 1)" // Yellow
                 }
             };
 
-            SudokuAverageTimeSpentIn16x16 = new Dataset[]
-            {
-                new Dataset
-                {
+            Sudoku_Average_Time_Last7Days_16x16_Dataset = new Dataset[] {
+                new Dataset {
                     Label = "Easy difficulty",
-                    Data = SudokuAverageScoreLast7DaysEasyMode16x16.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                    Data = Sudoku_Average_Last7Days_Easy_16x16.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(75, 192, 192, 1)", // Green
                     yAxisLabel = "Solution Time"
                 },
-                new Dataset
-                {
-                    Label = "Medium difficulty",
-                    Data = SudokuAverageScoreLast7DaysMediumMode16x16.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                new Dataset {
+                    Label = "Normal difficulty",
+                    Data = Sudoku_Average_Last7Days_Normal_16x16.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(54, 162, 235, 1)" // Blue
                 },
-                new Dataset
-                {
+                new Dataset {
                     Label = "Hard difficulty",
-                    Data = SudokuAverageScoreLast7DaysHardMode16x16.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
+                    Data = Sudoku_Average_Last7Days_Hard_16x16.Select(s => s.Score.TimeSpent ?? 0).ToArray(),
                     BorderColor = "rgba(255, 99, 132, 1)" // Red
                 }
             };
         }
-*/
+        
+        public void Dispose() {
+            AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
+        }
+    }
+}

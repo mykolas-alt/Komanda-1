@@ -5,19 +5,29 @@
 <PageTitle>Score</PageTitle>
 
 @if(username!=null) {
-    @if(AimTrainerScores==null || MathGameScores==null) {
+    @if(AimTrainerScores == null || MathGameScores == null || PairUpScores == null || SudokuScores == null) {
         <div class="loader"></div>
     } else {
         <div class="place_col game_score @(IsAimTrainerActive ? "active" : "")">
-            @if(AimTrainerScores.Count==0) {
-                <div class="no_scores">No scores available.</div>
+            @if(AimTrainerScores.Count == 0) {
+                <div class="no_scores">Aim Trainer: No scores available.</div>
             } else {
-                <span class="game_title">Aim Trainer</span>
+                <div class="place_row">
+                    <span class="game_title">Aim Trainer</span>
+                    <button class="difficulty_button @(activeDifficulty_AimTrainer == "normal" ? "active" : "")" @onclick='() => SetActiveDifficultyAimTrainer("normal")'>Normal</button>
+                    <button class="difficulty_button @(activeDifficulty_AimTrainer == "hard" ? "active" : "")" @onclick='() => SetActiveDifficultyAimTrainer("hard")'>Hard</button>
+                </div>
                 <div class="sub_game_score">
                     <div class="text_section @(IsAimTrainerActive ? "column_layout" : "row_layout")">
-                        <span class="score_words" style="--order: 0;">Matches Played: @AimTrainer_Played_Normal</span>
-                        <span class="score_words" style="--order: 1;">High Score: @AimTrainer_Highscore_Normal.Scores points</span>
-                        <span class="score_words" style="--order: 2;">Average Score: @AimTrainer_AllTimeAverage_Normal.Scores points</span>
+                        @if(activeDifficulty_AimTrainer == "normal") {
+                            <span class="score_words" style="--order: 0;">Played: @AimTrainer_Played_Normal</span>
+                            <span class="score_words" style="--order: 1;">High Score: @AimTrainer_Highscore_Normal.Scores</span>
+                            <span class="score_words" style="--order: 2;">Average Score: @AimTrainer_AllTimeAverage_Normal.Scores</span>
+                        } else {
+                            <span class="score_words" style="--order: 0;">Played: @AimTrainer_Played_Hard</span>
+                            <span class="score_words" style="--order: 1;">High Score: @AimTrainer_Highscore_Hard.Scores</span>
+                            <span class="score_words" style="--order: 2;">Average Score: @AimTrainer_AllTimeAverage_Hard.Scores</span>
+                        }
                     </div>
                     <div class="place_col game_info">
                         <div class="place_row">
@@ -25,13 +35,14 @@
                             <button class="stats_button @(activeTab_AimTrainer == "average" ? "active" : "")" @onclick='() => SetActiveTabAimTrainer("average")'>Average score</button>
                         </div>
                         <div class="game_stats">
-                            @if(activeTab_AimTrainer=="lastGames") {
+                            @if(activeTab_AimTrainer == "lastGames") {
                                 <div>
                                     <table class="table table-striped game_stats_table">
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
                                                 <th>Score</th>
+                                                <th>Difficulty</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -39,12 +50,13 @@
                                                 <tr>
                                                     <td>@score.ShowOtherDateTimeFormat()</td>
                                                     <td>@score.GameData.Scores points</td>
+                                                    <td>@score.GameData.Difficulty</td>
                                                 </tr>
                                             }
                                         </tbody>
                                     </table>
                                 </div>
-                            } else if(activeTab_AimTrainer=="average") {
+                            } else if(activeTab_AimTrainer == "average") {
                                 <div>
                                     <ScoreChart ChartId="aimTrainerChart" Labels="@(AimTrainer_Average_Last7Days_Normal.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="AimTrainer_Average_Last7Days_Dataset"/>
                                 </div>
@@ -56,15 +68,15 @@
             }
         </div>
         <div class="place_col game_score @(IsMathGameActive ? "active" : "")">
-            @if(MathGameScores.Count==0) {
-                <div class="no_scores">No scores available.</div>
+            @if(MathGameScores.Count == 0) {
+                <div class="no_scores">Math Game: No scores available.</div>
             } else {
                 <span class="game_title">Math Game</span>
                 <div class="sub_game_score">
                     <div class="text_section @(IsMathGameActive ? "column_layout" : "row_layout")">
-                        <span class="score_words" style="--order: 0;">Matches Played: @MathGame_Played</span>
-                        <span class="score_words" style="--order: 1;">High Score: @MathGame_Highscore.Scores points</span>
-                        <span class="score_words" style="--order: 2;">Average Score: @MathGame_AllTimeAverage.Scores points</span>
+                        <span class="score_words" style="--order: 0;">Played: @MathGame_Played</span>
+                        <span class="score_words" style="--order: 1;">High Score: @MathGame_Highscore.Scores</span>
+                        <span class="score_words" style="--order: 2;">Average Score: @MathGame_AllTimeAverage.Scores</span>
                     </div>
                     <div class="place_col game_info">
                         <div class="place_row">
@@ -72,7 +84,7 @@
                             <button class="stats_button @(activeTab_MathGame == "average" ? "active" : "")" @onclick='() => SetActiveTabMathGame("average")'>Average score</button>
                         </div>
                         <div class="game_stats">
-                            @if(activeTab_MathGame=="lastGames") {
+                            @if(activeTab_MathGame == "lastGames") {
                                 <div>
                                     <table class="table table-striped game_stats_table">
                                         <thead>
@@ -91,13 +103,197 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            } else if(activeTab_MathGame=="average") {
+                            } else if(activeTab_MathGame == "average") {
                                 <div>
                                     <ScoreChart ChartId="mathGameChart" Labels="@(MathGame_Average_Last7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="MathGame_Average_Last7Days_Dataset" />
                                 </div>
                             }
                         </div>
                         <button class="toggle_game_info" @onclick="ToggleMathGameInfo">☰</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="place_col game_score @(IsPairUpActive ? "active" : "")">
+            @if(PairUpScores.Count == 0) {
+                <div class="no_scores">Pair Up: No scores available.</div>
+            } else {
+                <div class="place_row">
+                    <span class="game_title">Pair Up</span>
+                    <button class="difficulty_button @(activeDifficulty_PairUp == "easy" ? "active" : "")" @onclick='() => SetActiveDifficultyPairUp("easy")'>Easy</button>
+                    <button class="difficulty_button @(activeDifficulty_PairUp == "normal" ? "active" : "")" @onclick='() => SetActiveDifficultyPairUp("normal")'>Normal</button>
+                    <button class="difficulty_button @(activeDifficulty_PairUp == "hard" ? "active" : "")" @onclick='() => SetActiveDifficultyPairUp("hard")'>Hard</button>
+                </div>
+                <div class="sub_game_score">
+                    <div class="text_section @(IsPairUpActive ? "column_layout" : "row_layout")">
+                        @if(activeDifficulty_PairUp == "easy") {
+                            <span class="score_words" style="--order: 0;">Played: @PairUp_Played_Easy</span>
+                            <span class="score_words" style="--order: 1;">Least Mistakes: @PairUp_Highscore_Easy.Scores</span>
+                            <span class="score_words" style="--order: 2;">Fastest Time: @PairUp_Highscore_Easy.GetFormattedTimeSpent()</span>
+                            <span class="score_words" style="--order: 3;">Average Score: @PairUp_AllTimeAverage_Easy.Scores</span>
+                            <span class="score_words" style="--order: 4;">Average Time: @PairUp_AllTimeAverage_Easy.GetFormattedTimeSpent()</span>
+                        } else if(activeDifficulty_PairUp == "normal") {
+                            <span class="score_words" style="--order: 0;">Played: @PairUp_Played_Normal</span>
+                            <span class="score_words" style="--order: 1;">Least Mistakes: @PairUp_Highscore_Normal.Scores</span>
+                            <span class="score_words" style="--order: 2;">Fastest Time: @PairUp_Highscore_Normal.GetFormattedTimeSpent()</span>
+                            <span class="score_words" style="--order: 3;">Average Score: @PairUp_AllTimeAverage_Normal.Scores</span>
+                            <span class="score_words" style="--order: 4;">Average Time: @PairUp_AllTimeAverage_Normal.GetFormattedTimeSpent()</span>
+                        } else {
+                            <span class="score_words" style="--order: 0;">Played: @PairUp_Played_Hard</span>
+                            <span class="score_words" style="--order: 1;">Least Mistakes: @PairUp_Highscore_Hard.Scores</span>
+                            <span class="score_words" style="--order: 2;">Fastest Time: @PairUp_Highscore_Hard.GetFormattedTimeSpent()</span>
+                            <span class="score_words" style="--order: 3;">Average Score: @PairUp_AllTimeAverage_Hard.Scores</span>
+                            <span class="score_words" style="--order: 4;">Average Time: @PairUp_AllTimeAverage_Hard.GetFormattedTimeSpent()</span>
+                        }
+                    </div>
+                    <div class="place_col game_info">
+                        <div class="place_row">
+                            <button class="stats_button @(activeTab_PairUp == "lastGames" ? "active" : "")" @onclick='() => SetActiveTabPairUp("lastGames")'>Last games</button>
+                            <button class="stats_button @(activeTab_PairUp == "average_score" ? "active" : "")" @onclick='() => SetActiveTabPairUp("average_score")'>Average score</button>
+                            <button class="stats_button @(activeTab_PairUp == "average_time" ? "active" : "")" @onclick='() => SetActiveTabPairUp("average_time")'>Average time</button>
+                        </div>
+                        <div class="game_stats">
+                            @if(activeTab_PairUp == "lastGames") {
+                                <div>
+                                    <table class="table table-striped game_stats_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Mistakes</th>
+                                                <th>Time</th>
+                                                <th>Difficulty</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach(var score in PairUpScores) {
+                                                <tr>
+                                                    <td>@score.ShowOtherDateTimeFormat()</td>
+                                                    <td>@score.GameData.Fails Mistakes</td>
+                                                    <td>@score.GameData.GetFormattedTimeSpent()</td>
+                                                    <td>@score.GameData.Difficulty</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            } else if(activeTab_PairUp == "average_score") {
+                                <div>
+                                    <ScoreChart ChartId="pairUpChart" Labels="@(PairUp_Average_Last7Days_Easy.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="PairUp_Average_Score_Last7Days_Dataset"/>
+                                </div>
+                            } else if(activeTab_PairUp == "average_time") {
+                                <div>
+                                    <TimeScoreChart ChartId="pairUpChartTimes" Labels="@(PairUp_Average_Last7Days_Easy.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="PairUp_Average_Time_Last7Days_Dataset" />
+                                </div>
+                            }
+                        </div>
+                        <button class="toggle_game_info" @onclick="TogglePairUpInfo">☰</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="place_col game_score @(IsSudokuActive ? "active" : "")">
+            @if(SudokuScores.Count == 0) {
+                <div class="no_scores">Sudoku: No scores available.</div>
+            } else {
+                <div class="place_row">
+                    <span class="game_title">Sudoku</span>
+                    <button class="difficulty_button @(activeDifficulty_Sudoku == "easy" ? "active" : "")" @onclick='() => SetActiveDifficultySudoku("easy")'>Easy</button>
+                    <button class="difficulty_button @(activeDifficulty_Sudoku == "normal" ? "active" : "")" @onclick='() => SetActiveDifficultySudoku("normal")'>Normal</button>
+                    <button class="difficulty_button @(activeDifficulty_Sudoku == "hard" ? "active" : "")" @onclick='() => SetActiveDifficultySudoku("hard")'>Hard</button>
+                    <button style="margin-left: 1.5rem;" class="size_button @(activeSize_Sudoku == "4x4" ? "active" : "")" @onclick='() => SetActiveSizeSudoku("4x4")'>4x4</button>
+                    <button class="size_button @(activeSize_Sudoku == "9x9" ? "active" : "")" @onclick='() => SetActiveSizeSudoku("9x9")'>9x9</button>
+                    <button class="size_button @(activeSize_Sudoku == "16x16" ? "active" : "")" @onclick='() => SetActiveSizeSudoku("16x16")'>16x16</button>
+                </div>
+                <div class="sub_game_score">
+                    <div class="text_section @(IsSudokuActive ? "column_layout" : "row_layout")">
+                        @if(activeDifficulty_Sudoku == "easy") {
+                            @if(activeSize_Sudoku == "4x4") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Easy_4x4</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Easy_4x4.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Easy_4x4.GetFormattedTimeSpent()</span>
+                            } else if(activeSize_Sudoku == "9x9") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Easy_9x9</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Easy_9x9.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Easy_9x9.GetFormattedTimeSpent()</span>
+                            } else if(activeSize_Sudoku == "16x16") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Easy_16x16</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Easy_16x16.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Easy_16x16.GetFormattedTimeSpent()</span>
+                            }
+
+                        } else if(activeDifficulty_Sudoku == "normal") {
+                            @if(activeSize_Sudoku == "4x4") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Normal_4x4</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Normal_4x4.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Normal_4x4.GetFormattedTimeSpent()</span>
+                            } else if(activeSize_Sudoku == "9x9") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Normal_9x9</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Normal_9x9.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Normal_9x9.GetFormattedTimeSpent()</span>
+                            } else if(activeSize_Sudoku == "16x16") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Normal_16x16</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Normal_16x16.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Normal_16x16.GetFormattedTimeSpent()</span>
+                            }
+                        } else {
+                            @if(activeSize_Sudoku == "4x4") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Hard_4x4</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Hard_4x4.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Hard_4x4.GetFormattedTimeSpent()</span>
+                            } else if(activeSize_Sudoku == "9x9") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Hard_9x9</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Hard_9x9.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Hard_9x9.GetFormattedTimeSpent()</span>
+                            } else if(activeSize_Sudoku == "16x16") {
+                                <span class="score_words" style="--order: 0;">Played: @Sudoku_Played_Hard_16x16</span>
+                                <span class="score_words" style="--order: 1;">Fastest Time: @Sudoku_Highscore_Hard_16x16.GetFormattedTimeSpent()</span>
+                                <span class="score_words" style="--order: 2;">Average Time: @Sudoku_AllTimeAverage_Hard_16x16.GetFormattedTimeSpent()</span>
+                            }
+                        }
+                    </div>
+                    <div class="place_col game_info">
+                        <div class="place_row">
+                            <button class="stats_button @(activeTab_Sudoku == "lastGames" ? "active" : "")" @onclick='() => SetActiveTabSudoku("lastGames")'>Last games</button>
+                            <button class="stats_button @(activeTab_Sudoku == "average" ? "active" : "")" @onclick='() => SetActiveTabSudoku("average")'>Average time</button>
+                        </div>
+                        <div class="game_stats">
+                            @if(activeTab_Sudoku == "lastGames") {
+                                <div>
+                                    <table class="table table-striped game_stats_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th>Difficulty</th>
+                                                <th>Size</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach(var score in SudokuScores) {
+                                                <tr>
+                                                    <td>@score.ShowOtherDateTimeFormat()</td>
+                                                    <td>@score.GameData.GetFormattedTimeSpent()</td>
+                                                    <td>@score.GameData.Difficulty</td>
+                                                    <td>@score.GameData.Mode.GameModeToString()</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            } else if(activeTab_Sudoku == "average") {
+                                <div>
+                                    @if(activeSize_Sudoku == "4x4") {
+                                        <TimeScoreChart ChartId="sudokuChart4x4" Labels="@(Sudoku_Average_Last7Days_Easy_4x4.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="Sudoku_Average_Time_Last7Days_4x4_Dataset"/>
+                                    } else if(activeSize_Sudoku == "9x9") {
+                                        <TimeScoreChart ChartId="sudokuChart9x9" Labels="@(Sudoku_Average_Last7Days_Easy_9x9.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="Sudoku_Average_Time_Last7Days_9x9_Dataset" />
+                                    } else if(activeSize_Sudoku == "16x16") {
+                                        <TimeScoreChart ChartId="sudokuChart16x16" Labels="@(Sudoku_Average_Last7Days_Easy_16x16.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="Sudoku_Average_Time_Last7Days_16x16_Dataset" />
+                                    }
+                                    
+                                </div>
+                            }
+                        </div>
+                        <button class="toggle_game_info" @onclick="ToggleSudokuInfo">☰</button>
                     </div>
                 </div>
             }
@@ -111,170 +307,12 @@
 {
     <ul class="nav nav-tabs">
         <li class="nav-item tabs">
-            <a class="nav-link @(activeTab == "MathGame" ? "active" : "")" @onclick='() => SetActiveTab("MathGame")'>Math Game</a>
-        </li>
-        <li class="nav-item tabs">
-            <a class="nav-link @(activeTab == "AimTrainer" ? "active" : "")" @onclick='() => SetActiveTab("AimTrainer")'>Aim Trainer</a>
-        </li>
-        <li class="nav-item tabs">
-            <a class="nav-link @(activeTab == "PairUp" ? "active" : "")" @onclick='() => SetActiveTab("PairUp")'>Pair Up</a>
-        </li>
-        <li class="nav-item tabs">
             <a class="nav-link @(activeTab == "Sudoku" ? "active" : "")" @onclick='() => SetActiveTab("Sudoku")'>Sudoku</a>
         </li>
     </ul>
 
     <div class="tab-content">
-        @if (activeTab == "AimTrainer" && username != null)
-        {
-            <div class="tab-pane fade show active">
-                @if (AimTrainerScores == null)
-                {
-                    <h5 class="text-center">Loading...</h5>
-                }
-                else if (AimTrainerScores.Count == 0)
-                {
-                    <h5 class="text-center">No scores available.</h5>
-                }
-                else
-                {
-                    <table class="table table-striped statsTable">
-                        <thead>
-                            <tr>
-                                <th>Statistics</th>
-                                <th>Normal Mode</th>
-                                <th>Hard Mode</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Matches Played:</strong></td>
-                                <td>@AimTrainerMatchesPlayedNormalMode</td>
-                                <td>@AimTrainerMatchesPlayedHardMode</td>
-                            </tr>
-                            <tr>
-                                <td><strong>High Score:</strong></td>
-                                <td>@AimTrainerHighscoreNormalMode.Scores points</td>
-                                <td>@AimTrainerHighscoreHardMode.Scores points</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Average Score:</strong></td>
-                                <td>@AimTrainerAllTimeAverageNormalMode.Scores points</td>
-                                <td>@AimTrainerAllTimeAverageHardMode.Scores points</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h4 class="text-center">Last 10 games:</h4>
-                    <table class="table table-striped last10GamesTable">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Score</th>
-                                <th>Difficulty</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var score in AimTrainerScores)
-                            {
-                                <tr>
-                                    <td>@score.ShowOtherDateTimeFormat()</td>
-                                    <td>@score.GameData.Scores points</td>
-                                    <td>@score.GameData.Difficulty</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <h4 class="text-center">Average Scores for the Last 7 Days:</h4>
-                    <ScoreChart ChartId="aimTrainerChart" Labels="@(AimTrainerAverageScoreLast7DaysNormalMode.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="AimTrainerAverageScoreLast7DaysDataset" />
-                }
-            </div>
-        }
-        else if (activeTab == "PairUp" && username != null)
-        {
-            <div class="tab-pane fade show active">
-                @if (PairUpScores == null)
-                {
-                    <h5 class="text-center">Loading...</h5>
-                }
-                else if (PairUpScores.Count == 0)
-                {
-                    <h5 class="text-center">No scores available.</h5>
-                }
-                else
-                {
-                    <table class="table table-striped statsTable">
-                        <thead>
-                            <tr>
-                                <th>Statistics</th>
-                                <th>Easy difficulty</th>
-                                <th>Medium difficulty</th>
-                                <th>Hard difficulty</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Matches Played:</strong></td>
-                                <td>@PairUpMatchesPlayedEasyMode</td>
-                                <td>@PairUpMatchesPlayedMediumMode</td>
-                                <td>@PairUpMatchesPlayedHardMode</td>
-                            </tr>
-                            <tr>
-                                <td><strong>High Score:</strong></td>
-                                <td>@PairUpHighscoreEasyMode.Scores mistakes</td>
-                                <td>@PairUpHighscoreMediumMode.Scores mistakes</td>
-                                <td>@PairUpHighscoreHardMode.Scores mistakes</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Fastest Solution Time:</strong></td>
-                                <td>@PairUpHighscoreEasyMode.GetFormattedTimeSpent()</td>
-                                <td>@PairUpHighscoreMediumMode.GetFormattedTimeSpent()</td>
-                                <td>@PairUpHighscoreHardMode.GetFormattedTimeSpent()</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Average Score:</strong></td>
-                                <td>@PairUpAllTimeAverageEasyMode.Scores mistakes</td>
-                                <td>@PairUpAllTimeAverageMediumMode.Scores mistakes</td>
-                                <td>@PairUpAllTimeAverageHardMode.Scores mistakes</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Average Solution Time:</strong></td>
-                                <td>@PairUpAllTimeAverageEasyMode.GetFormattedTimeSpent()</td>
-                                <td>@PairUpAllTimeAverageMediumMode.GetFormattedTimeSpent()</td>
-                                <td>@PairUpAllTimeAverageHardMode.GetFormattedTimeSpent()</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h4 class="text-center">Last 10 games:</h4>
-                    <table class="table table-striped last10GamesTable">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Mistakes</th>
-                                <th>Solution Time</th>
-                                <th>Difficulty</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var score in PairUpScores)
-                            {
-                                <tr>
-                                    <td>@score.ShowOtherDateTimeFormat()</td>
-                                    <td>@score.GameData.Fails Mistakes</td>
-                                    <td>@score.GameData.GetFormattedTimeSpent()</td>
-                                    <td>@score.GameData.Difficulty</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <h4 class="text-center">Average Scores for the Last 7 Days:</h4>
-                    <ScoreChart ChartId="pairUpChart" Labels="@(PairUpAverageScoreLast7DaysEasyMode.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="PairUpAverageScoreLast7DaysDataset" />
-
-                    <h4 class="text-center">Average Solution Time In Games for the Last 7 Days:</h4>
-                    <TimeScoreChart ChartId="pairUpChartTimes" Labels="@(PairUpAverageScoreLast7DaysEasyMode.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="PairUpAverageTimeSpentLast7DaysDataset" />
-                }
-            </div>
-        }
-        else if (activeTab == "Sudoku" && username != null)
+        @if (activeTab == "Sudoku" && username != null)
         {
             <div class="tab-pane fade show active">
                 @if (SudokuScores == null)
