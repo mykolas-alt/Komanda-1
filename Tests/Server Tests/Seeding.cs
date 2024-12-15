@@ -62,11 +62,11 @@ namespace Projektas.Tests.Server_Tests {
         private static List<Score<PairUpData>> GetPairUpScores(List<User> users)
         {
                     return new List<Score<PairUpData>>() {
-                new Score<PairUpData>() {Id=1,UserId=users[0].Id,GameData=new PairUpData{TimeInSeconds=70, Difficulty = GameDifficulty.Medium},User=users[0]},
+                new Score<PairUpData>() {Id=1,UserId=users[0].Id,GameData=new PairUpData{TimeInSeconds=70, Difficulty = GameDifficulty.Normal},User=users[0]},
                 new Score<PairUpData>() {Id=2,UserId=users[1].Id,GameData=new PairUpData{TimeInSeconds=49, Difficulty = GameDifficulty.Hard},User=users[1]},
                 new Score<PairUpData>() {Id=3,UserId=users[2].Id,GameData=new PairUpData{TimeInSeconds=28, Difficulty = GameDifficulty.Easy},User=users[2]},
                 new Score<PairUpData>() {Id=4,UserId=users[0].Id,GameData=new PairUpData{TimeInSeconds=65, Difficulty = GameDifficulty.Hard},User=users[0]},
-                new Score<PairUpData>() {Id=5,UserId=users[1].Id,GameData=new PairUpData{TimeInSeconds=55, Difficulty = GameDifficulty.Medium},User=users[1]},
+                new Score<PairUpData>() {Id=5,UserId=users[1].Id,GameData=new PairUpData{TimeInSeconds=55, Difficulty = GameDifficulty.Normal},User=users[1]},
                 new Score<PairUpData>() {Id=6,UserId=users[2].Id,GameData=new PairUpData{TimeInSeconds=30, Difficulty = GameDifficulty.Hard},User=users[2]}
             };
         }
@@ -74,11 +74,11 @@ namespace Projektas.Tests.Server_Tests {
         private static List<Score<SudokuData>> GetSudokuScores(List<User> users)
         {
                     return new List<Score<SudokuData>>() {
-                new Score<SudokuData>() {Id=1,UserId=users[0].Id,GameData=new SudokuData{TimeInSeconds=70, Difficulty = GameDifficulty.Medium, Mode = GameMode.SixteenBySixteen},User=users[0]},
+                new Score<SudokuData>() {Id=1,UserId=users[0].Id,GameData=new SudokuData{TimeInSeconds=70, Difficulty = GameDifficulty.Normal, Mode = GameMode.SixteenBySixteen},User=users[0]},
                 new Score<SudokuData>() {Id=2,UserId=users[1].Id,GameData=new SudokuData{TimeInSeconds=49, Difficulty = GameDifficulty.Hard, Mode = GameMode.NineByNine},User=users[1]},
                 new Score<SudokuData>() {Id=3,UserId=users[2].Id,GameData=new SudokuData{TimeInSeconds=28, Difficulty = GameDifficulty.Easy, Mode = GameMode.FourByFour},User=users[2]},
                 new Score<SudokuData>() {Id=4,UserId=users[0].Id,GameData=new SudokuData{TimeInSeconds=60, Difficulty = GameDifficulty.Hard, Mode = GameMode.NineByNine},User=users[0]},
-                new Score<SudokuData>() {Id=5,UserId=users[1].Id,GameData=new SudokuData{TimeInSeconds=55, Difficulty = GameDifficulty.Medium, Mode = GameMode.SixteenBySixteen},User=users[1]},
+                new Score<SudokuData>() {Id=5,UserId=users[1].Id,GameData=new SudokuData{TimeInSeconds=55, Difficulty = GameDifficulty.Normal, Mode = GameMode.SixteenBySixteen},User=users[1]},
                 new Score<SudokuData>() {Id=6,UserId=users[2].Id,GameData=new SudokuData{TimeInSeconds=30, Difficulty = GameDifficulty.Hard, Mode = GameMode.NineByNine},User=users[2]}
             };
         }

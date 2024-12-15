@@ -65,7 +65,7 @@ namespace Projektas.Tests
         public async Task GetHighscore_WithDifficulty_ShouldReturnCorrectHighscore()
         {
             var user = new User { Username = "testuser" };
-            var difficulty = GameDifficulty.Medium;
+            var difficulty = GameDifficulty.Normal;
             var scores = new List<UserScoreDto<PairUpData>>
             {
                 new UserScoreDto<PairUpData> { Username = "testuser", GameData = new PairUpData { Difficulty = difficulty, Fails = 2, TimeInSeconds = 30 } },
@@ -117,7 +117,7 @@ namespace Projektas.Tests
         public async Task GetAllTimeAverageScore_WithDifficulty_ShouldReturnCorrectAverageScore()
         {
             var user = new User { Username = "testuser" };
-            var difficulty = GameDifficulty.Medium;
+            var difficulty = GameDifficulty.Normal;
             var scores = new List<UserScoreDto<PairUpData>>
             {
                 new UserScoreDto<PairUpData> { Username = "testuser", GameData = new PairUpData { Difficulty = difficulty, Fails = 2, TimeInSeconds = 30 } },
@@ -169,7 +169,7 @@ namespace Projektas.Tests
         public async Task GetMatchesPlayed_WithDifficulty_ShouldReturnCorrectCount()
         {
             var user = new User { Username = "testuser" };
-            var difficulty = GameDifficulty.Medium;
+            var difficulty = GameDifficulty.Normal;
             var scores = new List<UserScoreDto<PairUpData>>
             {
                 new UserScoreDto<PairUpData> { Username = "testuser", GameData = new PairUpData { Difficulty = difficulty } },
@@ -240,7 +240,7 @@ namespace Projektas.Tests
         public async Task GetAverageScoreLast7Days_WithDifficulty_ShouldReturnCorrectAverageScores()
         {
             var user = new User { Username = "testuser" };
-            var difficulty = GameDifficulty.Medium;
+            var difficulty = GameDifficulty.Normal;
             var scores = new List<UserScoreDto<PairUpData>>
             {
                 new UserScoreDto<PairUpData> { Username = "testuser", Timestamp = DateTime.Today, GameData = new PairUpData { Difficulty = difficulty, Fails = 2, TimeInSeconds = 30 } },
