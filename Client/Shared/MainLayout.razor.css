@@ -93,6 +93,7 @@ main {
     flex-direction: column;
     min-height: 79.5vh;
     flex: 1;
+    overflow: auto;
 }
 
 .sidebar {
@@ -101,6 +102,7 @@ main {
     box-shadow: 0 4px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 20px 0 rgba(0, 0, 0, 0.19);
     transition: width 0.3s ease;
     width: 250px;
+    flex: none;
     bottom: 0;
 }
 
@@ -159,7 +161,7 @@ main {
 @media (min-width: 641px) {
     .top_row, article {
         padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
+        padding-right: 2rem !important;
     }
 
     .middle {

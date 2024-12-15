@@ -59,7 +59,7 @@ namespace Projektas.Client.Pages
         protected override void OnInitialized()
         {
             mode = GameMode.NineByNine; 
-            CurrentDifficulty = GameDifficulty.Medium;
+            CurrentDifficulty = GameDifficulty.Normal;
             TimerService.OnTick += TimerTick;
             IsGameActive = false;
             GenerateSudokuGameAsync();
@@ -106,21 +106,21 @@ namespace Projektas.Client.Pages
                 4 => CurrentDifficulty switch
                 {
                     GameDifficulty.Easy => _random.Next(7, 8),
-                    GameDifficulty.Medium => _random.Next(9, 10),
+                    GameDifficulty.Normal => _random.Next(9, 10),
                     GameDifficulty.Hard => _random.Next(11, 12),
                     _ => 0,
                 },
                 9 => CurrentDifficulty switch
                 {
                     GameDifficulty.Easy => _random.Next(30, 35),
-                    GameDifficulty.Medium => _random.Next(45, 48),
+                    GameDifficulty.Normal => _random.Next(45, 48),
                     GameDifficulty.Hard => _random.Next(53, 57),
                     _ => 0,
                 },
                 16 => CurrentDifficulty switch
                 {
                     GameDifficulty.Easy => _random.Next(30, 50),
-                    GameDifficulty.Medium => _random.Next(100, 130),
+                    GameDifficulty.Normal => _random.Next(100, 130),
                     GameDifficulty.Hard => _random.Next(140, 150),
                     _ => 0,
                 },

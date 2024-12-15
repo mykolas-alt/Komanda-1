@@ -60,7 +60,7 @@ namespace Projektas.Client.Pages
         {
             AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
             TimerService.OnTick += TimerTick;
-            CurrentDifficulty = GameDifficulty.Medium;
+            CurrentDifficulty = GameDifficulty.Normal;
             ResetGame();
             await LoadUsernameAsync();
         }
@@ -106,7 +106,7 @@ namespace Projektas.Client.Pages
                         count = 8;
                         break;
                     }
-                case GameDifficulty.Medium:
+                case GameDifficulty.Normal:
                     {
                         gridStyle = "grid-template-columns: repeat(8, 81px);";
                         changeIcon = true;

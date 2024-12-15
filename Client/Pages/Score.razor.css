@@ -1,4 +1,297 @@
-﻿.table {
+﻿.place_col {
+    flex-direction: column;
+}
+
+.place_row {
+    flex-direction: row;
+}
+
+.loader {
+    animation: spin 2s linear infinite;
+    border: 16px solid #c7c7c7;
+    border-top: 16px solid #374c94;
+    border-radius: 50%;
+    display: flex;
+    position: absolute;
+    left: 50%;
+    top: 35%;
+    width: 140px;
+    height: 140px;
+    z-index: 1;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.game_score {
+    background: #808080;
+    border: 3px solid #374c94;
+    border-radius: 14px;
+    color: #262626;
+    display: flex;
+    height: 6rem;
+    width: 70rem;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    transition: height 0.5s ease;
+}
+    .game_score.active {
+        height: 22rem;
+    }
+
+.game_title {
+    color: #f0f0f0;
+    height: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: 1rem;
+}
+
+.difficulty_button {
+    background: #d1d1d1;
+    border: 2px solid #374c94;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-bottom: 0;
+    margin-left: 0.1rem;
+    margin-right: auto;
+    z-index: 0;
+    transition: all 0.5s ease;
+}
+
+    .difficulty_button:first-of-type {
+        margin-left: 0.8rem;
+    }
+
+    .difficulty_button.active {
+        background: #f0f0f0;
+    }
+
+    .difficulty_button:hover {
+        background: #e8e8e8;
+    }
+
+.size_button {
+    background: #d1d1d1;
+    border: 2px solid #374c94;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-bottom: 0;
+    margin-left: 0.1rem;
+    margin-right: auto;
+    z-index: 0;
+    transition: all 0.5s ease;
+}
+
+    .size_button:first-of-type {
+        margin-left: 1.5rem;
+    }
+
+    .size_button.active {
+        background: #f0f0f0;
+    }
+
+    .size_button:hover {
+        background: #e8e8e8;
+    }
+
+.sub_game_score {
+    background: #999999;
+    border: 3px solid #374c94;
+    border-radius: 10px;
+    color: #262626;
+    display: flex;
+    height: 4rem;
+    width: 68rem;
+    margin-top: auto;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: 0;
+    padding-left: 1rem;
+    transition: height 0.5s ease;
+}
+
+.game_score.active .sub_game_score {
+    height: 20rem;
+}
+
+.text_section {
+    display: flex;
+    font-weight: bold;
+    font-size: 1.1rem;
+    justify-items: center;
+    align-items: center;
+    position: relative;
+    width: 20rem;
+    height: auto;
+    transition: all 0.5s ease;
+}
+
+.row_layout {
+    flex-direction: row;
+}
+
+.column_layout {
+    flex-direction: column;
+}
+
+.score_words {
+    background: #b8b8b8;
+    border-radius: 8px;
+    display: inline-block;
+    padding: 0.5rem 0.5rem;
+    text-align: left;
+    position: absolute;
+    top: 0.55rem;
+    left: -0.1rem;
+    width: 12rem;
+    transition: transform 0.5s ease;
+    opacity: 1;
+}
+
+.row_layout .score_words {
+    transform: translate(calc(var(--order) * 200px), 0);
+}
+
+.column_layout .score_words {
+    transform: translate(calc(var(--order) * 0px), calc(var(--order) * 63px));
+}
+
+.game_info {
+    background: #b8b8b8;
+    border: 3px solid #374c94;
+    border-radius: 8px;
+    display: flex;
+    font-weight: bold;
+    font-size: 1rem;
+    right: 0;
+    position: relative;
+    margin-left: auto;
+    margin-right: 0;
+    width: 60px;
+    height: 60px;
+    transition: width 0.5s ease, height 0.5s ease;
+    overflow: clip;
+}
+
+.game_score.active .game_info {
+    width: 60rem;
+    height: 19.7rem;
+}
+
+.stats_button {
+    background: #d1d1d1;
+    border: 2px solid #374c94;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-top: 0.4rem;
+    margin-bottom: 0;
+    margin-left: 0.5rem;
+    margin-right: auto;
+    z-index: 0;
+    transition: all 0.5s ease;
+}
+
+    .stats_button.active {
+        background: #f0f0f0;
+    }
+
+    .stats_button:hover {
+        background: #e8e8e8;
+    }
+
+.game_stats {
+    background: #e3e3e3;
+    border: 4px solid #374c94;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-left: auto;
+    margin-right: 0;
+    margin-top: auto;
+    margin-bottom: 0;
+    width: 49.72rem;
+    height: 17.2rem;
+    flex: none;
+    z-index: 1;
+    overflow-y: auto;
+}
+
+.game_stats_table th, .game_stats_table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.game_stats_table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.game_stats_table th {
+    background-color: #2e2e2e;
+    color: #daf9db;
+}
+
+.toggle_game_info {
+    background: #b8b8b8;
+    border: 3px solid #374c94;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    margin: 0rem;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    transition: 0.5s ease;
+    top: -2.5px;
+    left: auto;
+    right: -2.5px;
+    transition: all 0.5s ease;
+    z-index: 9
+}
+
+    .toggle_game_info:hover {
+        background: #e6e6e6;
+    }
+
+.game_score.active .toggle_game_info {
+    top: -2.5px;
+    left: auto;
+    right: -2.5px;
+    width: 40px;
+    height: 40px;
+}
+
+.no_account {
+    background: #adadad;
+    border: 3px solid #9c1208;
+    border-radius: 10px;
+    color: #262626;
+    text-align: center;
+    font-size: 1.5rem;
+    width: 30rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.no_scores {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: auto;
+}
+
+/*.table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -10,24 +303,7 @@
     margin-bottom: 30px;
 }
 
-.last10GamesTable th, .last10GamesTable td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
 
-.last10GamesTable tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.last10GamesTable tr:hover, .statsTable tr:hover, .statsTable9x9 tr:hover, .statsTable16x16 tr:hover {
-    background-color: #ddd;
-}
-
-.last10GamesTable th {
-    background-color: #4CAF50;
-    color: #daf9db;
-}
 
 .statsTable, .statsTable9x9, .statsTable16x16 {
     margin-bottom: 30px;
@@ -77,4 +353,4 @@
     width: 100%;
     display: block;
     text-align: center;
-}
+}*/
