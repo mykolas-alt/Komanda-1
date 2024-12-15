@@ -39,5 +39,15 @@ namespace Projektas.Server.Controllers {
 		public async Task<ActionResult<List<string>>> GetUsernamesAsync() {
 			return await _userService.GetUsernamesAsync();
 		}
+
+		[HttpPost("private")]
+		public async Task ChangePrivateAsync([FromQuery]string username, [FromBody]bool priv) {
+			await _userService.ChangePrivateAsync(username, priv);
+		}
+
+		[HttpGet("private_value")]
+		public async Task<bool> GetPrivateAsync([FromQuery]string username) {
+			return await _userService.GetPrivateAsync(username);
+		}
 	}
 }

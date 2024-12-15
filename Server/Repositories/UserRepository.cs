@@ -49,5 +49,34 @@ namespace Projektas.Server.Repositories {
 
 			return false;
 		}
+
+		public async Task ChangePrivateAsync(string username, bool priv) {
+			try {
+				var user = await _userDbContext.Users
+					.FirstOrDefaultAsync(u => u.Username == username);
+
+				if(user == null) {
+					throw new DatabaseOperationException($"No user was found.", "USER_IS_NULL");
+				}
+
+				user.IsPrivate = priv;
+
+				await _userDbContext.SaveChangesAsync();
+			} catch(DbUpdateException dbEx) {
+				throw new DatabaseOperationException("An error occurred while updating the database.", dbEx);
+			} catch(Exception ex) {
+				throw new DatabaseOperationException("An error occurred during the database operation.", ex);
+			}
+		}
+
+		public async Task<bool> GetPrivateAsync(string username) {
+			var user = await _userDbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+			if(user != null) {
+				return user.IsPrivate;
+			}
+
+			return false;
+		}
 	}
 }

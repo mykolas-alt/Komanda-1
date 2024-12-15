@@ -25,6 +25,7 @@ namespace Projektas.Server.Database
 			userConfig.Property(c => c.Surname).HasColumnName("surname").IsRequired();
 			userConfig.Property(c => c.Username).HasColumnName("username").IsRequired();
 			userConfig.Property(c => c.Password).HasColumnName("password").IsRequired();
+			userConfig.Property(c => c.IsPrivate).HasColumnName("isPrivate").IsRequired();
 			
 			ConfigureScoreTable<AimTrainerData>(modelBuilder,"aimTrainerScores", score => {
 				score.OwnsOne(s => s.GameData, gameData => {

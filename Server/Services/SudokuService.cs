@@ -83,7 +83,7 @@ namespace Projektas.Server.Services {
 
         public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(int topCount) {
             List<UserScoreDto<SudokuData>> userScores = await _scoreRepository.GetAllScoresAsync<SudokuData>();
-            List<UserScoreDto<SudokuData>> orderedScores = userScores.OrderByDescending(s => s.GameData.TimeInSeconds).ToList();
+            List<UserScoreDto<SudokuData>> orderedScores = userScores.Where(s => !s.IsPrivate).OrderByDescending(s => s.GameData.TimeInSeconds).ToList();
             List<UserScoreDto<SudokuData>> topScores = new List<UserScoreDto<SudokuData>>();
             
             for(int i = 0; i < topCount && i < orderedScores.Count; i++) {

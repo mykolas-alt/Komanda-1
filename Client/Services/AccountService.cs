@@ -34,5 +34,13 @@ namespace Projektas.Client.Services {
 		public async Task<List<string>> GetUsernamesAsync() {
 			return await _httpClient.GetFromJsonAsync<List<string>>("api/user/usernames");
 		}
+		
+        public async Task ChangePrivateAsync(string username, bool priv) {
+			await _httpClient.PostAsJsonAsync($"api/user/private?username={username}",priv);
+		}
+
+		public async Task<bool> GetPrivateAsync(string username) {
+			return await _httpClient.GetFromJsonAsync<bool>($"api/user/private_value?username={username}");
+		}
 	}
 }

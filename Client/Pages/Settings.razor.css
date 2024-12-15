@@ -1,0 +1,76 @@
+﻿.place_row {
+    flex-direction: row;
+}
+
+.settings_tab {
+    background: #adadad;
+    border: 3px solid #3f5970;
+    border-radius: 10px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem 1rem;
+}
+
+.settings_title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-left: 2rem;
+}
+
+.line {
+    border-radius: 5px;
+    color: #3f5970;
+    opacity: 1;
+    height: 5px;
+}
+
+.setting {
+    background: #d9d9d9;
+    border: 3px solid #3f5970;
+    border-radius: 10px;
+    display: flex;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 0.4rem 1rem;
+    flex-direction: row;
+}
+
+.desc {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.toggle {
+    align-content: center;
+    background: #ffffff;
+    border: 3px solid #3f5970;
+    border-radius: 20px;
+    margin-left: auto;
+    margin-right: 1rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 4rem;
+    height: 2rem;
+    transition: background 0.2s ease;
+}
+
+    .toggle.active {
+        background: #115bf0;
+    }
+
+.toggle_button {
+    background: #7d7d7d;
+    border: 3px solid #3f5970;
+    border-radius: 20px;
+    margin-top: 0.05rem;
+    margin-left: 0.1rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    transition: all 0.2s ease;
+}
+
+.toggle.active .toggle_button {
+    margin-left: 2rem;
+}

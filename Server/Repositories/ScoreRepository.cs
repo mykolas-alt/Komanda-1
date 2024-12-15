@@ -51,6 +51,7 @@ namespace Projektas.Server.Repositories {
 					.Where(s => s.UserId == user.Id)
 					.Select(s => new UserScoreDto<T> {
 						Username = s.User.Username,
+						IsPrivate = s.User.IsPrivate,
 						GameData = (T)(IGame)s.GameData
 					})
 					.ToListAsync();
@@ -68,6 +69,7 @@ namespace Projektas.Server.Repositories {
 					.Include(s => s.User)
 					.Select(s => new UserScoreDto<T> {
 						Username = s.User.Username,
+						IsPrivate = s.User.IsPrivate,
 						GameData = (T)(IGame)s.GameData,
 						Timestamp = s.Timestamp
 					})

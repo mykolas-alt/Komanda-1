@@ -21,7 +21,7 @@ namespace Projektas.Server.Services {
 
         public async Task<List<UserScoreDto<PairUpData>>> GetTopScoresAsync(int topCount) {
             List<UserScoreDto<PairUpData>> userScores = await _scoreRepository.GetAllScoresAsync<PairUpData>();
-            List<UserScoreDto<PairUpData>> orderedScores = userScores.OrderByDescending(s => s.GameData.TimeInSeconds).ThenBy(s => s.GameData.Fails).ToList();
+            List<UserScoreDto<PairUpData>> orderedScores = userScores.Where(s => !s.IsPrivate).OrderByDescending(s => s.GameData.TimeInSeconds).ThenBy(s => s.GameData.Fails).ToList();
             List<UserScoreDto<PairUpData>> topScores = new List<UserScoreDto<PairUpData>>();
             
             for(int i = 0; i < topCount && i < orderedScores.Count; i++) {

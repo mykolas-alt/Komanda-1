@@ -44,6 +44,15 @@ namespace Projektas.Server.Services {
 			return usernames;
 		}
 
+        public async Task ChangePrivateAsync(string username, bool priv) {
+			await _userRepository.ChangePrivateAsync(username, priv);
+		}
+
+		public async Task<bool> GetPrivateAsync(string username) {
+			bool res = await _userRepository.GetPrivateAsync(username);
+			return res;
+		}
+
 		public string GenerateJwtToken(User user) {
 			var claims = new[] {
 				new Claim(ClaimTypes.Name, user.Username),

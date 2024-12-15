@@ -8,6 +8,8 @@
         public string Username {get; set;} = "";
         public string Password {get; set;} = "";
 
+        public bool IsPrivate {get; set;} = false;
+
         public List<Score<MathGameData>> MathGameScores {get; set;} = new List<Score<MathGameData>>();
         public List<Score<SudokuData>> SudokuScores {get; set;} = new List<Score<SudokuData>>();
         public List<Score<AimTrainerData>> AimTrainerScores {get; set;} = new List<Score<AimTrainerData>>();

@@ -2,4 +2,18 @@
 
 <PageTitle>Settings</PageTitle>
 
-<h3>Settings</h3>
+<div class="settings_tab">
+	<div class="settings_title">Account</div>
+	<hr class="line">
+	<div class="place_row setting">
+		<div>
+			Private
+			<div class="desc">
+				Hides scores from leaderbords
+			</div>
+		</div>
+		<div class="toggle @(IsPrivateActive ? "active" : "")">
+			<button class="toggle_button" @onclick=TogglePrivate></button>
+		</div>
+	</div>
+</div>

@@ -28,7 +28,7 @@ namespace Projektas.Server.Services.MathGame
         public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount)
         {
             List<UserScoreDto<MathGameData>> userScores = await _scoreRepository.GetAllScoresAsync<MathGameData>();
-            List<UserScoreDto<MathGameData>> orderedScores = userScores.OrderByDescending(s => s.GameData.Scores).ToList();
+            List<UserScoreDto<MathGameData>> orderedScores = userScores.Where(s => !s.IsPrivate).OrderByDescending(s => s.GameData.Scores).ToList();
             List<UserScoreDto<MathGameData>> topScores = new List<UserScoreDto<MathGameData>>();
 
             for (int i = 0; i < topCount && i < orderedScores.Count; i++)
