@@ -54,7 +54,7 @@ namespace Projektas.Tests.Server_Tests.Controllers
         [Theory]
         [InlineData("math", "testuser")]
         [InlineData("aim", "testuser", GameDifficulty.Easy)]
-        [InlineData("pairup", "testuser", GameDifficulty.Medium)]
+        [InlineData("pairup", "testuser", GameDifficulty.Normal)]
         [InlineData("sudoku", "testuser", GameDifficulty.Hard, GameMode.FourByFour)]
         public async Task GetHighscore_ReturnsOk(string gameType, string username, GameDifficulty? difficulty = null, GameMode? mode = null)
         {
