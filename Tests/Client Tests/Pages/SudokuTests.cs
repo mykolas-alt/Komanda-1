@@ -96,7 +96,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             var difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 7, 8);
 
-            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Medium" });
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Normal" });
             difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 9, 10);
 
@@ -110,7 +110,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 30, 35);
 
-            cut.Instance.OnDifficultyChanged(new ChangeEventArgs {Value = "Medium"});
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs {Value = "Normal"});
             difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 45, 48);
 
@@ -124,7 +124,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 30, 50);
 
-            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Medium" });
+            cut.Instance.OnDifficultyChanged(new ChangeEventArgs { Value = "Normal" });
             difficulty = cut.Instance.SudokuDifficulty();
             Assert.InRange(difficulty, 100, 130);
 
