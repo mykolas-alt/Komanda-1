@@ -60,7 +60,8 @@
     border: 3px solid #3f5970;
     border-radius: 6px;
     color: #262626;
-    font-size: 20px;
+    font-size: 15px;
+    padding: 1rem 1rem;
     height: 19rem;
     transition: background-color 0.3s ease;
 }
