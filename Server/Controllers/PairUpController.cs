@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Projektas.Server.Services;
+using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
 
 namespace Projektas.Server.Controllers {
@@ -18,13 +19,13 @@ namespace Projektas.Server.Controllers {
         }
 
         [HttpGet("highscore")]
-        public async Task<ActionResult<UserScoreDto<PairUpData>?>> GetUserHighscoreAsync([FromQuery] string username) {
-            return await _pairUpService.GetUserHighscoreAsync(username);
+        public async Task<ActionResult<UserScoreDto<PairUpData>?>> GetUserHighscoreAsync([FromQuery] string username, [FromQuery] GameDifficulty difficulty) {
+            return await _pairUpService.GetUserHighscoreAsync(username, difficulty);
         }
 
         [HttpGet("top-score")]
-        public async Task<ActionResult<List<UserScoreDto<PairUpData>>>> GetTopScoresAsync([FromQuery] int topCount) {
-            return await _pairUpService.GetTopScoresAsync(topCount);
+        public async Task<ActionResult<List<UserScoreDto<PairUpData>>>> GetTopScoresAsync([FromQuery] int topCount, [FromQuery] GameDifficulty difficulty) {
+            return await _pairUpService.GetTopScoresAsync(topCount, difficulty);
         }
     }
 }

@@ -5,6 +5,7 @@
     using Projektas.Shared.Enums;
     using Projektas.Shared.Models;
     using System;
+    using System.Drawing;
     using System.Threading.Tasks;
 
     public partial class AimTrainer : IDisposable {
@@ -30,6 +31,7 @@
 
         public int score {get; private set;}
         private UserScoreDto<AimTrainerData>? highscore {get; set;}
+        private bool highscoreChecked = false;
         public List<UserScoreDto<AimTrainerData>>? topScores {get; private set;}
         
         public string? username = null;
@@ -38,14 +40,34 @@
             gameScreen = mode;
         }
 
-        public void ChangeDifficulty(string mode) {
+        public async void ChangeDifficulty(string mode) {
             switch(mode) {
                 case "Normal":
-                    Difficulty = GameDifficulty.Normal;
+                    Difficulty=GameDifficulty.Normal;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await AimTrainerService.GetTopScoresAsync(Difficulty, topCount: 10);
+			        StateHasChanged();
                     break;
                 case "Hard":
                     Difficulty = GameDifficulty.Hard;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await AimTrainerService.GetTopScoresAsync(Difficulty, topCount: 10);
+			        StateHasChanged();
                     break;
+            }
+        }
+
+        private async Task FetchHighscoreAsync() {
+            try {
+                highscore = await AimTrainerService.GetUserHighscoreAsync(username, Difficulty);
+            } catch {
+                highscore = null;
+            } finally {
+                highscoreChecked = true;
             }
         }
 
@@ -54,9 +76,9 @@
 
 			await LoadUsernameAsync();
             if(username != null) {
-                highscore = await AimTrainerService.GetUserHighscoreAsync(username);
+                await FetchHighscoreAsync();
             }
-            topScores = await AimTrainerService.GetTopScoresAsync(topCount: 10);
+            topScores = await AimTrainerService.GetTopScoresAsync(Difficulty, topCount: 10);
 		}
 
 		private async Task LoadUsernameAsync() {
@@ -110,9 +132,9 @@
             gameScreen = "ended";
             if(username != null) {
                 await AimTrainerService.SaveScoreAsync(username, score, Difficulty);
-                highscore = await AimTrainerService.GetUserHighscoreAsync(username);
+                await FetchHighscoreAsync();
             }
-            topScores = await AimTrainerService.GetTopScoresAsync(topCount: 10);
+            topScores = await AimTrainerService.GetTopScoresAsync(Difficulty, topCount: 10);
             TimerService.OnTick -= TimerTick;
             moveDotTimer?.Stop();
             moveDotTimer?.Dispose();

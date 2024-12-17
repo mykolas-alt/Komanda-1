@@ -23,13 +23,13 @@ namespace Projektas.Client.Services {
             await _httpClient.PostAsJsonAsync("api/aimtrainer/save-score", data);
         }
 
-        public async Task<UserScoreDto<AimTrainerData>> GetUserHighscoreAsync(string username) {
-            var url = $"api/aimtrainer/highscore?username={username}";
+        public async Task<UserScoreDto<AimTrainerData>> GetUserHighscoreAsync(string username, GameDifficulty difficulty) {
+            var url = $"api/aimtrainer/highscore?username={username}&difficulty={difficulty}";
             return await _httpClient.GetFromJsonAsync<UserScoreDto<AimTrainerData>>(url);
         }
 
-        public async Task<List<UserScoreDto<AimTrainerData>>> GetTopScoresAsync(int topCount = 10)  {
-            var url = $"api/aimtrainer/top-score?topCount={topCount}";
+        public async Task<List<UserScoreDto<AimTrainerData>>> GetTopScoresAsync(GameDifficulty difficulty, int topCount = 10)  {
+            var url = $"api/aimtrainer/top-score?topCount={topCount}&difficulty={difficulty}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<AimTrainerData>>>(url);
         }
     }

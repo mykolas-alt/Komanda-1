@@ -24,13 +24,13 @@ namespace Projektas.Client.Services {
             await _httpClient.PostAsJsonAsync("api/pairup/save-score", data);
         }
 
-        public async Task<UserScoreDto<PairUpData>> GetUserHighscoreAsync(string username) {
-            var url = $"api/pairup/highscore?username={username}";
+        public async Task<UserScoreDto<PairUpData>> GetUserHighscoreAsync(string username, GameDifficulty difficulty) {
+            var url = $"api/pairup/highscore?username={username}&difficulty={difficulty}";
             return await _httpClient.GetFromJsonAsync<UserScoreDto<PairUpData>>(url);
         }
 
-        public async Task<List<UserScoreDto<PairUpData>>> GetTopScoresAsync(int topCount = 10)  {
-            var url = $"api/pairup/top-score?topCount={topCount}";
+        public async Task<List<UserScoreDto<PairUpData>>> GetTopScoresAsync(GameDifficulty difficulty, int topCount = 10)  {
+            var url = $"api/pairup/top-score?topCount={topCount}&difficulty={difficulty}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<PairUpData>>>(url);
         }
     }

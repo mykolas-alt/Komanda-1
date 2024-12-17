@@ -15,7 +15,9 @@
                     <hr class="line">
                     <div class="player_highscore">
                         @if(highscore!=null) {
-                            <b>@highscore.GameData.Scores @highscore.GameData.Difficulty</b>
+                            <b>@highscore.GameData.Scores</b>
+                        } else if(highscoreChecked) {
+                            <p>No highscore</p>
                         } else {
                             <div class="loader"></div>
                         }
@@ -38,7 +40,7 @@
                 <div class="leaderboard_info">
                     @if(topScores!=null) {
                         for(int i = 0;i<topScores.Count;i++) {
-                            <p>@(i+1). @topScores[i].Username @topScores[i].GameData.Scores @topScores[i].GameData.Difficulty</p>
+                            <p>@(i+1). @topScores[i].Username @topScores[i].GameData.Scores</p>
                         }
                     } else {
                         <div class="loader"></div>
@@ -75,7 +77,9 @@
                     <hr class="line">
                     <div class="player_highscore">
                         @if(highscore!=null) {
-                            <b>@highscore.GameData.Scores @highscore.GameData.Difficulty</b>
+                            <b>@highscore.GameData.Scores</b>
+                        } else if(highscoreChecked) {
+                            <p>No highscore</p>
                         } else {
                             <div class="loader"></div>
                         }
@@ -104,7 +108,7 @@
                 <div class="leaderboard_info">
                     @if(topScores!=null) {
                         for(int i = 0;i<topScores.Count;i++) {
-                            <p>@(i+1). @topScores[i].Username @topScores[i].GameData.Scores @topScores[i].GameData.Difficulty</p>
+                            <p>@(i+1). @topScores[i].Username @topScores[i].GameData.Scores</p>
                         }
                     } else {
                         <div class="loader"></div>
@@ -114,50 +118,3 @@
         </div>
     }
 </div>
-
-<!--
-<div class="title-container">
-    <h1>Aim Trainer</h1>
-    <div>
-        <label>
-            <input type="radio" name="difficulty" value="Normal" checked @onchange="OnDifficultyChanged" disabled="@isGameActive"/> Normal
-        </label>
-        <label>
-            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" disabled="@isGameActive"/> Hard
-        </label>
-    </div>
-</div>
-
-<div class="game-container">
-    <div class="game-area">
-        @if (!isGameActive) {
-            @if (!isGameOver) {
-                <div class="start-button">
-                    <button class="btn btn-primary" @onclick="StartGame">Start Game</button>
-                </div>
-            } else {
-                <div>
-                    <h2>Game Over!</h2>
-                    <h3>Your Final Score: @score</h3>
-                    <button class="btn btn-primary" @onclick="TryAgain">Replay</button>
-                </div>
-            }
-        } else {
-            <div class="target-area">
-                <button @onclick="OnTargetClicked"
-                        class="target-button"
-                        style="left:@(TargetPosition.x)px; top:@(TargetPosition.y)px;
-                        width: @(isHardMode?30 : 50)px; height: @(isHardMode?30 : 50)px;
-                        background-color: @(GetTargetColor());">
-                </button>
-            </div>
-        }
-    </div>
-
-    <div class="score-timer">
-        @if (isGameActive) {
-            <h4 class="score-text">Score: @score</h4>
-            <h4 class="timer-text">Time Remaining: @TimerService.RemainingTime seconds</h4>
-        }
-    </div>
-</div>-->
