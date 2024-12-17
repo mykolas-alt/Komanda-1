@@ -38,6 +38,7 @@ namespace Projektas.Client.Pages {
         public string? Message {get; set;}
         
         private UserScoreDto<SudokuData>? highscore {get; set;}
+        private bool highscoreChecked = false;
         public List<UserScoreDto<SudokuData>>? topScores {get; private set;}
 
         public string? username = null;
@@ -46,30 +47,60 @@ namespace Projektas.Client.Pages {
             gameScreen = mode;
         }
 
-        public void ChangeDifficulty(string mode) {
+        public async void ChangeDifficulty(string mode) {
             switch(mode) {
                 case "Easy":
                     Difficulty = GameDifficulty.Easy;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
                     break;
                 case "Normal":
                     Difficulty = GameDifficulty.Normal;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
                     break;
                 case "Hard":
                     Difficulty = GameDifficulty.Hard;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
                     break;
             }
         }
 
-        public void ChangeSize(string size) {
+        public async void ChangeSize(string size) {
             switch(size) {
                 case "4x4":
                     Size = GameMode.FourByFour;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
                     break;
                 case "9x9":
                     Size = GameMode.NineByNine;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
                     break;
                 case "16x16":
                     Size = GameMode.SixteenBySixteen;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
                     break;
             }
         }
@@ -80,14 +111,24 @@ namespace Projektas.Client.Pages {
             return $"{minutes:D2}:{seconds:D2}";
         }
 
+        private async Task FetchHighscoreAsync() {
+            try {
+                highscore = await SudokuService.GetUserHighscoreAsync(username, Difficulty, Size);
+            } catch {
+                highscore = null;
+            } finally {
+                highscoreChecked = true;
+            }
+        }
+
         protected override async Task OnInitializedAsync() {
             AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
 
             await LoadUsernameAsync();
             if(username != null) {
-                highscore = await SudokuService.GetUserHighscoreAsync(username);
+                await FetchHighscoreAsync();
             }
-            topScores = await SudokuService.GetTopScoresAsync(topCount: 10);
+            topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
         }
 
         private async Task LoadUsernameAsync() {
@@ -170,9 +211,9 @@ namespace Projektas.Client.Pages {
             gameScreen = "ended";
             if(username != null) {
                 await SudokuService.SaveScoreAsync(username, ElapsedTime, Difficulty, Size);
-                highscore = await SudokuService.GetUserHighscoreAsync(username);
+                await FetchHighscoreAsync();
             }
-            topScores = await SudokuService.GetTopScoresAsync(topCount: 10);
+            topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
             TimerService.Stop();
             await InvokeAsync(StateHasChanged);
         }

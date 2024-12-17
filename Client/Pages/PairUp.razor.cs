@@ -4,6 +4,7 @@ using Projektas.Client.Services;
 using System;
 using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
+using System.Drawing;
 
 namespace Projektas.Client.Pages {
     public partial class PairUp : ComponentBase {
@@ -31,6 +32,7 @@ namespace Projektas.Client.Pages {
         public int ElapsedTime = 0;
 
         private UserScoreDto<PairUpData>? highscore {get; set;}
+        private bool highscoreChecked = false;
         public List<UserScoreDto<PairUpData>>? topScores {get; private set;}
 
         public string? username = null;
@@ -58,16 +60,31 @@ namespace Projektas.Client.Pages {
             gameScreen = mode;
         }
 
-        public void ChangeDifficulty(string mode) {
+        public async void ChangeDifficulty(string mode) {
             switch(mode) {
                 case "Easy":
                     Difficulty = GameDifficulty.Easy;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
+			        StateHasChanged();
                     break;
                 case "Normal":
                     Difficulty = GameDifficulty.Normal;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
+			        StateHasChanged();
                     break;
                 case "Hard":
                     Difficulty = GameDifficulty.Hard;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
+			        StateHasChanged();
                     break;
             }
         }
@@ -78,14 +95,24 @@ namespace Projektas.Client.Pages {
             return $"{minutes:D2}:{seconds:D2}";
         }
 
+        private async Task FetchHighscoreAsync() {
+            try {
+                highscore = await PairUpService.GetUserHighscoreAsync(username, Difficulty);
+            } catch {
+                highscore = null;
+            } finally {
+                highscoreChecked = true;
+            }
+        }
+
         protected override async Task OnInitializedAsync() {
             AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
             
             await LoadUsernameAsync();
             if(username != null) {
-                highscore = await PairUpService.GetUserHighscoreAsync(username);
+                await FetchHighscoreAsync();
             }
-            topScores = await PairUpService.GetTopScoresAsync(topCount: 10);
+            topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
         }
 
         private async Task LoadUsernameAsync() {
@@ -175,9 +202,9 @@ namespace Projektas.Client.Pages {
                         TimerService.Stop();
                         if(username != null) {
                             await PairUpService.SaveScoreAsync(username, ElapsedTime, mistakes, Difficulty);
-                            highscore = await PairUpService.GetUserHighscoreAsync(username);
+                            await FetchHighscoreAsync();
                         }
-                        topScores = await PairUpService.GetTopScoresAsync(topCount: 10);
+                        topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
                         gameScreen = "ended";
                     }
                 } else {
