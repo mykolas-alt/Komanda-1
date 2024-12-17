@@ -55,7 +55,7 @@ namespace Projektas.Client.Pages {
                         await FetchHighscoreAsync();
                     }
                     topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
-			        StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     break;
                 case "Normal":
                     Difficulty = GameDifficulty.Normal;
@@ -63,7 +63,7 @@ namespace Projektas.Client.Pages {
                         await FetchHighscoreAsync();
                     }
                     topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
-			        StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     break;
                 case "Hard":
                     Difficulty = GameDifficulty.Hard;
@@ -71,7 +71,7 @@ namespace Projektas.Client.Pages {
                         await FetchHighscoreAsync();
                     }
                     topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
-			        StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     break;
             }
         }
@@ -84,7 +84,7 @@ namespace Projektas.Client.Pages {
                         await FetchHighscoreAsync();
                     }
                     topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
-			        StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     break;
                 case "9x9":
                     Size = GameMode.NineByNine;
@@ -92,7 +92,7 @@ namespace Projektas.Client.Pages {
                         await FetchHighscoreAsync();
                     }
                     topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
-			        StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     break;
                 case "16x16":
                     Size = GameMode.SixteenBySixteen;
@@ -100,7 +100,7 @@ namespace Projektas.Client.Pages {
                         await FetchHighscoreAsync();
                     }
                     topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
-			        StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     break;
             }
         }

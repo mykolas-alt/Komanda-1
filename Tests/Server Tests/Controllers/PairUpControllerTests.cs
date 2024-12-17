@@ -78,11 +78,15 @@ namespace Projektas.Tests.Server_Tests.Controllers
                 Seeding.InitializeTestDB(db);
             }
 
-            string username = "jakedoe";
+            string username = "johndoe";
+            GameDifficulty difficulty = GameDifficulty.Normal;
 
-            var response = await _client.GetAsync($"/api/pairup/highscore?username={username}");
+            var response = await _client.GetAsync($"/api/pairup/highscore?username={username}&difficulty={difficulty}");
             response.EnsureSuccessStatusCode();
-            UserScoreDto<PairUpData> highscore = await response.Content.ReadFromJsonAsync<UserScoreDto<PairUpData>>();
+
+            UserScoreDto<PairUpData>? highscore = await response.Content.ReadFromJsonAsync<UserScoreDto<PairUpData>>();
+
+            Assert.NotNull(highscore);
 
             using (var scope = _factory.Services.CreateScope())
             {
@@ -92,7 +96,7 @@ namespace Projektas.Tests.Server_Tests.Controllers
                 var actualUserHighscore = await db.PairUpScores
                     .AsNoTracking()
                     .Include(s => s.User)
-                    .Where(u => u.User.Username == username)
+                    .Where(u => u.User.Username == username && u.GameData.Difficulty == difficulty)
                     .Select(u => new UserScoreDto<PairUpData>
                     {
                         Username = u.User.Username,
@@ -122,9 +126,10 @@ namespace Projektas.Tests.Server_Tests.Controllers
                 Seeding.InitializeTestDB(db);
             }
 
-            int topCount = 3;
+            int topCount = 2;
+            GameDifficulty difficulty = GameDifficulty.Normal;
 
-            var response = await _client.GetAsync($"/api/pairup/top-score?topCount={topCount}");
+            var response = await _client.GetAsync($"/api/pairup/top-score?topCount={topCount}&difficulty={difficulty}");
             response.EnsureSuccessStatusCode();
             List<UserScoreDto<PairUpData>>? topScores = await response.Content.ReadFromJsonAsync<List<UserScoreDto<PairUpData>>>();
 
@@ -138,7 +143,8 @@ namespace Projektas.Tests.Server_Tests.Controllers
 
                 var actualTopScores = await db.PairUpScores
                     .Include(s => s.User)
-                    .OrderByDescending(s => s.GameData.TimeInSeconds)
+                    .Where(s => s.GameData.Difficulty == difficulty)
+                    .OrderBy(s => s.GameData.TimeInSeconds)
                     .ThenBy(s => s.GameData.Fails)
                     .Take(topCount)
                     .Select(s => new UserScoreDto<PairUpData>

@@ -25,34 +25,6 @@ namespace Projektas.Tests.Client_Tests.Pages {
             Services.AddSingleton(_mockRandom.Object);
             Services.AddSingleton(_mockAuthStateProvider.Object);
 
-            _mockAimTrainerService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>(), It.IsAny<GameDifficulty>())).Returns(Task.CompletedTask);
-			_mockAimTrainerService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<AimTrainerData> {
-                Username = "User",
-                GameData = new AimTrainerData {
-                    Scores = 100
-                }
-            });
-			_mockAimTrainerService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto<AimTrainerData>> {
-				new UserScoreDto<AimTrainerData> {
-                    Username = "User1",
-                    GameData = new AimTrainerData {
-                        Scores = 100
-                    }
-                },
-				new UserScoreDto<AimTrainerData> {
-                    Username = "User2",
-                    GameData = new AimTrainerData {
-                        Scores = 90
-                    }
-                },
-				new UserScoreDto<AimTrainerData> {
-                    Username = "User3",
-                    GameData = new AimTrainerData {
-                        Scores = 80
-                    }
-                }
-			});
-
             _mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");
         }
 

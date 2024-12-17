@@ -25,34 +25,6 @@ namespace Projektas.Tests.Client_Tests.Pages {
             Services.AddSingleton(_mockTimerService.Object);
 			Services.AddSingleton(_mockAuthStateProvider.Object);
 
-			_mockSudokuService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>(), It.IsAny<GameDifficulty>(), It.IsAny<GameMode>())).Returns(Task.CompletedTask);
-			_mockSudokuService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<SudokuData> {
-                Username = "User",
-                GameData = new SudokuData {
-                    TimeInSeconds = 30
-                }
-            });
-			_mockSudokuService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto<SudokuData>> {
-				new UserScoreDto<SudokuData> {
-                    Username = "User1",
-                    GameData = new SudokuData {
-                        TimeInSeconds = 30
-                    }
-                },
-				new UserScoreDto<SudokuData> {
-                    Username = "User2",
-                    GameData = new SudokuData {
-                        TimeInSeconds = 50
-                    }
-                },
-				new UserScoreDto<SudokuData> {
-                    Username = "User3",
-                    GameData = new SudokuData {
-                        TimeInSeconds = 80
-                    }
-                }
-			});
-
 			_mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");
         }
 

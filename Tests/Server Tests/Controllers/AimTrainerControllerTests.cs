@@ -75,11 +75,14 @@ namespace Projektas.Tests.Server_Tests.Controllers
                 Seeding.InitializeTestDB(db);
             }
 
-            string username = "jakedoe";
+            string username = "johndoe";
+            GameDifficulty difficulty = GameDifficulty.Normal;
 
-            var response = await _client.GetAsync($"/api/aimtrainer/highscore?username={username}");
+            var response = await _client.GetAsync($"api/aimtrainer/highscore?username={username}&difficulty={difficulty}");
             response.EnsureSuccessStatusCode();
-            UserScoreDto<AimTrainerData> highscore = await response.Content.ReadFromJsonAsync<UserScoreDto<AimTrainerData>>();
+            UserScoreDto<AimTrainerData>? highscore = await response.Content.ReadFromJsonAsync<UserScoreDto<AimTrainerData>>();
+
+            Assert.NotNull(highscore);
 
             using (var scope = _factory.Services.CreateScope())
             {
@@ -89,7 +92,7 @@ namespace Projektas.Tests.Server_Tests.Controllers
                 var actualUserHighscore = await db.AimTrainerScores
                     .AsNoTracking()
                     .Include(s => s.User)
-                    .Where(u => u.User.Username == username)
+                    .Where(u => u.User.Username == username && u.GameData.Difficulty == difficulty)
                     .Select(u => new UserScoreDto<AimTrainerData>
                     {
                         Username = u.User.Username,
@@ -118,8 +121,9 @@ namespace Projektas.Tests.Server_Tests.Controllers
             }
 
             int topCount = 3;
+            GameDifficulty difficulty = GameDifficulty.Normal;
 
-            var response = await _client.GetAsync($"/api/aimtrainer/top-score?topCount={topCount}");
+            var response = await _client.GetAsync($"/api/aimtrainer/top-score?topCount={topCount}&difficulty={difficulty}");
             response.EnsureSuccessStatusCode();
             List<UserScoreDto<AimTrainerData>>? topScores = await response.Content.ReadFromJsonAsync<List<UserScoreDto<AimTrainerData>>>();
 
@@ -133,6 +137,7 @@ namespace Projektas.Tests.Server_Tests.Controllers
 
                 var actualTopScores = await db.AimTrainerScores
                     .Include(s => s.User)
+                    .Where(s => s.GameData.Difficulty == difficulty)
                     .OrderByDescending(s => s.GameData.Scores)
                     .Take(topCount)
                     .Select(s => new UserScoreDto<AimTrainerData>

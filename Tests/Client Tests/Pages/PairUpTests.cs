@@ -23,39 +23,6 @@ namespace Projektas.Tests.Client_Tests.Pages {
 			Services.AddSingleton(_mockAuthStateProvider.Object);
             Services.AddSingleton(_mockTimerService.Object);
 
-            // setup
-            _mockPairUpService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<GameDifficulty>())).Returns(Task.CompletedTask);
-			_mockPairUpService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<PairUpData> {
-                Username = "User",
-                GameData = new PairUpData {
-                    TimeInSeconds = 30,
-                    Fails = 10
-                }
-            });
-			_mockPairUpService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto<PairUpData>> {
-				new UserScoreDto<PairUpData> {
-                    Username = "User1",
-                    GameData = new PairUpData {
-                        TimeInSeconds = 30,
-                        Fails = 1
-                    }
-                },
-				new UserScoreDto<PairUpData> {
-                    Username = "User2",
-                    GameData = new PairUpData {
-                        TimeInSeconds = 30,
-                        Fails = 5
-                    }
-                },
-				new UserScoreDto<PairUpData> {
-                    Username = "User3",
-                    GameData = new PairUpData {
-                        TimeInSeconds = 60,
-                        Fails = 5
-                    }
-                }
-			});
-
 			_mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");
 		}
 
