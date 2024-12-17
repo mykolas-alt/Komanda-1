@@ -2,6 +2,7 @@
 using Projektas.Server.Interfaces;
 using Projektas.Server.Services;
 using Projektas.Shared.Models;
+using Projektas.Shared.Enums;
 
 namespace Projektas.Tests.Services
 {
@@ -37,13 +38,13 @@ namespace Projektas.Tests.Services
             var username = "testuser";
             var scores = new List<UserScoreDto<AimTrainerData>>
             {
-                new UserScoreDto<AimTrainerData> { Username = username, GameData = new AimTrainerData { Scores = 50 }, Timestamp = DateTime.UtcNow },
-                new UserScoreDto<AimTrainerData> { Username = username, GameData = new AimTrainerData { Scores = 100 }, Timestamp = DateTime.UtcNow }
+                new UserScoreDto<AimTrainerData> { Username = username, GameData = new AimTrainerData { Scores = 50, Difficulty = GameDifficulty.Normal }, Timestamp = DateTime.UtcNow },
+                new UserScoreDto<AimTrainerData> { Username = username, GameData = new AimTrainerData { Scores = 100, Difficulty = GameDifficulty.Normal }, Timestamp = DateTime.UtcNow }
             };
 
             _mockScoreRepository.Setup(repo => repo.GetHighscoreFromUserAsync<AimTrainerData>(username)).ReturnsAsync(scores);
 
-            var result = await _aimTrainerService.GetUserHighscoreAsync(username);
+            var result = await _aimTrainerService.GetUserHighscoreAsync(username, GameDifficulty.Normal);
 
             Assert.Equal(100, result.GameData.Scores);
         }
@@ -54,14 +55,14 @@ namespace Projektas.Tests.Services
             var topCount = 2;
             var scores = new List<UserScoreDto<AimTrainerData>>
             {
-                new UserScoreDto<AimTrainerData> { Username = "user1", GameData = new AimTrainerData { Scores = 50 }, Timestamp = DateTime.UtcNow },
-                new UserScoreDto<AimTrainerData> { Username = "user2", GameData = new AimTrainerData { Scores = 100 }, Timestamp = DateTime.UtcNow },
-                new UserScoreDto<AimTrainerData> { Username = "user3", GameData = new AimTrainerData { Scores = 75 }, Timestamp = DateTime.UtcNow }
+                new UserScoreDto<AimTrainerData> { Username = "user1", GameData = new AimTrainerData { Scores = 50, Difficulty = GameDifficulty.Easy }, Timestamp = DateTime.UtcNow },
+                new UserScoreDto<AimTrainerData> { Username = "user2", GameData = new AimTrainerData { Scores = 100, Difficulty = GameDifficulty.Normal }, Timestamp = DateTime.UtcNow },
+                new UserScoreDto<AimTrainerData> { Username = "user3", GameData = new AimTrainerData { Scores = 75, Difficulty = GameDifficulty.Normal }, Timestamp = DateTime.UtcNow }
             };
 
             _mockScoreRepository.Setup(repo => repo.GetAllScoresAsync<AimTrainerData>()).ReturnsAsync(scores);
 
-            var result = await _aimTrainerService.GetTopScoresAsync(topCount);
+            var result = await _aimTrainerService.GetTopScoresAsync(topCount, GameDifficulty.Normal);
 
             Assert.Equal(2, result.Count);
             Assert.Equal(100, result[0].GameData.Scores);

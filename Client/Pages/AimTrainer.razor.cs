@@ -48,7 +48,7 @@
                         await FetchHighscoreAsync();
                     }
                     topScores = await AimTrainerService.GetTopScoresAsync(Difficulty, topCount: 10);
-			        StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     break;
                 case "Hard":
                     Difficulty = GameDifficulty.Hard;
@@ -56,7 +56,7 @@
                         await FetchHighscoreAsync();
                     }
                     topScores = await AimTrainerService.GetTopScoresAsync(Difficulty, topCount: 10);
-			        StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     break;
             }
         }
@@ -83,13 +83,13 @@
 
 		private async Task LoadUsernameAsync() {
 			username = await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
-			StateHasChanged();
-		}
+            await InvokeAsync(StateHasChanged);
+        }
 
 		private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
 			await InvokeAsync(LoadUsernameAsync);
-			StateHasChanged();
-		}
+            await InvokeAsync(StateHasChanged);
+        }
 
         public void StartGame() {
             gameScreen = "started";

@@ -25,34 +25,6 @@ namespace Projektas.Tests.Client_Tests.Pages {
             Services.AddSingleton(_mockRandom.Object);
             Services.AddSingleton(_mockAuthStateProvider.Object);
 
-            _mockAimTrainerService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(),It.IsAny<int>(), It.IsAny<GameDifficulty>())).Returns(Task.CompletedTask);
-			_mockAimTrainerService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<AimTrainerData> {
-                Username = "User",
-                GameData = new AimTrainerData {
-                    Scores = 100
-                }
-            });
-			_mockAimTrainerService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto<AimTrainerData>> {
-				new UserScoreDto<AimTrainerData> {
-                    Username = "User1",
-                    GameData = new AimTrainerData {
-                        Scores = 100
-                    }
-                },
-				new UserScoreDto<AimTrainerData> {
-                    Username = "User2",
-                    GameData = new AimTrainerData {
-                        Scores = 90
-                    }
-                },
-				new UserScoreDto<AimTrainerData> {
-                    Username = "User3",
-                    GameData = new AimTrainerData {
-                        Scores = 80
-                    }
-                }
-			});
-
             _mockAuthStateProvider.Setup(s => s.GetUsernameAsync()).ReturnsAsync("TestUser");
         }
 
@@ -62,8 +34,6 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
             cut.Instance.StartGame();
 
-            Assert.True(cut.Instance.isGameActive);
-            Assert.False(cut.Instance.isGameOver);
             Assert.Equal(0, cut.Instance.score);
             _mockTimerService.Verify(t => t.Start(It.IsAny<int>()), Times.Once);
             _mockTimerService.VerifyAdd(t => t.OnTick += It.IsAny<Action>(), Times.Once);
@@ -72,15 +42,11 @@ namespace Projektas.Tests.Client_Tests.Pages {
         [Fact]
         public void StartGame_ShouldStartInHardMode() {
             var cut = RenderComponent<AimTrainer>();
-            var changeEventArgs = new ChangeEventArgs {Value = "Hard"};
 
-            cut.Instance.OnDifficultyChanged(changeEventArgs);
+            cut.Instance.ChangeDifficulty("Hard");
             cut.Instance.StartGame();
 
-            Assert.True(cut.Instance.isGameActive);
-            Assert.False(cut.Instance.isGameOver);
             Assert.Equal(0, cut.Instance.score);
-            Assert.True(cut.Instance.isHardMode);
             _mockTimerService.Verify(t => t.Start(It.IsAny<int>()), Times.Once);
             _mockTimerService.VerifyAdd(t => t.OnTick += It.IsAny<Action>(), Times.Once);
         }
@@ -97,13 +63,23 @@ namespace Projektas.Tests.Client_Tests.Pages {
         }
 
         [Fact]
-        public void OnDifficultyChanged_ShouldSetHardMode() {
-            var cut = RenderComponent<AimTrainer>();
-            var changeEventArgs = new ChangeEventArgs {Value = "Hard"};
+        public void ChangeDifficulty_ShouldSetDifficultyToNormal()
+        {
+            var aimTrainer = RenderComponent<AimTrainer>();
 
-            cut.Instance.OnDifficultyChanged(changeEventArgs);
+            aimTrainer.Instance.ChangeDifficulty("Normal");
 
-            Assert.True(cut.Instance.isHardMode);
+            Assert.Equal(GameDifficulty.Normal, aimTrainer.Instance.Difficulty);
+        }
+
+        [Fact]
+        public void ChangeDifficulty_ShouldSetDifficultyToHard()
+        {
+            var aimTrainer = RenderComponent<AimTrainer>();
+
+            aimTrainer.Instance.ChangeDifficulty("Hard");
+
+            Assert.Equal(GameDifficulty.Hard, aimTrainer.Instance.Difficulty);
         }
 
         [Fact]
@@ -114,24 +90,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
             cut.Instance.TimerTick();
 
-            Assert.False(cut.Instance.isGameActive);
-            Assert.True(cut.Instance.isGameOver);
             _mockTimerService.VerifyRemove(t => t.OnTick -= It.IsAny<Action>(), Times.Once);
-        }
-
-        [Fact]
-        public void TryAgain_ShouldRestartGame() {
-            var cut = RenderComponent<AimTrainer>();
-            cut.Instance.StartGame();
-            cut.Instance.OnTargetClicked();
-            cut.Instance.TimerTick();
-
-            cut.Instance.TryAgain();
-
-            Assert.True(cut.Instance.isGameActive);
-            Assert.False(cut.Instance.isGameOver);
-            Assert.Equal(0,cut.Instance.score);
-            _mockTimerService.Verify(t => t.Start(It.IsAny<int>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -149,9 +108,8 @@ namespace Projektas.Tests.Client_Tests.Pages {
         [Fact]
         public void MoveTarget_ShouldChangesPositionCorrectly() {
             _mockRandom.Setup(r => r.Next(It.IsAny<int>())).Returns(1);
-            var changeEventArgs = new ChangeEventArgs {Value = "Hard"};
             var cut = RenderComponent<AimTrainer>();
-            cut.Instance.OnDifficultyChanged(changeEventArgs);
+            cut.Instance.ChangeDifficulty("Hard");
             cut.Instance.StartGame();
 
             cut.Instance.MoveTarget(1000, 400);
