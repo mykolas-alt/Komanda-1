@@ -1,50 +1,120 @@
 ﻿@page "/aimtrainer"
 @using Projektas.Client.Components
+@using Projektas.Shared.Enums
 
 <PageTitle>Aim Trainer</PageTitle>
 
-<div class="title-container">
-    <h1>Aim Trainer</h1>
-    <div>
-        <label>
-            <input type="radio" name="difficulty" value="Normal" checked @onchange="OnDifficultyChanged" disabled="@isGameActive"/> Normal
-        </label>
-        <label>
-            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" disabled="@isGameActive"/> Hard
-        </label>
-    </div>
-</div>
-
-<div class="game-container">
-    <div class="game-area">
-        @if (!isGameActive) {
-            @if (!isGameOver) {
-                <div class="start-button">
-                    <button class="btn btn-primary" @onclick="StartGame">Start Game</button>
+<div class="game_window">
+    @if(gameScreen=="main") {
+        <div class="game_title">Aim Trainer</div>
+        <hr class="line">
+        <div class="place_row game_info">
+            @if(username!=null) {
+                <div class="highscore">
+                    Highscore
+                    <hr class="line">
+                    <div class="player_highscore">
+                        @if(highscore!=null) {
+                            <b>@highscore.GameData.Scores</b>
+                        } else if(highscoreChecked) {
+                            <p>No highscore</p>
+                        } else {
+                            <div class="loader"></div>
+                        }
+                    </div>
                 </div>
             } else {
-                <div>
-                    <h2>Game Over!</h2>
-                    <h3>Your Final Score: @score</h3>
-                    <button class="btn btn-primary" @onclick="TryAgain">Replay</button>
-                </div>
+                <div class="no_highscore"></div>
             }
-        } else {
-            <div class="target-area">
+            <div class="place_col middle">
+                <button class="button" @onclick="StartGame">Start</button>
+                @if(Difficulty==GameDifficulty.Normal) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Hard")'>Difficulty: Normal</button>
+                } else if(Difficulty==GameDifficulty.Hard) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Hard</button>
+                }
+            </div>
+            <div class="leaderboard">
+                Leaderboard
+                <hr class="line">
+                <div class="leaderboard_info">
+                    @if(topScores!=null) {
+                        for(int i = 0;i<topScores.Count;i++) {
+                            <p>@(i+1). @topScores[i].Username @topScores[i].GameData.Scores</p>
+                        }
+                    } else {
+                        <div class="loader"></div>
+                    }
+                </div>
+            </div>
+        </div>
+    } else if(gameScreen=="started") {
+        <div class="place_col">
+            <div class="place_row">
+                <div class="game_score">
+                    Score: @score
+                </div>
+                <div class="game_timer">
+                    Time left: @TimerService.RemainingTime s
+                </div>
+            </div>
+            <div class="game_area">
                 <button @onclick="OnTargetClicked"
-                        class="target-button"
+                        class="target_button"
                         style="left:@(TargetPosition.x)px; top:@(TargetPosition.y)px;
-                        width: @(isHardMode?30 : 50)px; height: @(isHardMode?30 : 50)px;
+                        width: @(Difficulty==GameDifficulty.Hard?30 : 50)px; height: @(Difficulty==GameDifficulty.Hard?30 : 50)px;
                         background-color: @(GetTargetColor());">
                 </button>
             </div>
-        }
-    </div>
-
-    <div class="score-timer">
-        @if (isGameActive) {
-            <h4 class="score-text">Score: @score</h4>
-            <h4 class="timer-text">Time Remaining: @TimerService.RemainingTime seconds</h4>
-        }
-    </div>
+        </div>
+    } else if(gameScreen=="ended") {
+        <div class="game_title">Game Ended</div>
+        <hr class="line">
+        <div class="place_row game_info">
+            @if(username!=null) {
+                <div class="highscore">
+                    Highscore
+                    <hr class="line">
+                    <div class="player_highscore">
+                        @if(highscore!=null) {
+                            <b>@highscore.GameData.Scores</b>
+                        } else if(highscoreChecked) {
+                            <p>No highscore</p>
+                        } else {
+                            <div class="loader"></div>
+                        }
+                    </div>
+                </div>
+            } else {
+                <div class="no_highscore"></div>
+            }
+            <div class="place_col middle end">
+                <div class="game_score end">
+                    Your Score
+                    <hr class="line">
+                    @score
+                </div>
+                <button class="button" @onclick="StartGame">Restart</button>
+                @if(Difficulty==GameDifficulty.Normal) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Hard")'>Difficulty: Normal</button>
+                } else if(Difficulty==GameDifficulty.Hard) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Hard</button>
+                }
+                <button class="button" @onclick='() => ChangeScreen("main")'>Main Menu</button>
+            </div>
+            <div class="leaderboard">
+                Leaderboard
+                <hr class="line">
+                <div class="leaderboard_info">
+                    @if(topScores!=null) {
+                        for(int i = 0;i<topScores.Count;i++) {
+                            <p>@(i+1). @topScores[i].Username @topScores[i].GameData.Scores</p>
+                        }
+                    } else {
+                        <div class="loader"></div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
 </div>

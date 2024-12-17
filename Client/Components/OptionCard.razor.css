@@ -1,15 +1,20 @@
 ﻿.option {
     background-color: #fff;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    box-shadow: -0.3px 0.3px 3px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 10px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    transition: all 0.2s ease;
+    width: 15rem;
 }
 
     .option:hover {
-        background-color: #28a745;
+        background-color: #2370eb;
         color: #fff;
-        border-radius: 3px;
-        padding: 10px;
+        transform: scale(1.05);
     }

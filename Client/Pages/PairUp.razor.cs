@@ -3,25 +3,37 @@ using Projektas.Client.Interfaces;
 using Projektas.Client.Services;
 using System;
 using Projektas.Shared.Enums;
+using Projektas.Shared.Models;
+using System.Drawing;
 
-namespace Projektas.Client.Pages
-{
-    public partial class PairUp : ComponentBase
-    {
+namespace Projektas.Client.Pages {
+    public partial class PairUp : ComponentBase {
+        [Inject]
+        public IPairUpService PairUpService {get; set;}
 
         [Inject]
-        public required ITimerService TimerService { get; set; }
-        public List<Card> cards { get; set; }
-        public Card? firstSelectedCard { get; private set; }
-        public Card? secondSelectedCard { get; private set; }
-        public bool isGameActive { get; set; }
-        public bool missMatch { get; private set; }
-        public int matchedPairsCount { get; private set; }
-        public int mistakes { get; private set; }
-        private GameDifficulty CurrentDifficulty { get; set; }
-        public string gridStyle { get; private set; }
-        public bool changeIcon { get; private set; }
+        public IAccountAuthStateProvider AuthStateProvider {get; set;}
+        
+        [Inject]
+        public required ITimerService TimerService {get; set;}
+
+        
+        public string gameScreen = "main";
+        private GameDifficulty Difficulty {get; set;} = GameDifficulty.Normal;
+
+        public List<Card> cards {get; set;}
+        public Card? firstSelectedCard {get; private set;}
+        public Card? secondSelectedCard {get; private set;}
+        public bool missMatch {get; private set;}
+        public int matchedPairsCount {get; private set;}
+        public int mistakes {get; private set;}
+        public string gridStyle {get; private set;}
+        public bool changeIcon {get; private set;}
         public int ElapsedTime = 0;
+
+        private UserScoreDto<PairUpData>? highscore {get; set;}
+        private bool highscoreChecked = false;
+        public List<UserScoreDto<PairUpData>>? topScores {get; private set;}
 
         public string? username = null;
 
@@ -44,49 +56,82 @@ namespace Projektas.Client.Pages
             "\u273F"   // Flower: ✿
         };
 
-        public PairUp()
-        {
-
+        public void ChangeScreen(string mode) {
+            gameScreen = mode;
         }
 
-        [Inject]
-        public IPairUpService PairUpService { get; set; }
+        public async void ChangeDifficulty(string mode) {
+            switch(mode) {
+                case "Easy":
+                    Difficulty = GameDifficulty.Easy;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
+			        StateHasChanged();
+                    break;
+                case "Normal":
+                    Difficulty = GameDifficulty.Normal;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
+			        StateHasChanged();
+                    break;
+                case "Hard":
+                    Difficulty = GameDifficulty.Hard;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
+			        StateHasChanged();
+                    break;
+            }
+        }
 
-        [Inject]
-        public IAccountAuthStateProvider AuthStateProvider { get; set; }
+        static public string FormatTime(int totalSeconds) {
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            return $"{minutes:D2}:{seconds:D2}";
+        }
 
+        private async Task FetchHighscoreAsync() {
+            try {
+                highscore = await PairUpService.GetUserHighscoreAsync(username, Difficulty);
+            } catch {
+                highscore = null;
+            } finally {
+                highscoreChecked = true;
+            }
+        }
 
-        protected override async Task OnInitializedAsync()
-        {
+        protected override async Task OnInitializedAsync() {
             AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
-            TimerService.OnTick += TimerTick;
-            CurrentDifficulty = GameDifficulty.Normal;
-            ResetGame();
+            
             await LoadUsernameAsync();
+            if(username != null) {
+                await FetchHighscoreAsync();
+            }
+            topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
         }
 
-        private async Task LoadUsernameAsync()
-        {
+        private async Task LoadUsernameAsync() {
             username = await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
             StateHasChanged();
         }
 
-        private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task)
-        {
+        private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
             await InvokeAsync(LoadUsernameAsync);
             StateHasChanged();
         }
 
-        public void OnDifficultyChanged(ChangeEventArgs e)
-        {
-            if (Enum.TryParse(e.Value?.ToString(), true, out GameDifficulty parsedDifficulty))
-            {
-                CurrentDifficulty = parsedDifficulty;
-            }
+        public void StartGame() {
+            TimerService.OnTick += TimerTick;
+            ResetGame();
+            gameScreen = "started";
         }
 
-        public void ResetGame()
-        {
+        public void ResetGame() {
             ElapsedTime = 0;
             TimerService.Stop();
             mistakes = 0;
@@ -94,105 +139,80 @@ namespace Projektas.Client.Pages
             firstSelectedCard = null;
             secondSelectedCard = null;
             missMatch = false;
-            isGameActive = true;
             int count = 0;
 
-            switch (CurrentDifficulty)
-            {
+            switch(Difficulty) {
                 case GameDifficulty.Easy:
-                    {
-                        gridStyle = "grid-template-columns: repeat(4, 81px);";
-                        changeIcon = false;
-                        count = 8;
-                        break;
-                    }
+                    gridStyle = "grid-template-columns: repeat(4, 100px);";
+                    changeIcon = false;
+                    count = 8;
+                    break;
                 case GameDifficulty.Normal:
-                    {
-                        gridStyle = "grid-template-columns: repeat(8, 81px);";
-                        changeIcon = true;
-                        count = 16;
-                        break;
-                    }
+                    gridStyle = "grid-template-columns: repeat(8, 80px);";
+                    changeIcon = true;
+                    count = 16;
+                    break;
                 case GameDifficulty.Hard:
-                    {
-                        gridStyle = "grid-template-columns: repeat(8, 81px);";
-                        changeIcon = false;
-                        count = 24;
-                        break;
-                    }
+                    gridStyle = "grid-template-columns: repeat(12, 70px);";
+                    changeIcon = false;
+                    count = 24;
+                    break;
             }
-
 
             cards = GenerateCardDeck(count).OrderBy(c => Guid.NewGuid()).ToList(); // shuffle cards
             TimerService.Start(1800);
-
         }
 
-        public void TimerTick()
-        {
+        public void TimerTick() {
             ElapsedTime++;
-            if (TimerService.RemainingTime == 0)
-            {
+            if(TimerService.RemainingTime == 0) {
                 ResetGame();
             }
 
             InvokeAsync(StateHasChanged);
         }
 
-        private List<Card> GenerateCardDeck(int count)
-        {
+        private List<Card> GenerateCardDeck(int count) {
             var cardValues = Enumerable.Range(1, count).ToList();
             var allCards = cardValues.Concat(cardValues)
-                .Select(value => new Card { Value = (object)value, IsMatched = false, IsSelected = false })
+                .Select(value => new Card {Value = (object)value, IsMatched = false, IsSelected = false})
                 .ToList();
             return allCards;
         }
 
-        public void OnCardSelected(Card selectedCard)
-        {
-            if (!isGameActive || selectedCard.IsMatched || selectedCard == firstSelectedCard || missMatch)
+        public async Task OnCardSelectedAsync(Card selectedCard) {
+            if(gameScreen != "started" || selectedCard.IsMatched || selectedCard == firstSelectedCard || missMatch)
                 return;
 
             selectedCard.IsSelected = true;
 
-            if (firstSelectedCard == null)
-            {
+            if(firstSelectedCard == null) {
                 firstSelectedCard = selectedCard;
-            }
-            else if (secondSelectedCard == null)
-            {
+            } else if(secondSelectedCard == null) {
                 secondSelectedCard = selectedCard;
 
-                if ((int)firstSelectedCard.Value == (int)secondSelectedCard.Value)
-                {
+                if((int)firstSelectedCard.Value == (int)secondSelectedCard.Value) {
                     firstSelectedCard.IsMatched = true;
                     secondSelectedCard.IsMatched = true;
                     matchedPairsCount++;
                     firstSelectedCard = null;
                     secondSelectedCard = null;
 
-                    if (cards.All(c => c.IsMatched))
-                    {
+                    if(cards.All(c => c.IsMatched)) {
                         TimerService.Stop();
-                        if (username != null)
-                        {
-                            PairUpService.SaveScoreAsync(username, ElapsedTime, mistakes, CurrentDifficulty);
+                        if(username != null) {
+                            await PairUpService.SaveScoreAsync(username, ElapsedTime, mistakes, Difficulty);
+                            await FetchHighscoreAsync();
                         }
-                        isGameActive = false;
+                        topScores = await PairUpService.GetTopScoresAsync(Difficulty, topCount: 10);
+                        gameScreen = "ended";
                     }
-                }
-                else
-                {
-                    if (firstSelectedCard.HasBeenSeen || secondSelectedCard.HasBeenSeen)
-                    {
-                        mistakes++;
-                    }
-                    firstSelectedCard.HasBeenSeen = secondSelectedCard.HasBeenSeen = true;
-
+                } else {
+                    mistakes++;
                     var first = firstSelectedCard;
                     var second = secondSelectedCard;
                     missMatch = true;
-                    Task.Delay(1000).ContinueWith(_ => {
+                    await Task.Delay(1000).ContinueWith(_ => {
                         first.IsSelected = false;
                         second.IsSelected = false;
                         firstSelectedCard = null;
@@ -206,17 +226,14 @@ namespace Projektas.Client.Pages
             InvokeAsync(StateHasChanged);
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
         }
 
-        public class Card
-        {
-            public required object Value { get; set; }
-            public bool HasBeenSeen = false;
-            public bool IsMatched { get; set; }
-            public bool IsSelected { get; set; }
+        public class Card {
+            public required object Value {get; set;}
+            public bool IsMatched {get; set;}
+            public bool IsSelected {get; set;}
         }
     }
 }

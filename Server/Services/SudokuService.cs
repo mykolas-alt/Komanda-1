@@ -1,5 +1,6 @@
 ﻿using Google.OrTools.ConstraintSolver;
 using Projektas.Server.Interfaces;
+using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
 
 namespace Projektas.Server.Services {
@@ -75,17 +76,33 @@ namespace Projektas.Server.Services {
             await _scoreRepository.AddScoreToUserAsync<SudokuData>(data.Username, data.GameData, data.Timestamp);
         }
 
-        public async Task<UserScoreDto<SudokuData>> GetUserHighscoreAsync(string username) {
+        public async Task<UserScoreDto<SudokuData>> GetUserHighscoreAsync(string username, GameDifficulty difficulty, GameMode size) {
             var scores = await _scoreRepository.GetHighscoreFromUserAsync<SudokuData>(username);
 
-            return scores.OrderBy(s => s.GameData.TimeInSeconds).First();
+            var filteredScores = scores
+                .Where(s => s.GameData.Difficulty == difficulty && s.GameData.Mode == size)
+                .OrderBy(s => s.GameData.TimeInSeconds)
+                .ToList();
+
+            if(!filteredScores.Any()) {
+                return null;
+            }
+
+            return filteredScores.First();
         }
 
-        public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(int topCount) {
+        public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(int topCount, GameDifficulty difficulty, GameMode size) {
             List<UserScoreDto<SudokuData>> userScores = await _scoreRepository.GetAllScoresAsync<SudokuData>();
-            List<UserScoreDto<SudokuData>> orderedScores = userScores.Where(s => !s.IsPrivate).OrderByDescending(s => s.GameData.TimeInSeconds).ToList();
+            List<UserScoreDto<SudokuData>> orderedScores = userScores
+                .Where(s => !s.IsPrivate && s.GameData.Difficulty == difficulty && s.GameData.Mode == size)
+                .OrderBy(s => s.GameData.TimeInSeconds)
+                .ToList();
             List<UserScoreDto<SudokuData>> topScores = new List<UserScoreDto<SudokuData>>();
             
+            if(!orderedScores.Any()) {
+                return topScores;
+            }
+
             for(int i = 0; i < topCount && i < orderedScores.Count; i++) {
                 topScores.Add(orderedScores[i]);
             }

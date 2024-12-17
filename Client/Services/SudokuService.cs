@@ -63,13 +63,13 @@ namespace Projektas.Client.Services {
             await _httpClient.PostAsJsonAsync("api/sudoku/save-score", data);
         }
 
-        public async Task<UserScoreDto<SudokuData>> GetUserHighscoreAsync(string username) {
-            var url = $"api/sudoku/highscore?username={username}";
+        public async Task<UserScoreDto<SudokuData>> GetUserHighscoreAsync(string username, GameDifficulty difficulty, GameMode size) {
+            var url = $"api/sudoku/highscore?username={username}&difficulty={difficulty}&size={size}";
             return await _httpClient.GetFromJsonAsync<UserScoreDto<SudokuData>?>(url);
         }
 
-        public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(int topCount = 10)  {
-            var url = $"api/sudoku/top-score?topCount={topCount}";
+        public async Task<List<UserScoreDto<SudokuData>>> GetTopScoresAsync(GameDifficulty difficulty, GameMode size, int topCount = 10)  {
+            var url = $"api/sudoku/top-score?topCount={topCount}&difficulty={difficulty}&size={size}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<SudokuData>>>(url);
         }
     }

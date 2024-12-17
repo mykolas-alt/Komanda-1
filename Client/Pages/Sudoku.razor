@@ -1,82 +1,171 @@
 ﻿@page "/sudoku"
+@using Projektas.Shared.Enums
 
 <PageTitle>Sudoku</PageTitle>
-<div style="text-align: center;">
-    <h1>Sudoku</h1>
-    <div>
-        <h4 class="timer-text">Time: @FormatTime(ElapsedTime)</h4>
-    </div>
 
-    <div>
-        <label>
-            <input type="radio" name="size" value=4 @onchange="OnSizeChanged" /> 4x4
-        </label>
-        <label>
-            <input type="radio" name="size" value=9 checked @onchange="OnSizeChanged" /> 9x9
-        </label>
-        <label>
-            <input type="radio" name="size" value=16 @onchange="OnSizeChanged" /> 16x16
-        </label>
-    </div>
-    <div>
-        <label>
-            <input type="radio" name="difficulty" value="Easy"  @onchange="OnDifficultyChanged" /> Easy
-        </label>
-        <label>
-            <input type="radio" name="difficulty" value="Normal" checked @onchange="OnDifficultyChanged" /> Normal
-        </label>
-        <label>
-            <input type="radio" name="difficulty" value="Hard" @onchange="OnDifficultyChanged" /> Hard
-        </label>
-    </div>
-
-    @if (IsLoading)
-    {
-        <div class="loading">Loading Sudoku...</div> 
-    }
-    else
-    {
-
-        <div class="grid">
-            @foreach (int row in Enumerable.Range(0, GridSize))
-            {
-                <div class="grid-row">
-                    @foreach (int col in Enumerable.Range(0, GridSize))
-                    {
-                        <div @onclick="@(() => HandleCellClicked(row, col))" class="cell @(row == SelectedRow && col == SelectedCol ? "selected" : "")">
-                            <select class="select @(IsCellDisabled(row, col) ? "disabled" : "")" @onchange="@((ChangeEventArgs args) => HandleValueSelected(args, row, col))" value="@GridValues[row, col]">
+<div class="game_window">
+    @if(gameScreen=="main") {
+        <div class="game_title">Sudoku</div>
+        <hr class="line">
+        <div class="place_row game_info">
+            @if(username!=null) {
+                <div class="highscore">
+                    Highscore
+                    <hr class="line">
+                    <div class="player_highscore">
+                        @if(highscore!=null) {
+                            <b>@FormatTime(highscore.GameData.TimeInSeconds)</b>
+                        } else if(highscoreChecked) {
+                            <p>No highscore</p>
+                        } else {
+                            <div class="loader"></div>
+                        }
+                    </div>
+                </div>
+            } else {
+                <div class="no_highscore"></div>
+            }
+            <div class="place_col middle">
+                <button class="button" @onclick="StartGameAsync">Start</button>
+                @if(Difficulty==GameDifficulty.Easy) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Easy</button>
+                } else if(Difficulty==GameDifficulty.Normal) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Hard")'>Difficulty: Normal</button>
+                } else if(Difficulty==GameDifficulty.Hard) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Easy")'>Difficulty: Hard</button>
+                }
+                @if(Size==GameMode.FourByFour) {
+                    <button class="button" @onclick='() => ChangeSize("9x9")'>Size: 4x4</button>
+                } else if(Size==GameMode.NineByNine) {
+                    <button class="button" @onclick='() => ChangeSize("16x16")'>Size: 9x9</button>
+                } else if(Size==GameMode.SixteenBySixteen) {
+                    <button class="button" @onclick='() =>  ChangeSize("4x4")'>Size: 16x16</button>
+                }
+            </div>
+            <div class="leaderboard">
+                Leaderboard
+                <hr class="line">
+                <div class="leaderboard_info">
+                    @if(topScores!=null) {
+                        for(int i = 0;i<topScores.Count;i++) {
+                            <p>@(i+1). @topScores[i].Username @FormatTime(topScores[i].GameData.TimeInSeconds)</p>
+                        }
+                    } else {
+                        <div class="loader"></div>
+                    }
+                </div>
+            </div>
+        </div>
+    } else if(gameScreen=="started") {
+        <div class="place_col">
+            <div class="place_row">
+                <div class="game_timer">
+                    Time: @FormatTime(ElapsedTime)
+                </div>
+                <button class="button" style="margin-top: 1rem;" @onclick="IsCorrect">Submit</button>
+            </div>
+            <div class="grid @(Size==GameMode.FourByFour? "small" : "") @(Size==GameMode.NineByNine? "medium" : "") @(Size==GameMode.SixteenBySixteen? "big" : "")">
+                @foreach(int row in Enumerable.Range(0,GridSize)) {
+                    <div class="grid-row">
+                        @foreach(int col in Enumerable.Range(0,GridSize)) {
+                            <div @onclick="@(() => HandleCellClicked(row, col))" class="cell @(row == SelectedRow && col == SelectedCol ? "selected" : "")">
+                                <select class="select @(IsCellDisabled(row, col) ? "disabled" : "")" @onchange="@((ChangeEventArgs args) => HandleValueSelected(args, row, col))" value="@GridValues[row, col]">
                                     <option value="0"> </option>
-                                    @foreach (int value in PossibleValues)
-                                    {
+                                    @foreach(int value in PossibleValues) {
                                         <option value="@value">@value</option>
                                     }
-                            </select>                           
-                        </div>
-                    }
+                                </select>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            @if(Message!=null) {
+                <div class="message">
+                    @Message
                 </div>
             }
         </div>
-
-    }
-    <button class="btn btn-primary mt-3" @onclick="GenerateSudokuGameAsync">Generate Sudoku</button>
-    <button class="btn btn-primary mt-3" @onclick="IsCorrect">Submit</button>
-    @if (Message != null)
-    {
-        <div>
-            <h4>@Message</h4>
+    } else if(gameScreen=="ended") {
+        <div class="game_title">Game Ended</div>
+        <hr class="line">
+        <div class="place_row game_info">
+            @if(username!=null) {
+                <div class="highscore">
+                    Highscore
+                    <hr class="line">
+                    <div class="player_highscore">
+                        @if(highscore!=null) {
+                            <b>@FormatTime(highscore.GameData.TimeInSeconds)</b>
+                        } else {
+                            <div class="loader"></div>
+                        }
+                    </div>
+                </div>
+            } else {
+                <div class="no_highscore"></div>
+            }
+            <div class="place_col middle end">
+                <div class="game_score end">
+                    Your Time: @FormatTime(ElapsedTime)
+                </div>
+                <button class="button" @onclick="StartGameAsync">Restart</button>
+                @if(Difficulty==GameDifficulty.Easy) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Easy</button>
+                } else if(Difficulty==GameDifficulty.Normal) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Hard")'>Difficulty: Normal</button>
+                } else if(Difficulty==GameDifficulty.Hard) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Easy")'>Difficulty: Hard</button>
+                }
+                @if(Size==GameMode.FourByFour) {
+                    <button class="button" @onclick='() => ChangeSize("9x9")'>Size: 4x4</button>
+                } else if(Size==GameMode.NineByNine) {
+                    <button class="button" @onclick='() => ChangeSize("16x16")'>Size: 9x9</button>
+                } else if(Size==GameMode.SixteenBySixteen) {
+                    <button class="button" @onclick='() =>  ChangeSize("4x4")'>Size: 16x16</button>
+                }
+                <button class="button" @onclick='() => ChangeScreen("main")'>Main Menu</button>
+            </div>
+            <div class="leaderboard">
+                Leaderboard
+                <hr class="line">
+                <div class="leaderboard_info">
+                    @if(topScores!=null) {
+                        for(int i = 0;i<topScores.Count;i++) {
+                            <p>@(i+1). @topScores[i].Username @FormatTime(topScores[i].GameData.TimeInSeconds)</p>
+                        }
+                    } else {
+                        <div class="loader"></div>
+                    }
+                </div>
+            </div>
         </div>
     }
-
-
 </div>
 
 <style>
     .grid {
         display: grid;
-        grid-template-columns: repeat( @GridSize, 60px);
-        grid-template-rows: repeat( @GridSize, 60px);
+        grid-template-columns: repeat( @GridSize, 30px);
+        grid-template-rows: repeat( @GridSize, 30px);
         border-collapse: collapse;
         justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    .grid.small {
+        grid-template-columns: repeat( @GridSize, 100px);
+        grid-template-rows: repeat( @GridSize, 100px);
+    }
+
+    .grid.medium {
+        grid-template-columns: repeat( @GridSize, 50px);
+        grid-template-rows: repeat( @GridSize, 50px);
+    }
+
+    .grid.big {
+        grid-template-columns: repeat( @GridSize, 28px);
+        grid-template-rows: repeat( @GridSize, 28px);
     }
 
     @GridStyles
@@ -94,4 +183,3 @@
     }}
     ";
 }
-

@@ -1,83 +1,160 @@
 using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
+using Projektas.Client.Services;
 using Projektas.Shared.Enums;
+using Projektas.Shared.Models;
 
-namespace Projektas.Client.Pages
-{
-    public partial class Sudoku
-    {
+namespace Projektas.Client.Pages {
+    public partial class Sudoku {
         [Inject]
-        public required ISudokuService SudokuService { get; set; }
+        public required ISudokuService SudokuService {get; set;}
+        
         [Inject]
-        public required ITimerService TimerService { get; set; }
+        public required ITimerService TimerService {get; set;}
+
+        [Inject]
+        public IAccountAuthStateProvider AuthStateProvider {get; set;}
 
         private static Random _random = new Random();
 
-        private GameDifficulty CurrentDifficulty { get; set; }
-        public GameMode mode {get; set;} // nextGridSize
+        
+        public string gameScreen = "main";
+        private GameDifficulty Difficulty {get; set;} = GameDifficulty.Normal;
+        public GameMode Size {get; set;} = GameMode.NineByNine; // nextGridSize
 
-        public bool IsGameActive { get; set; }
-        public bool IsLoading { get; set; }
-
-        public int GridSize { get; set; }
-        public int InternalGridSize { get; set; }
-        public int[,]? GridValues { get; set; }
-        public int[,]? Solution { get; set; }
+        public int GridSize {get; set;}
+        public int GridElemSize {get; set;}
+        public int InternalGridSize {get; set;}
+        public int[,]? GridValues {get; set;}
+        public int[,]? Solution {get; set;}
 
         private List<(int, int)>? DisabledCells;
 
-        public List<int>? PossibleValues { get; set; }
-        public int SelectedRow { get; set; }
-        public int SelectedCol { get; set; }
+        public List<int>? PossibleValues {get; set;}
+        public int SelectedRow {get; set;}
+        public int SelectedCol {get; set;}
 
-        public int ElapsedTime { get; private set; }
-        public string? Message { get; set; }
+        public int ElapsedTime {get; private set;}
+        public string? Message {get; set;}
+        
+        private UserScoreDto<SudokuData>? highscore {get; set;}
+        private bool highscoreChecked = false;
+        public List<UserScoreDto<SudokuData>>? topScores {get; private set;}
+
         public string? username = null;
 
-        [Inject]
-        public IAccountAuthStateProvider AuthStateProvider { get; set; }
+        public void ChangeScreen(string mode) {
+            gameScreen = mode;
+        }
 
-        protected override async Task OnInitializedAsync()
-        {
+        public async void ChangeDifficulty(string mode) {
+            switch(mode) {
+                case "Easy":
+                    Difficulty = GameDifficulty.Easy;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
+                    break;
+                case "Normal":
+                    Difficulty = GameDifficulty.Normal;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
+                    break;
+                case "Hard":
+                    Difficulty = GameDifficulty.Hard;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
+                    break;
+            }
+        }
+
+        public async void ChangeSize(string size) {
+            switch(size) {
+                case "4x4":
+                    Size = GameMode.FourByFour;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
+                    break;
+                case "9x9":
+                    Size = GameMode.NineByNine;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
+                    break;
+                case "16x16":
+                    Size = GameMode.SixteenBySixteen;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
+			        StateHasChanged();
+                    break;
+            }
+        }
+
+        static public string FormatTime(int totalSeconds) {
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            return $"{minutes:D2}:{seconds:D2}";
+        }
+
+        private async Task FetchHighscoreAsync() {
+            try {
+                highscore = await SudokuService.GetUserHighscoreAsync(username, Difficulty, Size);
+            } catch {
+                highscore = null;
+            } finally {
+                highscoreChecked = true;
+            }
+        }
+
+        protected override async Task OnInitializedAsync() {
             AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
 
             await LoadUsernameAsync();
+            if(username != null) {
+                await FetchHighscoreAsync();
+            }
+            topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
         }
 
-        private async Task LoadUsernameAsync()
-        {
+        private async Task LoadUsernameAsync() {
             username = await ((IAccountAuthStateProvider)AuthStateProvider).GetUsernameAsync();
             StateHasChanged();
         }
 
-        private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task)
-        {
+        private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task) {
             await InvokeAsync(LoadUsernameAsync);
             StateHasChanged();
         }
 
-        protected override void OnInitialized()
-        {
-            mode = GameMode.NineByNine; 
-            CurrentDifficulty = GameDifficulty.Normal;
+        public async void StartGameAsync() {
+            Message = null;
             TimerService.OnTick += TimerTick;
-            IsGameActive = false;
-            GenerateSudokuGameAsync();
+            await GenerateSudokuGameAsync();
+            gameScreen = "started";
         }
 
-
-        public async Task GenerateSudokuGameAsync()
-        {
-            if (IsLoading)
-            {
-                return;
-            }
-            IsLoading = true;
-            GridSize = (int)mode;
+        public async Task GenerateSudokuGameAsync() {
+            ElapsedTime = 0;
+            TimerService.Stop();
+            GridSize = (int)Size;
             int toHide = SudokuDifficulty();
             InternalGridSize = (int)Math.Sqrt(GridSize);
             PossibleValues = Enumerable.Range(1, GridSize).ToList();
-            ElapsedTime = 0;
             TimerService.Stop();
             StateHasChanged();
 
@@ -92,33 +169,26 @@ namespace Projektas.Client.Pages
                    .Where(col => GridValues[row, col] != 0)
                    .Select(col => (row, col)))
                .ToList();
-
-            IsGameActive = true;
-            IsLoading = false;
-            TimerService.Start(180000);
+            
+            TimerService.Start(18000);
             StateHasChanged();
         }
 
-        public int SudokuDifficulty()
-        {
-            return GridSize switch
-            {
-                4 => CurrentDifficulty switch
-                {
+        public int SudokuDifficulty() {
+            return GridSize switch {
+                4 => Difficulty switch {
                     GameDifficulty.Easy => _random.Next(7, 8),
                     GameDifficulty.Normal => _random.Next(9, 10),
                     GameDifficulty.Hard => _random.Next(11, 12),
                     _ => 0,
                 },
-                9 => CurrentDifficulty switch
-                {
+                9 => Difficulty switch {
                     GameDifficulty.Easy => _random.Next(30, 35),
                     GameDifficulty.Normal => _random.Next(45, 48),
                     GameDifficulty.Hard => _random.Next(53, 57),
                     _ => 0,
                 },
-                16 => CurrentDifficulty switch
-                {
+                16 => Difficulty switch {
                     GameDifficulty.Easy => _random.Next(30, 50),
                     GameDifficulty.Normal => _random.Next(100, 130),
                     GameDifficulty.Hard => _random.Next(140, 150),
@@ -128,99 +198,54 @@ namespace Projektas.Client.Pages
             };
         }
 
-        public void TimerTick()
-        {
+        public void TimerTick() {
             ElapsedTime++;
-            Message = null;
-            if (TimerService.RemainingTime == 0)
-            {
-                EndGame(false);
+            if(TimerService.RemainingTime == 0) {
+                EndGameAsync();
             }
 
             InvokeAsync(StateHasChanged);
         }
 
-        private void EndGame(bool won)
-        {
-            IsGameActive = false;
-            if (username != null)
-            {
-                SudokuService.SaveScoreAsync(username, ElapsedTime, CurrentDifficulty, mode);
+        private async void EndGameAsync() {
+            gameScreen = "ended";
+            if(username != null) {
+                await SudokuService.SaveScoreAsync(username, ElapsedTime, Difficulty, Size);
+                await FetchHighscoreAsync();
             }
+            topScores = await SudokuService.GetTopScoresAsync(Difficulty, Size, topCount: 10);
             TimerService.Stop();
-            if (won)
-            {
-                Message = "Correct solution. Solved in " + FormatTime(ElapsedTime);
-            }
-            else
-            {
-                Message = "Ran out of time";
-            }
-
-            InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
         }
 
-        public void IsCorrect()
-        {
-            if (IsGameActive && !IsLoading)
-            {
-                if (GridValues!.Cast<int>().SequenceEqual(Solution!.Cast<int>()))
-                {
-                    EndGame(true);
-                }
-                else
-                {
+        public void IsCorrect() {
+            if(gameScreen == "started") {
+                if (GridValues!.Cast<int>().SequenceEqual(Solution!.Cast<int>())) {
+                    EndGameAsync();
+                } else {
                     Message = "Incorrect solution";
                 }
             }
         }
 
-        public void OnDifficultyChanged(ChangeEventArgs e)
-        {
-            if (Enum.TryParse(e.Value?.ToString(), true, out GameDifficulty parsedDifficulty))
-            {
-                CurrentDifficulty = parsedDifficulty;
-            }
-        }
-
-        public void OnSizeChanged(ChangeEventArgs e)
-        {
-            if (int.TryParse(e.Value?.ToString(), out int size))
-            {
-                mode = (GameMode)size;
-            }
-        }
-
-        static public string FormatTime(int totalSeconds)
-        {
-            int minutes = totalSeconds / 60;
-            int seconds = totalSeconds % 60;
-            return $"{minutes:D2}:{seconds:D2}";
-        }
-
-        private bool IsCellDisabled(int row, int col)
-        {
-            if (!IsGameActive)
-            {
+        private bool IsCellDisabled(int row, int col) {
+            if(gameScreen != "started") {
                 return true;
             }
             return DisabledCells!.Contains((row, col));
         }
 
-        public void HandleCellClicked(int row, int col)
-        {
+        public void HandleCellClicked(int row, int col) {
             SelectedRow = row;
             SelectedCol = col;
         }
 
-        public void HandleValueSelected(ChangeEventArgs args, int row, int col)
-        {
+        public void HandleValueSelected(ChangeEventArgs args, int row, int col) {
             int value = int.Parse(args.Value.ToString());
             GridValues![row, col] = value;
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
         }
     }
