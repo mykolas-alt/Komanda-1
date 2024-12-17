@@ -4,6 +4,15 @@ using Projektas.Shared.Models;
 
 namespace Projektas.Client.Pages {
     public partial class MathGame {
+        [Inject]
+        public IMathGameService MathGameService {get; set;}
+
+        [Inject]
+        public ITimerService TimerService {get; set;}
+        [Inject]
+        public IAccountAuthStateProvider AuthStateProvider {get; set;}
+
+
         public string? question {get; private set;} = null;
         public bool isTimesUp {get; private set;} = false;
         public List<int>? options {get; private set;}
@@ -13,14 +22,6 @@ namespace Projektas.Client.Pages {
         public string? username = null;
         public int score {get; private set;} = 0;
         public string gameScreen = "main";
-
-        [Inject]
-        public IMathGameService MathGameService {get; set;}
-
-        [Inject]
-        public ITimerService TimerService {get; set;}
-        [Inject]
-        public IAccountAuthStateProvider AuthStateProvider {get; set;}
 
         public void ChangeScreen(string mode) {
             gameScreen = mode;

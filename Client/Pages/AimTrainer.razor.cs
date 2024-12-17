@@ -1,24 +1,13 @@
 ﻿namespace Projektas.Client.Pages {
     using Microsoft.AspNetCore.Components;
     using Projektas.Client.Interfaces;
+    using Projektas.Client.Services;
     using Projektas.Shared.Enums;
+    using Projektas.Shared.Models;
     using System;
     using System.Threading.Tasks;
 
     public partial class AimTrainer : IDisposable {
-        public bool isGameActive {get; private set;} = false;
-        public bool isGameOver {get; private set;} = false;
-        public bool isHardMode {get; private set;} = false;
-        private System.Timers.Timer? moveDotTimer;
-
-        public string? username = null;
-
-        public (int x,int y) TargetPosition {get; set;}
-        public int score {get; private set;}
-        public int moveCounter {get; private set;}
-        public int moveDirection {get; set;} // 0 = left, 1 = right, 2 = up, 3 = down
-        public GameDifficulty Difficulty {get; set;} = GameDifficulty.Normal;
-
         [Inject]
         public Random _random {get; set;}
 
@@ -30,11 +19,44 @@
 
         [Inject]
         public IAccountAuthStateProvider AuthStateProvider {get; set;}
+        
+        public string gameScreen = "main";
+        public GameDifficulty Difficulty {get; set;} = GameDifficulty.Normal;
 
-		protected override async Task OnInitializedAsync() {
+        private System.Timers.Timer? moveDotTimer;
+        public (int x,int y) TargetPosition {get; set;}
+        public int moveCounter {get; private set;}
+        public int moveDirection {get; set;} // 0 = left, 1 = right, 2 = up, 3 = down
+
+        public int score {get; private set;}
+        private UserScoreDto<AimTrainerData>? highscore {get; set;}
+        public List<UserScoreDto<AimTrainerData>>? topScores {get; private set;}
+        
+        public string? username = null;
+
+        public void ChangeScreen(string mode) {
+            gameScreen = mode;
+        }
+
+        public void ChangeDifficulty(string mode) {
+            switch(mode) {
+                case "Normal":
+                    Difficulty = GameDifficulty.Normal;
+                    break;
+                case "Hard":
+                    Difficulty = GameDifficulty.Hard;
+                    break;
+            }
+        }
+
+        protected override async Task OnInitializedAsync() {
 			AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
 
 			await LoadUsernameAsync();
+            if(username != null) {
+                highscore = await AimTrainerService.GetUserHighscoreAsync(username);
+            }
+            topScores = await AimTrainerService.GetTopScoresAsync(topCount: 10);
 		}
 
 		private async Task LoadUsernameAsync() {
@@ -47,21 +69,13 @@
 			StateHasChanged();
 		}
 
-        public void OnDifficultyChanged(ChangeEventArgs e) {
-            if(!isGameActive) {
-                isHardMode = e.Value?.ToString()=="Hard";
-                Difficulty = GameDifficulty.Hard;
-            }
-        }
-
         public void StartGame() {
-            isGameActive = true;
-            isGameOver = false;
+            gameScreen = "started";
             ResetGame(1000, 400);
             TimerService.Start(30);
             TimerService.OnTick += TimerTick;
 
-            if(isHardMode) {
+            if(Difficulty == GameDifficulty.Hard) {
                 StartMovingDotTimer();
             }
             InvokeAsync(StateHasChanged);
@@ -91,38 +105,18 @@
                 InvokeAsync(StateHasChanged);
             }
         }
-        private async Task EndGameAsync()
-        {
-            if (username != null)
-            {
+
+        private async Task EndGameAsync() {
+            gameScreen = "ended";
+            if(username != null) {
                 await AimTrainerService.SaveScoreAsync(username, score, Difficulty);
+                highscore = await AimTrainerService.GetUserHighscoreAsync(username);
             }
-            isGameActive = false;
-            isGameOver = true;
+            topScores = await AimTrainerService.GetTopScoresAsync(topCount: 10);
             TimerService.OnTick -= TimerTick;
             moveDotTimer?.Stop();
             moveDotTimer?.Dispose();
             await InvokeAsync(StateHasChanged);
-        }
-
-        public void TryAgain() {
-            isGameOver = false;
-            StartGame();
-        }
-
-        public void Dispose() {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing) {
-            AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
-            if(disposing) {
-                TimerService.OnTick -= TimerTick;
-                moveDotTimer?.Stop();
-                moveDotTimer?.Dispose();
-                moveDotTimer = null;
-            }
         }
 
         private void ResetGame(int boxWidth, int boxHeight) {
@@ -133,7 +127,7 @@
         }
 
         private void SetRandomTargetPosition(int boxWidth, int boxHeight) {
-            int targetSizeOffset = isHardMode ? 34 : 54;
+            int targetSizeOffset = Difficulty == GameDifficulty.Hard ? 34 : 54;
             int x = _random.Next(4, boxWidth - targetSizeOffset);
             int y = _random.Next(4, boxHeight - targetSizeOffset);
             TargetPosition = (x, y);
@@ -171,7 +165,22 @@
         }
 
         private string GetTargetColor() {
-            return isHardMode ? "black" : "blue";
+            return Difficulty == GameDifficulty.Hard ? "black" : "blue";
+        }
+
+        public void Dispose() {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) {
+            AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
+            if(disposing) {
+                TimerService.OnTick -= TimerTick;
+                moveDotTimer?.Stop();
+                moveDotTimer?.Dispose();
+                moveDotTimer = null;
+            }
         }
     }
 }
