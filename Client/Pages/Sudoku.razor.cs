@@ -100,7 +100,7 @@ namespace Projektas.Client.Pages {
             StateHasChanged();
         }
 
-        public async void StartGameAsync() {
+        public async Task StartGameAsync() {
             Message = null;
             TimerService.OnTick += TimerTick;
             await GenerateSudokuGameAsync();
@@ -115,7 +115,7 @@ namespace Projektas.Client.Pages {
             InternalGridSize = (int)Math.Sqrt(GridSize);
             PossibleValues = Enumerable.Range(1, GridSize).ToList();
             TimerService.Stop();
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
 
             GridValues = await SudokuService.GenerateSolvedSudokuAsync(GridSize);
             Solution = (int[,])GridValues.Clone();
@@ -130,7 +130,7 @@ namespace Projektas.Client.Pages {
                .ToList();
             
             TimerService.Start(18000);
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
 
         public int SudokuDifficulty() {
@@ -166,7 +166,7 @@ namespace Projektas.Client.Pages {
             InvokeAsync(StateHasChanged);
         }
 
-        private async void EndGameAsync() {
+        private async Task EndGameAsync() {
             gameScreen = "ended";
             if(username != null) {
                 await SudokuService.SaveScoreAsync(username, ElapsedTime, Difficulty, Size);
