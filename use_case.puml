@@ -1,0 +1,91 @@
+@startuml Use cases
+' !pragma layout smetana
+left to right direction
+:Player: as player
+:Unauthenticated player: as u_player
+:Authenticated player: as a_player
+
+rectangle "Account" as account {
+    usecase "Log in" as log_in
+    usecase "Sign up" as sign_up
+    usecase "Log out" as log_out
+}
+
+player <|-- u_player
+player <|-- a_player
+
+u_player --> log_in
+u_player --> sign_up
+
+a_player --> log_out
+
+newpage
+left to right direction
+:Player: as player
+
+rectangle "Game selection" as game_selection {
+   usecase "Start game" as start_game
+   usecase "Change difficulty" as change_difficulty
+}
+
+player --> start_game
+player --> change_difficulty
+
+newpage
+left to right direction
+:Player: as player
+
+rectangle "High score module" as hs_module {
+    usecase "View shortened game statistics" as view_shortened
+    usecase "View graph of game statistics" as view_graph
+    usecase "View timeline of played games" as view_timeline
+    usecase "View game statistics by difficulty" as view_by_difficulty
+}
+
+player --> view_shortened
+player --> view_graph
+player --> view_timeline
+player --> view_by_difficulty
+
+newpage
+left to right direction
+:Admin: as admin
+
+rectangle "Admin panel" as admin_panel {
+    usecase "Ban player" as ban_player
+    usecase "Delete high score" as delete_hs
+    usecase "Disable a game" as disable_game
+}
+
+admin --> ban_player
+admin --> delete_hs
+admin --> disable_game
+
+newpage
+left to right direction
+:Admin: as admin
+
+rectangle "Monitoring panel" as monitoring_panel {
+    usecase "View general site traffic" as general_traffic
+    usecase "View game specific traffic" as specific_traffic
+    usecase "View logged in user count" as user_count
+}
+
+admin --> general_traffic
+admin --> specific_traffic
+admin --> user_count
+
+newpage
+left to right direction
+:Player: as player
+
+rectangle "Navigation" as navigation {
+    usecase "Go to home page (game selection)" as home_page
+    usecase "Go to account page" as account_page
+    usecase "Go to statistics page" as statistics_page
+}
+
+player --> home_page
+player --> account_page
+player --> statistics_page
+@enduml

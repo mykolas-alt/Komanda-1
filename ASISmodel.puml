@@ -1,0 +1,33 @@
+@startuml Domain model: AS IS
+!pragma layout smetana
+left to right direction
+:Player: as player
+rectangle "Player account" as p_account
+rectangle "Game" as game
+rectangle "High score entry" as hs_entry
+rectangle "Leaderboard" as leaderboard
+rectangle "Aim trainer" as aim_trainer
+rectangle "Pair up" as pair_up
+rectangle "Math game" as math_game
+rectangle "Sudoku" as sudoku
+rectangle "Score visibility settings" as settings
+rectangle "Difficulty" as difficulty
+rectangle "Database" as database
+rectangle "High score tracking system" as hs_tracking_system
+rectangle "Authentication system" as auth_tracking_system
+rectangle "User list" as user_list
+
+game <|-- aim_trainer
+game <|-- pair_up
+game <|-- math_game
+game <|-- sudoku
+game o-- difficulty
+
+user_list o-- p_account
+p_account o-- settings
+leaderboard o-- hs_entry
+player o-- p_account
+hs_entry o-- game
+hs_entry o-- p_account
+
+@enduml
