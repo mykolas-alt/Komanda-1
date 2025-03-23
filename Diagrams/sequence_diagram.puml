@@ -3,6 +3,7 @@ actor "User" as User
 participant "Web Server" as Server
 participant "AuthService" as Auth
 participant "GameController" as GameCtrl
+participant "TimerService" as Timer
 participant "MathGame" as MathGame
 participant "SudokuGame" as Sudoku
 participant "PairMatchingGame" as PairMatch
@@ -11,47 +12,70 @@ participant "DataPersistence" as DB
 participant "Leaderboard" as LB
 
 ' =================== Authentication Flow ===================
-' ---- Sign Up Flow ----
-User -> Server: Request SignUp(username, password, other details)
-Server -> Auth: register(User)
-Auth --> Server: Registration Success/Failure
-Server --> User: Display SignUp Result
-
-' ---- Login Flow ----
 User -> Server: Request Login(username, password)
 Server -> Auth: authorize(User)
-Auth --> Server: Return authorization result
+Auth --> Server: Authorization Result
 Server --> User: Display Login Result
 
-' =================== Game Selection and Play ===================
-' ---- Game Selection ----
-User -> Server: Select Game "MathGame"
-Server -> GameCtrl: initiateGame("MathGame", User)
-GameCtrl -> MathGame: startGame()
-MathGame --> GameCtrl: Game Started
+' =================== Game Selection ===================
+User -> Server: Select Game ("MathGame"/"SudokuGame"/"PairMatchingGame"/"AimTrainerGame")
+Server -> GameCtrl: initiateGame(selectedGame, User)
 
-' ---- Game Play Loop ----
-User -> Server: Request Next Question
-Server -> GameCtrl: getQuestion(User)
-GameCtrl -> MathGame: generateQuestion(currentScore)
-MathGame --> GameCtrl: "What is 7+3?" 
-Server --> User: Display Question and Options
+alt MathGame selected
+    GameCtrl -> MathGame: startGame()
+    MathGame --> GameCtrl: Game Started (Timer active)
+    GameCtrl -> Timer: StartTimer(duration)
+    Timer --> GameCtrl: Timer Tick events
+    loop For each Math Question
+        User -> Server: Submit Answer(option)
+        Server -> GameCtrl: checkAnswer(option)
+        GameCtrl -> MathGame: generateQuestion(currentScore)
+        MathGame --> GameCtrl: New Question generated
+        Server --> User: Display Question, Options & Updated Score
+    end
+    GameCtrl -> MathGame: endGame()
+    MathGame --> GameCtrl: finalScore
+else SudokuGame selected
+    GameCtrl -> Sudoku: startGame()
+    Sudoku --> GameCtrl: Puzzle Generated (full board)
+    loop Until Puzzle is Complete
+        User -> Server: Submit Completed Grid
+        Server -> GameCtrl: checkAnswer(grid)
+        GameCtrl -> Sudoku: isSudokuComplete(grid)
+        Sudoku --> GameCtrl: false (continue) / true (complete)
+        Server --> User: Display Result
+    end
+    GameCtrl -> Sudoku: endGame()
+    Sudoku --> GameCtrl: finalScore
+else PairMatchingGame selected
+    GameCtrl -> PairMatch: startGame()
+    PairMatch --> GameCtrl: Card Deck Dealt
+    loop Until all pairs matched or session ends
+        User -> Server: Select Cards (firstIndex, secondIndex)
+        Server -> GameCtrl: checkSelectedCards(firstIndex, secondIndex)
+        GameCtrl -> PairMatch: checkSelectedCards(firstIndex, secondIndex)
+        PairMatch --> GameCtrl: Match Result (and update mistakes)
+        Server --> User: Display Match Result & Current Score
+    end
+    GameCtrl -> PairMatch: endGame()
+    PairMatch --> GameCtrl: finalScore
+else AimTrainerGame selected
+    GameCtrl -> AimTrainer: startGame()
+    AimTrainer --> GameCtrl: Game Started (Timer active)
+    GameCtrl -> Timer: StartTimer(duration)
+    Timer --> GameCtrl: Timer Tick events
+    loop For each target event
+        User -> Server: Action (hit target)
+        Server -> GameCtrl: processAction(action)
+        GameCtrl -> AimTrainer: moveTarget()
+        AimTrainer --> GameCtrl: Score Updated
+        Server --> User: Display Updated Score & Target Info
+    end
+    GameCtrl -> AimTrainer: endGame()
+    AimTrainer --> GameCtrl: finalScore
+end
 
-User -> Server: Submit Answer(option)
-Server -> GameCtrl: checkAnswer(User, option)
-GameCtrl -> MathGame: checkAnswer(option)
-MathGame --> GameCtrl: Boolean Result
-GameCtrl -> MathGame: updateScore(result)
-MathGame --> GameCtrl: Updated currentScore
-Server --> User: Provide Feedback (correct/incorrect, currentScore)
-
-' (Loop these steps for multiple rounds)
-
-' =================== Ending the Game Session ===================
-User -> Server: End Game Session
-Server -> GameCtrl: endGame(User)
-GameCtrl -> MathGame: endGame()
-MathGame --> GameCtrl: finalScore
+' =================== Ending Game Session ===================
 GameCtrl -> DB: save(GameSession, finalScore)
 DB --> GameCtrl: Confirmation
 GameCtrl -> LB: updateScores(GameSession)
@@ -61,7 +85,7 @@ Server --> User: Display Final Score & Leaderboard
 ' =================== Logout Flow ===================
 User -> Server: Request Logout
 Server -> Auth: logout(User)
-Auth --> Server: Logout Process Completed
+Auth --> Server: Logout Completed
 Server --> User: Display Logout Confirmation
 
 @enduml

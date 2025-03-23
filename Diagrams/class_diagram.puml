@@ -13,6 +13,16 @@ enum Operation {
   Division
 }
 
+
+class DataPersistence {
+  +save()
+  +retrieve()
+}
+
+GameSession ..> DataPersistence
+Statistics ..> DataPersistence
+
+
 ' ======== User/Account Domain ========
 abstract class User {
   +int userId
@@ -25,7 +35,7 @@ abstract class User {
 }
 
 class Player {
-  +playGame(game: Game)
+  +playGame()
   +viewStatistics()
   +togglePrivate()
 }
@@ -38,80 +48,66 @@ class Admin {
 User <|-- Player
 User <|-- Admin
 
+
+
 ' ======== Game Domain ========
 class Game {
   +String name
   +String description
   -Difficulty difficulty
   
-  +TimerService Timer
   +int finalScore
   
   +startGame()
   +endGame()
-  
-  +SaveScore() 
-  +GetUserHighscoreAsync(username:string) 
-  +GetTopScoresAsync()
+  +saveScore() 
+  +getUserHighscore() 
+  +getTopScores()
 }
 
 
-' ======== Statistics/High Score Domain ========
-class GameSession {
-  +int sessionId
-
-  
-  +recordSession()
-  +selectGame()
-  +displayHighScore()
-}
 
 class MathGame {
   -int currentScore 
-' (Used to make the questions harder, increases after a question is correct)
   -List<Operation> operations
   -List<int> numbers
-  -int answer
+  -List<int> options
+  -boolean isCorrect
 
-  +generateQuestion(currentScore: int): String
-  +generateOptions(): List<int>
-  'cards that are displayed in the web
-  +checkAnswer(option: int): boolean
-  
+  +generateQuestion(currentScore: int)
+  +generateOptions()
+  +checkAnswer()
 }
 
 class SudokuGame {
   - List<List<int>> grid
   - List<List<int>> solution
   - int gridSize
-  - boolean isComplete ???
-  + generateSudoku(gridSize: int, d: Difficulty): void
-  + checkMove(row: int, col: int, val: int, gridSize: int): boolean
-  + isSudokuComplete(): boolean
+  - boolean isComplete
+  
+  +generateSudoku()
+  +checkAnswer()
+  +isSudokuComplete()
 }
-
 
 class PairMatchingGame {
   -List<Card> cards
   -int matchedPairs
   -int mistakes
-  
-  -generateCardDeck(theme: String)
-  +checkSelectedCards(firstIndex: int, secondIndex: int): boolean
 
+  -generateCardDeck()
+  +checkSelectedCards()
 }
 
 class AimTrainerGame {
   -int targetPosititionX
   -int targetPosititionY
-'  -int botWidth
-'  -int boxHeight
   -int score
 
   +spawnTarget()
   +moveTarget()
-  
 }
+
 
 Game <|-- MathGame
 Game <|-- SudokuGame
@@ -119,36 +115,40 @@ Game <|-- PairMatchingGame
 Game <|-- AimTrainerGame
 
 
+class TimerService {
+  +int RemainingTime
+  +Start()
+  +Stop()
+  +OnTick()
+}
+
+Game *-- TimerService
+
+' ======== Statistics/High Score Domain ========
+class GameSession {
+  +int sessionId
+  +recordSession()
+  +selectGame()
+  +displayHighScore()
+}
+
+class Statistics {
+  +viewShortStats()
+  +viewTimeline()
+  +viewStatsByDifficulty()
+  +viewGraph()
+}
 
 GameSession o-- Game
 GameSession o-- Player
-
-class Statistics {
-  +viewShortStats(player: Player, game: Game)
-  +viewTimeline(player: Player, game: Game)
-  +viewStatsByDifficulty(player: Player, d: Difficulty)
-  +viewGraph(player: Player, game: Game)
-}
-
 Statistics -- GameSession
 
 ' ======== Services & Persistence ========
 class AuthService {
-  +authorize(user: User): boolean
-  +register(user: User)
+  +authorize()
+  +register()
 }
 
 User ..> AuthService
 
-class DataPersistence {
-  +save(entity: Object)
-  +retrieve(query: String): Object
-}
-
-GameSession ..> DataPersistence
-Statistics ..> DataPersistence
-
-
-' ======== Notes ========
-'note "This analysis-level diagram focuses on core domain classes.\nIt does not show all low-level or UI classes." as N1
 @enduml
