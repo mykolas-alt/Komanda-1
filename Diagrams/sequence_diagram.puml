@@ -4,6 +4,9 @@ participant "Web Server" as Server
 participant "AuthService" as Auth
 participant "GameController" as GameCtrl
 participant "MathGame" as MathGame
+participant "SudokuGame" as Sudoku
+participant "PairMatchingGame" as PairMatch
+participant "AimTrainerGame" as AimTrainer
 participant "DataPersistence" as DB
 participant "Leaderboard" as LB
 

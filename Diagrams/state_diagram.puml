@@ -2,21 +2,45 @@
 !pragma layout smetana
 
 ' Main application states
-[*] --> Unauthenticated : Start Application
+[*] --> LandingPage : Start Application
 
-state Unauthenticated {
+state LandingPage {
   [*] --> ViewingLandingPage
   ViewingLandingPage --> AttemptingLogin : Click Login
   ViewingLandingPage --> AttemptingSignup : Click Signup
+  ViewingLandingPage --> BrowsingGamesAnonymous : Browse Games Anonymously
   AttemptingLogin --> ViewingLandingPage : Login Failed
   AttemptingSignup --> ViewingLandingPage : Signup Failed
 }
 
-Unauthenticated --> Authenticated : Login Success
+AttemptingLogin --> Authenticated : Login Success
 
+' Anonymous user flow
+state BrowsingGamesAnonymous {
+  [*] --> ViewingGameOptionsAnonymous
+  ViewingGameOptionsAnonymous --> SelectingDifficultyAnonymous : Select Game
+  SelectingDifficultyAnonymous --> ViewingGameOptionsAnonymous : Cancel
+  ViewingGameOptionsAnonymous --> LandingPage : Login Required (for statistics/account)
+}
+
+BrowsingGamesAnonymous --> PlayingGameAnonymous : Start Game (No Score Saving)
+
+' Anonymous playing state
+state PlayingGameAnonymous {
+  [*] --> GameInitializingAnonymous
+  GameInitializingAnonymous --> GameInProgressAnonymous : Game Started
+  GameInProgressAnonymous --> GameEndedAnonymous : End Game Conditions Met
+  GameEndedAnonymous --> ViewingResultsAnonymous : Score Not Saved
+  ViewingResultsAnonymous --> PromptLoginForSaving : Prompt to Login to Save Score
+  ViewingResultsAnonymous --> GameInitializingAnonymous : Play Again
+  PromptLoginForSaving --> LandingPage : Redirect to Login
+}
+PlayingGameAnonymous --> BrowsingGamesAnonymous : Exit Game
+
+' Authenticated user flow
 state Authenticated {
   [*] --> BrowsingGames
-  
+ 
   ' Game selection & navigation state
   state BrowsingGames {
     [*] --> ViewingGameOptions
@@ -27,53 +51,53 @@ state Authenticated {
     ViewingStatistics --> ViewingGameOptions : Back
     ViewingAccount --> ViewingGameOptions : Back
   }
-  
+ 
   ' Game playing state
   state PlayingGame {
     [*] --> GameInitializing
     GameInitializing --> GameInProgress : Game Started
-    
+   
     state GameInProgress {
       [*] --> WaitingForUserInput
-      
+     
       state MathGameStates {
         QuestionDisplayed --> AnswerSubmitted : Submit Answer
         AnswerSubmitted --> ResultDisplayed : Evaluate Answer
         ResultDisplayed --> QuestionDisplayed : Next Question
       }
-      
+     
       state SudokuGameStates {
         GridDisplayed --> CellSelected : Select Cell
         CellSelected --> ValueEntered : Enter Value
         ValueEntered --> GridDisplayed : Continue
       }
-      
+     
       state PairMatchingGameStates {
         CardsShown --> FirstCardSelected : Select Card
         FirstCardSelected --> SecondCardSelected : Select Second Card
         SecondCardSelected --> MatchEvaluated : Check Match
         MatchEvaluated --> CardsShown : Continue
       }
-      
+     
       state AimTrainerGameStates {
         TargetDisplayed --> TargetClicked : Click Target
         TargetClicked --> ScoreUpdated : Update Score
         ScoreUpdated --> TargetDisplayed : Generate New Target
       }
-      
+     
       ' Connect the specific game states to the general state
       WaitingForUserInput --> QuestionDisplayed : If Math Game
       WaitingForUserInput --> GridDisplayed : If Sudoku
       WaitingForUserInput --> CardsShown : If Pair Matching
       WaitingForUserInput --> TargetDisplayed : If Aim Trainer
     }
-    
+   
     GameInProgress --> GameEnded : End Game Conditions Met
     GameEnded --> SubmittingScore : Submit Score
     SubmittingScore --> ViewingResults : Score Saved
     ViewingResults --> GameInitializing : Play Again
   }
-  
+ 
   ' Statistics viewing state
   state ViewingStatistics {
     [*] --> SelectingStatisticsView
@@ -81,13 +105,13 @@ state Authenticated {
     SelectingStatisticsView --> ViewingGraphStats : Select Graph View
     SelectingStatisticsView --> ViewingTimelineStats : Select Timeline View
     SelectingStatisticsView --> ViewingDifficultyStats : Select Difficulty Stats
-    
+   
     ViewingShortStats --> SelectingStatisticsView : Back
     ViewingGraphStats --> SelectingStatisticsView : Back
     ViewingTimelineStats --> SelectingStatisticsView : Back
     ViewingDifficultyStats --> SelectingStatisticsView : Back
   }
-  
+ 
   ' Account management state
   state ViewingAccount {
     [*] --> ManagingProfile
@@ -95,7 +119,7 @@ state Authenticated {
     ManagingProfile --> AttemptingLogout : Click Logout
     UpdatingSettings --> ManagingProfile : Save Settings
   }
-  
+ 
   ' State transitions between major states
   BrowsingGames --> PlayingGame : Start Game
   PlayingGame --> BrowsingGames : Exit Game
@@ -103,7 +127,7 @@ state Authenticated {
 }
 
 ' Logout transition
-Authenticated --> Unauthenticated : Logout Success
-AttemptingLogout --> Unauthenticated : Logout Processed
+Authenticated --> LandingPage : Logout Success
+AttemptingLogout --> LandingPage : Logout Processed
 
 @enduml
