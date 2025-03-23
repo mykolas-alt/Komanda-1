@@ -15,7 +15,7 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlite("Data source=Database/usersdb.db"));
+builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -44,8 +44,10 @@ builder.Services.AddScoped<IUserService, UserService>(provider => new UserServic
 ));
 builder.Services.AddScoped<IAccountScoreService, AccountScoreService>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
-	options.TokenValidationParameters = new TokenValidationParameters {
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
 		ValidateIssuer = true,
 		ValidateAudience = true,
 		ValidateLifetime = true,
@@ -59,11 +61,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+	using var context = scope.ServiceProvider.GetRequiredService<UserDbContext>();
+	context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
 	app.UseWebAssemblyDebugging();
-} else {
+}
+else
+{
 	app.UseExceptionHandler("/Error");
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
