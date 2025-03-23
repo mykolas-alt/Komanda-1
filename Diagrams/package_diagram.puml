@@ -1,0 +1,88 @@
+@startuml Package Diagram
+' Remove the layout directive that might be causing issues
+' !pragma layout smetana
+
+' Main application layers
+package "UI Layer" as UI {
+  package "Web Interface" {
+    [Game Selection UI]
+    [Game Play UI]
+    [Statistics UI]
+    [Account UI]
+    [Admin UI]
+  }
+  
+  package "Navigation" {
+    [Navigation Controller]
+  }
+}
+
+package "Business Logic Layer" as BLL {
+  package "User Management" {
+    [User Service]
+    [Authentication Service]
+    [Admin Service]
+  }
+  
+  package "Game Management" {
+    [Game Controller]
+    [Difficulty Manager]
+    [Timer Service]
+  }
+  
+  package "Statistics" {
+    [Leaderboard Service]
+    [Statistical Analysis]
+    [Graph Generator]
+  }
+}
+
+package "Game Implementation Layer" as Games {
+  package "MathGame" {
+    [Question Generator]
+    [Answer Checker]
+  }
+  
+  package "Sudoku" {
+    [Grid Generator]
+    [Move Validator]
+  }
+  
+  package "PairMatching" {
+    [Card Manager]
+    [Matching Logic]
+  }
+  
+  package "AimTrainer" {
+    [Target Generator]
+    [Score Calculator]
+  }
+}
+
+package "Data Layer" as DL {
+  package "Data Access" {
+    [Database Connection]
+    [Query Executor]
+  }
+  
+  package "Repositories" {
+    [User Repository]
+    [Game Session Repository]
+    [Score Repository]
+  }
+  
+  package "Domain Models" {
+    [User Model]
+    [Game Model]
+    [Session Model]
+    [Score Model]
+  }
+}
+
+' Simplified dependencies without hide directives
+UI --> BLL : uses
+BLL --> Games : manages
+BLL --> DL : accesses data
+Games ..> DL : persists results
+
+@enduml

@@ -1,0 +1,63 @@
+@startuml Component Diagram
+!pragma layout smetana
+
+' Main components
+package "Frontend" {
+  [WebUI] as UI
+  [Navigation Component] as Nav
+}
+
+package "Core Services" {
+  [Authentication Component] as Auth
+  [Game Controller] as GameCtrl
+  [Statistics Manager] as StatsMgr
+  [User Manager] as UserMgr
+}
+
+package "Game Components" {
+  [Math Game] as MathGame
+  [Sudoku Game] as Sudoku
+  [Pair Matching Game] as PairMatch
+  [Aim Trainer Game] as AimTrainer
+}
+
+package "Persistence" {
+  [Data Access Layer] as DAL
+  [Score Repository] as ScoreRepo
+  [User Repository] as UserRepo
+  [Game Session Repository] as SessionRepo
+}
+
+' External interfaces
+interface "HTTP/REST API" as API
+interface "Database Interface" as DBIF
+
+' Relationships
+UI -- API
+API -- Auth
+API -- GameCtrl
+API -- StatsMgr
+API -- UserMgr
+
+Auth ..> UserRepo : uses
+GameCtrl ..> MathGame : controls
+GameCtrl ..> Sudoku : controls
+GameCtrl ..> PairMatch : controls
+GameCtrl ..> AimTrainer : controls
+GameCtrl ..> ScoreRepo : uses
+GameCtrl ..> SessionRepo : uses
+StatsMgr ..> ScoreRepo : uses
+StatsMgr ..> SessionRepo : uses
+UserMgr ..> UserRepo : uses
+
+ScoreRepo -- DBIF
+UserRepo -- DBIF
+SessionRepo -- DBIF
+
+Nav ..> UI : navigates
+
+' Notes
+note bottom of GameCtrl : Manages game lifecycle and difficulty settings
+note bottom of StatsMgr : Provides various statistical views and analytics
+note bottom of Auth : Handles login, signup and user authorization
+@enduml
