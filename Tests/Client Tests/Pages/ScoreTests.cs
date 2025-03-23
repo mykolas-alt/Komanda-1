@@ -123,6 +123,12 @@ namespace Projektas.Tests.Client_Tests.Pages
         }
 
         [Fact]
+        public void Failing_Test()
+        {
+            Assert.Fail();
+        }
+
+        [Fact]
         public async Task LoadMathGameScoresAsync_ShouldSetPropertiesCorrectly()
         {
             var component = RenderComponent<Score>();
