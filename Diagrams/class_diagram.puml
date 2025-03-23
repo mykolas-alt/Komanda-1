@@ -1,0 +1,154 @@
+@startuml
+' ======== Abstract Classes and Enumerations ========
+enum Difficulty {
+  Easy
+  Medium
+  Hard
+}
+
+enum Operation {
+  Addition
+  Substraction
+  Multiplication
+  Division
+}
+
+' ======== User/Account Domain ========
+abstract class User {
+  +int userId
+  +String username
+  +String password
+  +boolean isAuthorized
+  +login()
+  +logout()
+  +signUp()
+}
+
+class Player {
+  +playGame(game: Game)
+  +viewStatistics()
+  +togglePrivate()
+}
+
+class Admin {
+  +manageUsers()
+  +updateGameContent()
+}
+
+User <|-- Player
+User <|-- Admin
+
+' ======== Game Domain ========
+class Game {
+  +String name
+  +String description
+  -Difficulty difficulty
+  
+  +TimerService Timer
+  +int finalScore
+  
+  +startGame()
+  +endGame()
+  
+  +SaveScore() 
+  +GetUserHighscoreAsync(username:string) 
+  +GetTopScoresAsync()
+}
+
+
+' ======== Statistics/High Score Domain ========
+class GameSession {
+  +int sessionId
+
+  
+  +recordSession()
+  +selectGame()
+  +displayHighScore()
+}
+
+class MathGame {
+  -int currentScore 
+' (Used to make the questions harder, increases after a question is correct)
+  -List<Operation> operations
+  -List<int> numbers
+  -int answer
+
+  +generateQuestion(currentScore: int): String
+  +generateOptions(): List<int>
+  'cards that are displayed in the web
+  +checkAnswer(option: int): boolean
+  
+}
+
+class SudokuGame {
+  - List<List<int>> grid
+  - List<List<int>> solution
+  - int gridSize
+  - boolean isComplete ???
+  + generateSudoku(gridSize: int, d: Difficulty): void
+  + checkMove(row: int, col: int, val: int, gridSize: int): boolean
+  + isSudokuComplete(): boolean
+}
+
+
+class PairMatchingGame {
+  -List<Card> cards
+  -int matchedPairs
+  -int mistakes
+  
+  -generateCardDeck(theme: String)
+  +checkSelectedCards(firstIndex: int, secondIndex: int): boolean
+
+}
+
+class AimTrainerGame {
+  -int targetPosititionX
+  -int targetPosititionY
+'  -int botWidth
+'  -int boxHeight
+  -int score
+
+  +spawnTarget()
+  +moveTarget()
+  
+}
+
+Game <|-- MathGame
+Game <|-- SudokuGame
+Game <|-- PairMatchingGame
+Game <|-- AimTrainerGame
+
+
+
+GameSession o-- Game
+GameSession o-- Player
+
+class Statistics {
+  +viewShortStats(player: Player, game: Game)
+  +viewTimeline(player: Player, game: Game)
+  +viewStatsByDifficulty(player: Player, d: Difficulty)
+  +viewGraph(player: Player, game: Game)
+}
+
+Statistics -- GameSession
+
+' ======== Services & Persistence ========
+class AuthService {
+  +authorize(user: User): boolean
+  +register(user: User)
+}
+
+User ..> AuthService
+
+class DataPersistence {
+  +save(entity: Object)
+  +retrieve(query: String): Object
+}
+
+GameSession ..> DataPersistence
+Statistics ..> DataPersistence
+
+
+' ======== Notes ========
+'note "This analysis-level diagram focuses on core domain classes.\nIt does not show all low-level or UI classes." as N1
+@enduml

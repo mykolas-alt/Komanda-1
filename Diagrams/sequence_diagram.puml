@@ -1,0 +1,64 @@
+@startuml
+actor "User" as User
+participant "Web Server" as Server
+participant "AuthService" as Auth
+participant "GameController" as GameCtrl
+participant "MathGame" as MathGame
+participant "DataPersistence" as DB
+participant "Leaderboard" as LB
+
+' =================== Authentication Flow ===================
+' ---- Sign Up Flow ----
+User -> Server: Request SignUp(username, password, other details)
+Server -> Auth: register(User)
+Auth --> Server: Registration Success/Failure
+Server --> User: Display SignUp Result
+
+' ---- Login Flow ----
+User -> Server: Request Login(username, password)
+Server -> Auth: authorize(User)
+Auth --> Server: Return authorization result
+Server --> User: Display Login Result
+
+' =================== Game Selection and Play ===================
+' ---- Game Selection ----
+User -> Server: Select Game "MathGame"
+Server -> GameCtrl: initiateGame("MathGame", User)
+GameCtrl -> MathGame: startGame()
+MathGame --> GameCtrl: Game Started
+
+' ---- Game Play Loop ----
+User -> Server: Request Next Question
+Server -> GameCtrl: getQuestion(User)
+GameCtrl -> MathGame: generateQuestion(currentScore)
+MathGame --> GameCtrl: "What is 7+3?" 
+Server --> User: Display Question and Options
+
+User -> Server: Submit Answer(option)
+Server -> GameCtrl: checkAnswer(User, option)
+GameCtrl -> MathGame: checkAnswer(option)
+MathGame --> GameCtrl: Boolean Result
+GameCtrl -> MathGame: updateScore(result)
+MathGame --> GameCtrl: Updated currentScore
+Server --> User: Provide Feedback (correct/incorrect, currentScore)
+
+' (Loop these steps for multiple rounds)
+
+' =================== Ending the Game Session ===================
+User -> Server: End Game Session
+Server -> GameCtrl: endGame(User)
+GameCtrl -> MathGame: endGame()
+MathGame --> GameCtrl: finalScore
+GameCtrl -> DB: save(GameSession, finalScore)
+DB --> GameCtrl: Confirmation
+GameCtrl -> LB: updateScores(GameSession)
+LB --> GameCtrl: Updated Rankings
+Server --> User: Display Final Score & Leaderboard
+
+' =================== Logout Flow ===================
+User -> Server: Request Logout
+Server -> Auth: logout(User)
+Auth --> Server: Logout Process Completed
+Server --> User: Display Logout Confirmation
+
+@enduml

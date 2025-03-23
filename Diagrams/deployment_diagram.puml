@@ -1,0 +1,27 @@
+@startuml
+' Define the client node
+node "Client Browser" as Client {
+  artifact "Web App (UI)" as WebUI
+}
+
+' Define the web/application server node
+node "Web/Application Server" as AppServer {
+  artifact "Application manager" as AppArtifact
+  artifact "AuthService, GameService, ScoreService" as ServiceArtifact
+}
+
+' Define the database server node
+node "Database Server" as DBServer {
+  artifact "SQL/NoSQL Database" as Database
+}
+
+' Communication between nodes
+Client --> AppServer : HTTP/REST API calls
+AppServer --> DBServer : SQL queries
+
+' Optional: if using a CI/CD server or Load Balancer, you could add:
+'node "Load Balancer" as LB {
+'  artifact "LB" as LBArtifact
+'}
+'LB --> AppServer
+@enduml
