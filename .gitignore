@@ -20,3 +20,4 @@
 /Tests/obj/Projektas.Tests.csproj.nuget.g.props
 /Server/Database/usersdb.db-shm
 /Server/Database/usersdb.db-wal
+out/Diagrams
