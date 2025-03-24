@@ -1,5 +1,5 @@
 @startuml Component Diagram
-!pragma layout smetana
+left to right direction
 
 ' Main components
 package "Frontend" {
