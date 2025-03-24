@@ -77,7 +77,7 @@
 
 .player_highscore {
     font-weight: bold;
-    font-size: 4rem;
+    font-size: 3rem;
 }
 
 .no_highscore {
@@ -95,9 +95,9 @@
     margin-right: auto;
 }
 
-    .middle.end {
-        margin-top: 1rem;
-    }
+.middle.end {
+    margin-top: 1rem;
+}
 
 .button {
     background: #b0b0b0;
@@ -111,18 +111,18 @@
     transition: all 0.2s ease;
 }
 
-    .button:first-of-type {
-        margin-top: auto;
-    }
+.button:first-of-type {
+    margin-top: auto;
+}
 
-    .button:last-of-type {
-        margin-bottom: auto;
-    }
+.button:last-of-type {
+    margin-bottom: auto;
+}
 
-    .button:hover {
-        background: #d1d1d1;
-        transform: scale(1.1);
-    }
+.button:hover {
+    background: #d1d1d1;
+    transform: scale(1.1);
+}
 
 .leaderboard {
     background: #bfbfbf;
@@ -171,10 +171,10 @@
     background: #888;
 }
 
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 
 .game_question {
     font-weight: bold;
@@ -197,9 +197,9 @@
     text-align: center;
 }
 
-    .game_score.end {
-        margin-top: 0rem;
-    }
+.game_score.end {
+    margin-top: 0rem;
+}
 
 .game_questions {
     margin-left: auto;
