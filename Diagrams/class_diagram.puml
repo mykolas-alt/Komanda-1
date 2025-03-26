@@ -1,154 +1,204 @@
 @startuml
 ' ======== Abstract Classes and Enumerations ========
 enum Difficulty {
-  Easy
-  Medium
-  Hard
+Easy
+Medium
+Hard
 }
 
 enum Operation {
-  Addition
-  Substraction
-  Multiplication
-  Division
+Addition
+Substraction
+Multiplication
+Division
 }
 
-
-class DataPersistence {
-  +save()
-  +retrieve()
+' ======== Data & Persistence ========
+abstract class DataPersistence {
++save()
++retrieve()
 }
-
-GameSession ..> DataPersistence
-Statistics ..> DataPersistence
-
 
 ' ======== User/Account Domain ========
 abstract class User {
-  +int userId
-  +String username
-  +String password
-  +boolean isAuthorized
-  +login()
-  +logout()
-  +signUp()
++int userId
++String username
++String password
++boolean isAuthorized
++login()
++logout()
++signUp()
 }
 
-class Player {
-  +playGame()
-  +viewStatistics()
-  +togglePrivate()
-}
-
-class Admin {
-  +manageUsers()
-  +updateGameContent()
+abstract class Player {
++playGame()
++viewStatistics()
++togglePrivate()
 }
 
 User <|-- Player
-User <|-- Admin
 
-
-
-' ======== Game Domain ========
-class Game {
-  +String name
-  +String description
-  -Difficulty difficulty
-  
-  +int finalScore
-  
-  +startGame()
-  +endGame()
-  +saveScore() 
-  +getUserHighscore() 
-  +getTopScores()
+' ======== Application Session ========
+abstract class AppSession {
++int sessionId
++startSession()
++endSession()
++navigateToPage()
 }
 
-
-
-class MathGame {
-  -int currentScore 
-  -List<Operation> operations
-  -List<int> numbers
-  -List<int> options
-  -boolean isCorrect
-
-  +generateQuestion(currentScore: int)
-  +generateOptions()
-  +checkAnswer()
+' ======== Application Pages ========
+abstract class AppPage {
++loadPage()
++renderContent()
 }
 
-class SudokuGame {
-  - List<List<int>> grid
-  - List<List<int>> solution
-  - int gridSize
-  - boolean isComplete
-  
-  +generateSudoku()
-  +checkAnswer()
-  +isSudokuComplete()
+abstract class GamePage extends AppPage {
++startGame()
++saveScore()
 }
 
-class PairMatchingGame {
-  -List<Card> cards
-  -int matchedPairs
-  -int mistakes
-
-  -generateCardDeck()
-  +checkSelectedCards()
+class MathGamePage extends GamePage {
+-int score
+-string question
+-List<int> options
+-boolean? isCorrect
++generateQuestion()
++checkAnswer(int option)
 }
 
-class AimTrainerGame {
-  -int targetPosititionX
-  -int targetPosititionY
-  -int score
-
-  +spawnTarget()
-  +moveTarget()
+class SudokuGamePage extends GamePage {
+-int[,] grid
+-int[,] solution
+-int elapsedTime
+-List<int> possibleValues
++generateSudoku()
++checkSolution()
 }
 
-
-Game <|-- MathGame
-Game <|-- SudokuGame
-Game <|-- PairMatchingGame
-Game <|-- AimTrainerGame
-
-
-class TimerService {
-  +int RemainingTime
-  +Start()
-  +Stop()
-  +OnTick()
+class PairMatchingGamePage extends GamePage {
+-List<Card> cards
+-int matchedPairs
+-int mistakes
++generateCardDeck()
++checkSelectedCards()
 }
 
-Game *-- TimerService
+class AimTrainerPage extends GamePage {
+-int score
+-(int x, int y) targetPosition
+-int moveDirection
++onTargetClicked()
++moveTarget()
+}
+
+class SettingsPage extends AppPage {
+  +bool IsPrivateActive
+  -TogglePrivate()
+}
+
 
 ' ======== Statistics/High Score Domain ========
-class GameSession {
-  +int sessionId
-  +recordSession()
-  +selectGame()
-  +displayHighScore()
+abstract class StatisticsPage extends AppPage {
++viewShortStats()
++viewTimeline()
++viewStatsByDifficulty()
++viewGraph()
 }
 
-class Statistics {
-  +viewShortStats()
-  +viewTimeline()
-  +viewStatsByDifficulty()
-  +viewGraph()
+class ScoreChart {
++renderChart()
 }
 
-GameSession o-- Game
-GameSession o-- Player
-Statistics -- GameSession
-
-' ======== Services & Persistence ========
-class AuthService {
-  +authorize()
-  +register()
+class TimeScoreChart {
++renderTimeChart()
 }
 
+StatisticsPage -- ScoreChart
+StatisticsPage -- TimeScoreChart
+
+
+AppSession o-- AppPage
+AppSession o-- Player
+
+' ======== Timer Service ========
+class TimerService {
++int RemainingTime
++Start()
++Stop()
++OnTick()
+}
+
+GamePage *-- TimerService
+
+
+' ======== Services (Subset) ========
+abstract class AuthService {
++authorize()
++register()
+}
 User ..> AuthService
 
+' ======== Controllers ========
+class AccountScoreController <<Controller>> {
++GetGameScores()
++GetGameHighscore()
++GetGameMatchesPlayed()
++GetGameAverageScore()
++GetGameAverageScoreLast7Days()
+}
+
+AccountScoreController ..> DataPersistence
+
+class AimTrainerController <<Controller>> {
++SaveScoreAsync()
++GetUserHighscoreAsync()
++GetTopScoresAsync()
+}
+
+class MathGameController <<Controller>> {
++GetQuestion()
++GetOptions()
++CheckAnswer()
++SaveScoreAsync()
++GetUserHighscoreAsync()
++GetTopScoresAsync()
+}
+
+class PairUpController <<Controller>> {
++SaveScoreAsync()
++GetUserHighscoreAsync()
++GetTopScoresAsync()
+}
+
+class SudokuController <<Controller>> {
++GenerateSolvedSudoku()
++HideNumbers()
++SaveScoreAsync()
++GetUserHighscoreAsync()
++GetTopScoresAsync()
+}
+
+class UserController <<Controller>> {
++CreateUserAsync()
++LogInAsync()
++LogOff()
++GetUsernamesAsync()
++ChangePrivateAsync()
++GetPrivateAsync()
+}
+
+' ======== Relationships for Controllers ========
+AuthService ..> UserController
+MathGamePage ..> MathGameController
+PairMatchingGamePage ..> PairUpController
+SudokuGamePage ..> SudokuController
+AimTrainerPage ..> AimTrainerController
+SettingsPage ..> UserController
+StatisticsPage ..> AccountScoreController
+
+AimTrainerController ..> DataPersistence
+MathGameController ..> DataPersistence
+PairUpController ..> DataPersistence
+SudokuController ..> DataPersistence
+UserController ..> DataPersistence
 @enduml
