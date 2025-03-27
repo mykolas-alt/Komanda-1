@@ -1,10 +1,17 @@
 @startuml
+skinparam linetype polyline
+'skinparam linetype ortho
 ' ======== Abstract Classes and Enumerations ========
 enum Difficulty {
 Easy
 Medium
 Hard
 }
+
+Difficulty --* MathGamePage
+Difficulty --* SudokuGamePage
+Difficulty --* PairMatchingGamePage
+Difficulty --* AimTrainerPage
 
 enum Operation {
 Addition
@@ -13,51 +20,53 @@ Multiplication
 Division
 }
 
-' ======== Data & Persistence ========
-abstract class DataPersistence {
-+save()
-+retrieve()
-}
+Operation --* MathGamePage
+
 
 ' ======== User/Account Domain ========
-abstract class User {
-+int userId
-+String username
-+String password
-+boolean isAuthorized
-+login()
-+logout()
-+signUp()
-}
+'abstract class User {
+'+int userId
+'+String username
+'+String password
+'+boolean isAuthorized
+'+login()
+'+logout()
+'+signUp()
+'}
 
-abstract class Player {
-+playGame()
-+viewStatistics()
-+togglePrivate()
-}
-
-User <|-- Player
-
-' ======== Application Session ========
-abstract class AppSession {
-+int sessionId
-+startSession()
-+endSession()
-+navigateToPage()
-}
+'User <|-- Player
 
 ' ======== Application Pages ========
-abstract class AppPage {
-+loadPage()
-+renderContent()
+abstract class BlazerComponentBase {
 }
 
-abstract class GamePage extends AppPage {
-+startGame()
-+saveScore()
+class AccountPage extends BlazerComponentBase {
+  - string username 
+  + string accountUsername
+  + string accountPassword
+  + bool isUsernameNew
+  + bool incorectLogIn
+
+  + LogInEventAsync()
+  + LogOffEvent()
+  + SignUpEventAsync()
 }
 
-class MathGamePage extends GamePage {
+class User {
+  + int Id
+  + Username : string
+  + Password : string
+  + bool IsPrivate
+  + List<Score<MathGamePageData>> MathGamePageScores
+  + List<Score<SudokuData>> SudokuScores
+  + List<Score<AimTrainerData>> AimTrainerScores
+  + List<Score<PairUpData>> PairUpScores
+}
+
+User <.. AccountPage
+UserController ..> User
+
+class MathGamePage extends BlazerComponentBase {
 -int score
 -string question
 -List<int> options
@@ -66,7 +75,7 @@ class MathGamePage extends GamePage {
 +checkAnswer(int option)
 }
 
-class SudokuGamePage extends GamePage {
+class SudokuGamePage extends BlazerComponentBase {
 -int[,] grid
 -int[,] solution
 -int elapsedTime
@@ -75,7 +84,7 @@ class SudokuGamePage extends GamePage {
 +checkSolution()
 }
 
-class PairMatchingGamePage extends GamePage {
+class PairMatchingGamePage extends BlazerComponentBase {
 -List<Card> cards
 -int matchedPairs
 -int mistakes
@@ -83,42 +92,72 @@ class PairMatchingGamePage extends GamePage {
 +checkSelectedCards()
 }
 
-class AimTrainerPage extends GamePage {
+class AimTrainerPage extends BlazerComponentBase {
 -int score
--(int x, int y) targetPosition
+-int x,
+-int y targetPosition
 -int moveDirection
 +onTargetClicked()
 +moveTarget()
 }
 
-class SettingsPage extends AppPage {
-  +bool IsPrivateActive
-  -TogglePrivate()
+
+class SettingsPage extends BlazerComponentBase {
+  - bool IsPrivateActive
+  - TogglePrivate()
 }
+
+class UserScoreDto <T: Class> {
+  + string Username
+  + bool IsPrivate
+  + DateTime Timestamp
+  + T GameData 
+  + ShowOtherDateTimeFormat()
+}
+
+UserScoreDto <.. StatisticsPage
+
+MathGamePage ..> UserScoreDto
+SudokuGamePage ..> UserScoreDto
+PairMatchingGamePage ..> UserScoreDto
+AimTrainerPage ..> UserScoreDto
+
+
+ UserScoreDto <.. MathGamePageController
+ UserScoreDto <.. SudokuController
+ UserScoreDto <.. PairUpController  
+ UserScoreDto <.. AimTrainerController
+
 
 
 ' ======== Statistics/High Score Domain ========
-abstract class StatisticsPage extends AppPage {
-+viewShortStats()
-+viewTimeline()
-+viewStatsByDifficulty()
-+viewGraph()
+class StatisticsPage extends BlazerComponentBase {
+  + Dictionary<string, List<UserScoreDto>> GameScores 
+  + Dictionary<string, int> GamePlayedCounts
+  + Dictionary<string, GameScore> GameHighscores
+  + Dictionary<string, GameScore> GameAllTimeAverages
+  + Dictionary<string, List<AverageScoreDto>> GameAverageLast7Days
+
+  - ToggleGameInfo()
+  - SetActiveDifficulty()
+  - SetActiveSizeSudoku()
+  + LoadAllGameScoresAsync()
+  + LoadGameScoresAsync()
+  + LoadAllGameDatasetsAsync()
+  + LoadGameDatasetsAsync()
 }
 
-class ScoreChart {
-+renderChart()
+
+
+class AverageScoreDto {
+  + Date : DateTime
+  + Score : GameScore
 }
 
-class TimeScoreChart {
-+renderTimeChart()
-}
+AverageScoreDto <.. StatisticsPage
+AverageScoreDto <.. AccountScoreController
+AccountScoreController ..> UserScoreDto
 
-StatisticsPage -- ScoreChart
-StatisticsPage -- TimeScoreChart
-
-
-AppSession o-- AppPage
-AppSession o-- Player
 
 ' ======== Timer Service ========
 class TimerService {
@@ -128,15 +167,15 @@ class TimerService {
 +OnTick()
 }
 
-GamePage *-- TimerService
+AimTrainerPage *-- TimerService
+SudokuGamePage *-- TimerService
+PairMatchingGamePage *-- TimerService
+MathGamePage *-- TimerService
 
 
 ' ======== Services (Subset) ========
-abstract class AuthService {
-+authorize()
-+register()
-}
-User ..> AuthService
+
+'User ..> AuthService
 
 ' ======== Controllers ========
 class AccountScoreController <<Controller>> {
@@ -147,7 +186,6 @@ class AccountScoreController <<Controller>> {
 +GetGameAverageScoreLast7Days()
 }
 
-AccountScoreController ..> DataPersistence
 
 class AimTrainerController <<Controller>> {
 +SaveScoreAsync()
@@ -155,7 +193,7 @@ class AimTrainerController <<Controller>> {
 +GetTopScoresAsync()
 }
 
-class MathGameController <<Controller>> {
+class MathGamePageController <<Controller>> {
 +GetQuestion()
 +GetOptions()
 +CheckAnswer()
@@ -187,18 +225,127 @@ class UserController <<Controller>> {
 +GetPrivateAsync()
 }
 
-' ======== Relationships for Controllers ========
-AuthService ..> UserController
-MathGamePage ..> MathGameController
-PairMatchingGamePage ..> PairUpController
-SudokuGamePage ..> SudokuController
-AimTrainerPage ..> AimTrainerController
-SettingsPage ..> UserController
-StatisticsPage ..> AccountScoreController
 
-AimTrainerController ..> DataPersistence
-MathGameController ..> DataPersistence
-PairUpController ..> DataPersistence
-SudokuController ..> DataPersistence
-UserController ..> DataPersistence
+
+' ======== Relationships for Controllers ========
+SettingsPage ..> User
+
+
+class AccountScoreService {
+  - int lastGamesCount
+  - IScoreRepository repository
+
+  + AccountScoreService()
+  - Task<List<UserScoreDto<T>>> GetUserSpecificScores<T>()
+  + Task<List<UserScoreDto<T>>> GetUserScores<T>()
+  + Task<GameScore> GetHighscore<T>()
+  + Task<GameScore> GetAllTimeAverageScore<T>()
+  + Task<int> GetMatchesPlayed<T>()
+  + Task<List<AverageScoreDto>> GetAverageScoreLast7Days<T>()
+}
+
+AccountScoreService *-- AccountScoreController
+AccountScoreService ..> UserScoreDto
+
+class AimTrainerService {
+  - IScoreRepository _scoreRepository
+
+  + AimTrainerService()
+  + Task AddScoreToDbAsync()
+  + Task<UserScoreDto<AimTrainerData>> GetUserHighscoreAsync()
+  + Task<List<UserScoreDto<AimTrainerData>>> GetTopScoresAsync()
+}
+
+AimTrainerService *-- AimTrainerController
+AimTrainerService ..> UserScoreDto
+
+class PairUpService {
+  - IScoreRepository _scoreRepository
+
+  + PairUpService()
+  + Task AddScoreToDbAsync()
+  + Task<UserScoreDto<PairUpData>> GetUserHighscoreAsync()
+  + Task<List<UserScoreDto<PairUpData>>> GetTopScoresAsync()
+}
+
+PairUpService *-- PairUpController
+PairUpService ..> UserScoreDto
+
+class SudokuService {
+  - IntVar[,] _possibleGrid
+  - SolutionCollector _solutionCollector
+
+  + GetUserHighscoreAsync()
+  + GetTopScoresAsync()
+  + HideNumbers()
+  + GenerateSolvedSudoku()
+  - SolveSudoku()
+  - IsValidMove()
+}
+
+SudokuService *-- SudokuController
+SudokuService ..> UserScoreDto
+
+class UserService {
+  - UserTrackingService _userTrackingService
+
+  + UserService()
+  + CreateUserAsync()
+  + LogInToUserAsync()
+  + LogOffFromUser()
+  + GetUsernamesAsync()
+  + ChangePrivateAsync()
+  + GetPrivateAsync()
+}
+
+UserService *-- UserController
+
+class UserTrackingService {
+  - ConcurrentDictionary<string, DateTime> _activeUsers
+
+  + AddOrUpdateUser()
+  + RemoveUser()
+  + GetActiveUsers()
+}
+
+UserTrackingService *-- UserService
+
+class MathGameService {
+  - IMathCalculationService _mathCalculationService
+  - IMathGenerationService _mathGenerationService
+  + int Answer
+  + List<int> numbers
+  + List<Operation> operations
+
+  + MathGameService()
+  + GenerateQuestion()
+  + CheckAnswer()
+  + GenerateOptions()
+  - BuildQuestionToString()
+}
+
+MathGameService *-- MathGamePageController
+
+class ScoreRepository {
+  - UserDbContext _userDbContext
+
+  + ScoreRepository()
+  + AddScoreToUserAsync()
+  + GetHighscoreFromUserAsync()
+  + GetAllScoresAsync()
+}
+
+ScoreRepository *-- AccountScoreService
+
+class UserRepository {
+  - UserDbContext _userDbContext
+
+  + UserRepository()
+  + Task CreateUserAsync()
+  + Task<List<User>> GetAllUsersAsync()
+  + Task<bool> ValidateUserAsync()
+  + Task ChangePrivateAsync()
+  + Task<bool> GetPrivateAsync()
+}
+
 @enduml
