@@ -1,0 +1,35 @@
+@startuml Shared Package Diagram
+!pragma layout smetana
+
+package "Shared" {
+    package "Enums" {
+        [GameDifficulty]
+        [GameMode]
+        [GameType]
+    }
+
+    package "Extensions" {
+        [GameModeExtension]
+    }
+
+    package "Interfaces" {
+        [IGame]
+        [IGameWithDifficulty]
+        [IGameWithModes]
+    }
+
+    package "Models" {
+        [AimTrainerData]
+        [AverageScoreDto]
+        [SudokuData]
+        [GameScore]
+        [User]
+        [UserScoreDto]
+        [LoginResponse]
+        [MathGameData]
+        [PairUpData]
+        [Score]
+    }
+}
+
+@enduml

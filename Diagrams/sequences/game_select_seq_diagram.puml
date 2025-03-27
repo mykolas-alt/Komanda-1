@@ -1,0 +1,20 @@
+@startuml
+title Game Selection and Management Flow
+
+actor "User" as User
+participant "Web Server" as Server
+participant "GameController" as GameCtrl
+participant "TimerService" as Timer
+participant "DataPersistence" as DB
+participant "Leaderboard" as LB
+
+User -> Server: Select Game ("MathGame"/"SudokuGame"/"PairMatchingGame"/"AimTrainerGame")
+Server -> GameCtrl: initiateGame(selectedGame, User)
+
+GameCtrl -> DB: save(GameSession, finalScore)
+DB --> GameCtrl: Confirmation
+GameCtrl -> LB: updateScores(GameSession)
+LB --> GameCtrl: Updated Rankings
+Server --> User: Display Final Score & Leaderboard
+
+@enduml

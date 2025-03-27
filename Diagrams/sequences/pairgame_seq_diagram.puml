@@ -1,0 +1,23 @@
+@startuml
+title Pair Matching Game Flow
+
+actor "User" as User
+participant "Web Server" as Server
+participant "GameController" as GameCtrl
+participant "PairMatchingGame" as PairMatch
+
+GameCtrl -> PairMatch: startGame()
+PairMatch --> GameCtrl: Card Deck Dealt
+
+loop Until all pairs matched or session ends
+    User -> Server: Select Cards (firstIndex, secondIndex)
+    Server -> GameCtrl: checkSelectedCards(firstIndex, secondIndex)
+    GameCtrl -> PairMatch: checkSelectedCards(firstIndex, secondIndex)
+    PairMatch --> GameCtrl: Match Result (and update mistakes)
+    Server --> User: Display Match Result & Current Score
+end
+
+GameCtrl -> PairMatch: endGame()
+PairMatch --> GameCtrl: finalScore
+
+@enduml

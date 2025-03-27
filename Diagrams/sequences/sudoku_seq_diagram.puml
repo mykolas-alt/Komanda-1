@@ -1,0 +1,23 @@
+@startuml
+title Sudoku Game Flow
+
+actor "User" as User
+participant "Web Server" as Server
+participant "GameController" as GameCtrl
+participant "SudokuGame" as Sudoku
+
+GameCtrl -> Sudoku: startGame()
+Sudoku --> GameCtrl: Puzzle Generated (full board)
+
+loop Until Puzzle is Complete
+    User -> Server: Submit Completed Grid
+    Server -> GameCtrl: checkAnswer(grid)
+    GameCtrl -> Sudoku: isSudokuComplete(grid)
+    Sudoku --> GameCtrl: false (continue) / true (complete)
+    Server --> User: Display Result
+end
+
+GameCtrl -> Sudoku: endGame()
+Sudoku --> GameCtrl: finalScore
+
+@enduml

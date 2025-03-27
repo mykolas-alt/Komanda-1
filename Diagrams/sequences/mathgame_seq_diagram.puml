@@ -1,0 +1,26 @@
+@startuml
+title Math Game Flow
+
+actor "User" as User
+participant "Web Server" as Server
+participant "GameController" as GameCtrl
+participant "MathGame" as MathGame
+participant "TimerService" as Timer
+
+GameCtrl -> MathGame: startGame()
+MathGame --> GameCtrl: Game Started (Timer active)
+GameCtrl -> Timer: StartTimer(duration)
+Timer --> GameCtrl: Timer Tick events
+
+loop For each Math Question
+    User -> Server: Submit Answer(option)
+    Server -> GameCtrl: checkAnswer(option)
+    GameCtrl -> MathGame: generateQuestion(currentScore)
+    MathGame --> GameCtrl: New Question generated
+    Server --> User: Display Question, Options & Updated Score
+end
+
+GameCtrl -> MathGame: endGame()
+MathGame --> GameCtrl: finalScore
+
+@enduml

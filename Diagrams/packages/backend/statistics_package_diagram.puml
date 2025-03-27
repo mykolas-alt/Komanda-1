@@ -1,0 +1,15 @@
+@startuml Statistics Package
+!pragma layout smetana
+
+package "Statistics" {
+
+    [AccountScoreController]
+    [AccountScoreService]
+    [ScoreRepository]
+    AccountScoreController ..> AccountScoreService
+    AccountScoreService ..> ScoreRepository
+}
+
+
+@enduml
+//Manages game statistics, \nscores, and leaderboards

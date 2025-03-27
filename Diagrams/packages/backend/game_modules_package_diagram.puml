@@ -1,0 +1,16 @@
+@startuml Game Modes Package
+!pragma layout smetana
+
+package "Game Modules" as GameModules {
+    [MathGameModule]
+    [SudokuGameModule]
+    [PairMatchingGameModule]
+    [AimTrainerGameModule]
+    
+
+}
+
+
+@enduml
+
+// Specific game \nimplementations \nwith common interface

@@ -1,0 +1,37 @@
+@startuml Frontend Package Diagram
+!pragma layout smetana
+
+package "Frontend" {
+    package "Components" {
+        [Dataset]
+        [OptionCard]
+        [ScoreChart]
+        [TimeScoreChart]
+    }
+
+    package "UI Modules" {
+        [LandingPageUI]
+        [GameSelectionUI]
+        [GameplayUI]
+        [ResultsUI]
+        [AccountUI]
+        [ScoreUI]
+        [StatisticsUI]
+        [LoginSignUpUI]
+        [MainLayoutUI]
+        [NavMenuUI]
+    }
+
+    package "Services Package" {
+    [AccountAuthStateProvider]
+    [AccountScoreService]
+    [AccountService]
+    [AimTrainerService]
+    [MathGameService]
+    [PairUpService]
+    [SudokuService]
+    [TimerService]
+}
+}
+
+@enduml

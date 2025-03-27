@@ -1,0 +1,18 @@
+@startuml
+title Authentication Flow
+
+actor "User" as User
+participant "Web Server" as Server
+participant "AuthService" as Auth
+
+User -> Server: Request Login(username, password)
+Server -> Auth: authorize(User)
+Auth --> Server: Authorization Result
+Server --> User: Display Login Result
+
+User -> Server: Request Logout
+Server -> Auth: logout(User)
+Auth --> Server: Logout Completed
+Server --> User: Display Logout Confirmation
+
+@enduml

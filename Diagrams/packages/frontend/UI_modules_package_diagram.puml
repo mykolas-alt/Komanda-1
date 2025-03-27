@@ -1,0 +1,19 @@
+@startuml UI Modules Package
+!pragma layout smetana
+
+package "UI Modules" {
+    [LandingPageUI]
+    [GameSelectionUI]
+    [GameplayUI]
+    [ResultsUI]
+    [AccountUI]
+    [ScoreUI]
+    [StatisticsUI]
+    [LoginSignUpUI]
+    [MainLayoutUI]
+    [NavMenuUI]
+    
+}
+
+@enduml
+// User interface components \nwith common interface
