@@ -1,0 +1,15 @@
+@startuml Persistence Package
+!pragma layout smetana
+
+package "Repositories" {
+    [ScoreRepository]
+    [UserRepository]
+    [UserDatabaseContext]
+
+    ScoreRepository ..> UserDatabaseContext 
+    UserRepository ..> UserDatabaseContext 
+}
+
+
+@enduml
+// Data storage and \nretrieval mechanisms

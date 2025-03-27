@@ -1,0 +1,13 @@
+@startuml Components Package
+!pragma layout smetana
+
+package "Components" {
+    [Dataset]
+    [OptionCard]
+    [ScoreChart]
+    [TimeScoreChart]
+
+    
+}
+
+@enduml

@@ -1,0 +1,65 @@
+@startuml Backend Package
+!pragma layout smetana
+left to right direction
+package "Backend" {
+    
+    package "Game Modules" as GameModules {
+    [MathGameModule]
+    [SudokuGameModule]
+    [PairMatchingGameModule]
+    [AimTrainerGameModule]
+    }
+
+    package "Repositories" {
+    [ScoreRepository]
+    [UserRepository]
+    [UserDatabaseContext]
+
+    ScoreRepository ..> UserDatabaseContext 
+    UserRepository ..> UserDatabaseContext 
+}
+
+package "Database Context " {
+
+    [MathGameScores]
+    [SudokuGameScores]
+    [PairMatchingGameScores]
+    [AimTrainerGameScores]
+    [Users]
+
+    
+}
+
+
+
+package "Statistics" {
+
+    [AccountScoreController]
+    [AccountScoreService]
+    [ScoreRepository]
+    AccountScoreController ..> AccountScoreService
+    AccountScoreService ..> ScoreRepository
+}
+
+package "Game Package" as GamePackage{
+    [GameService]
+    [GameController]
+    [ScoreRepository]
+
+    
+    GameController ..> GameService
+    GameService ..> ScoreRepository 
+
+}
+
+
+
+
+    
+
+}
+
+
+@enduml
+
+// Specific game \nimplementations \nwith common interface

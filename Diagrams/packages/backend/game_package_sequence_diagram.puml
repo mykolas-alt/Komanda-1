@@ -1,0 +1,17 @@
+@startuml Game Core Package
+!pragma layout smetana
+
+package "Game Package" as GamePackage{
+    [GameService]
+    [GameController]
+    [ScoreRepository]
+
+    
+    GameController ..> GameService
+    GameService ..> ScoreRepository 
+
+}
+
+
+@enduml
+// Manages game lifecycle \nand creation

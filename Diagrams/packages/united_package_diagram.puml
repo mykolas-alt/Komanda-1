@@ -1,0 +1,41 @@
+@startuml United Package Diagram
+!pragma layout smetana
+
+package "Codebase" {
+    
+    package "Frontend" {
+        package "Components" {}
+        package "UI Modules" {}
+        package "Services" {}
+
+        
+    }
+
+    package "Backend" {
+        package "Game Modules" {}
+        package "Repositories" {}
+        package "Database Context" {}
+        package "Statistics" {}
+        package "Games" {}
+    }
+
+    package "Shared" {
+        package "Enums" {}
+        package "Interfaces" {}
+        package "Models" {}
+    }
+
+    "Game Modules" --> "Interfaces"
+    "Repositories" --> "Models"
+    "Games" --> "Statistics"
+    "Games" --> "Game Modules"
+    "Games" --> "Repositories" 
+    "Services" -->  "Interfaces"
+    "Repositories" --> "Database Context"
+    "Games" --> "Enums" 
+    "Components" --> "UI Modules" 
+    "Statistics" --> "Repositories" 
+}
+
+
+@enduml

@@ -1,0 +1,16 @@
+@startuml Statistics Package
+!pragma layout smetana
+
+package "Database Context " {
+
+    [MathGameScores]
+    [SudokuGameScores]
+    [PairMatchingGameScores]
+    [AimTrainerGameScores]
+    [Users]
+
+    
+}
+
+
+@enduml

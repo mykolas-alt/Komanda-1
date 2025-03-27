@@ -1,0 +1,15 @@
+@startuml
+
+package "Services Package" {
+    [AccountAuthStateProvider]
+    [AccountScoreService]
+    [AccountService]
+    [AimTrainerService]
+    [MathGameService]
+    [PairUpService]
+    [SudokuService]
+    [TimerService]
+}
+
+
+@enduml
