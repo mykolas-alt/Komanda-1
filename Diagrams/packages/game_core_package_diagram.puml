@@ -1,0 +1,15 @@
+@startuml Game Core Package
+!pragma layout smetana
+
+package "Game Core" {
+    [GameManager]
+    [GameState]
+    [GameController]
+    [TimerService]
+    
+    GameController ..> GameManager : controls
+    GameController ..> TimerService : manages time
+}
+
+note right : Manages game lifecycle, \nstate, and creation
+@enduml

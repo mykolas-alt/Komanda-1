@@ -1,0 +1,15 @@
+@startuml User Management Package
+!pragma layout smetana
+
+package "User Management" {
+    [AuthenticationService]
+    [UserProfileService]
+    [CredentialsValidator]
+    [UserController]
+    
+    AuthenticationService ..> CredentialsValidator : validates
+    UserController ..> UserProfileService : manages
+}
+
+note right : Handles user authentication, \nprofile management, \nand authorization
+@enduml

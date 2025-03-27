@@ -1,0 +1,18 @@
+@startuml Persistence Package
+!pragma layout smetana
+
+package "Persistence" {
+    [ScoreRepository]
+    [UserRepository]
+    [StatisticsRepository]
+    [GameSessionRepository]
+    [DataAccessLayer]
+    
+    ScoreRepository ..> DataAccessLayer : uses
+    UserRepository ..> DataAccessLayer : uses
+    StatisticsRepository ..> DataAccessLayer : uses
+    GameSessionRepository ..> DataAccessLayer : uses
+}
+
+note right : Data storage and \nretrieval mechanisms
+@enduml

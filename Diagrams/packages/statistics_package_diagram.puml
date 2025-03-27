@@ -1,0 +1,17 @@
+@startuml Statistics Package
+!pragma layout smetana
+
+package "Statistics" {
+    [StatisticsTracker]
+    [StatisticsView]
+    [ScoreCalculator]
+    [LeaderboardManager]
+    [AccountScoreController]
+    
+    StatisticsTracker ..> ScoreCalculator : calculates
+    AccountScoreController ..> StatisticsView : provides view
+    LeaderboardManager ..> ScoreCalculator : uses
+}
+
+note right : Manages game statistics, \nscores, and leaderboards
+@enduml

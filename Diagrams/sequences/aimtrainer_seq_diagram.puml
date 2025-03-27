@@ -1,0 +1,26 @@
+@startuml
+title Aim Trainer Game Flow
+
+actor "User" as User
+participant "Web Server" as Server
+participant "GameController" as GameCtrl
+participant "AimTrainerGame" as AimTrainer
+participant "TimerService" as Timer
+
+GameCtrl -> AimTrainer: startGame()
+AimTrainer --> GameCtrl: Game Started (Timer active)
+GameCtrl -> Timer: StartTimer(duration)
+Timer --> GameCtrl: Timer Tick events
+
+loop For each target event
+    User -> Server: Action (hit target)
+    Server -> GameCtrl: processAction(action)
+    GameCtrl -> AimTrainer: moveTarget()
+    AimTrainer --> GameCtrl: Score Updated
+    Server --> User: Display Updated Score & Target Info
+end
+
+GameCtrl -> AimTrainer: endGame()
+AimTrainer --> GameCtrl: finalScore
+
+@enduml
