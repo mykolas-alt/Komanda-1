@@ -1,0 +1,70 @@
+@startuml Component simplified Diagram
+top to bottom direction
+skinparam componentStyle rectangle
+
+' Main components
+package "Frontend" {
+  [WebUI] as UI
+  [Navigation Component] as Nav
+}
+package "Game Components" as GamesC{
+
+        [Math Game] as MathGame
+        [Sudoku Game] as Sudoku
+        [Pair Matching Game] as PairMatch
+        [Aim Trainer Game] as AimTrainer
+
+}
+package "Core Services" as Core {
+    [Game Controller] as GameCtrl
+    [Authentication Component] as Auth
+    [Statistics Manager] as StatsMgr
+    [User Manager] as UserMgr
+}
+
+
+
+package "Persistence" {
+  [Data Access Layer] as DAL
+  [Score Repository] as ScoreRepo
+  [User Repository] as UserRepo
+  
+}
+
+' External interfaces
+
+interface "Database Interface" as DBIF
+
+interface "Auth API" as AuthAPI
+interface "Statistics API" as StatsAPI
+interface "Game API" as GameAPI
+interface "User API" as UserAPI
+
+' Relationships
+
+Nav ..> UI : navigates
+AuthAPI -- Auth : authenticates
+GameAPI -- GameCtrl : manages
+StatsAPI -- StatsMgr : retrieves stats
+UserAPI -- UserMgr : manages users
+UI --( AuthAPI : provides authentication
+UI --( StatsAPI : provides statistics
+UI --( GameAPI : provides game data
+UI --( UserAPI : provides user data
+
+Core ..> UserRepo : uses
+
+GameCtrl ..> GamesC : controls
+Core ..> ScoreRepo : retrieves
+Core ..> UserRepo : manages
+Core ..( DBIF : queries
+
+DAL ..( DBIF : interacts
+ScoreRepo ..> DAL : accesses
+UserRepo ..> DAL : accesses
+
+' Additional relationships
+GamesC ..> ScoreRepo : updates
+
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml DB and Services Component Diagram
+left to right direction
+skinparam componentStyle rectangle
+package "Core Services" {
+  [Authentication Component] as Auth
+  [Game Controller] as GameCtrl
+  [Statistics Manager] as StatsMgr
+  [User Manager] as UserMgr
+}
+
+
+
+interface "Database Interface" as DBIF
+
+' Relationships
+
+
+API -- Auth : authenticates
+API -- GameCtrl : manages
+API -- StatsMgr : retrieves stats
+API -- UserMgr : manages users
+
+
+Auth ..( DBIF : queries
+
+
+GameCtrl ..( DBIF : queries
+
+StatsMgr ..( DBIF : queries
+
+UserMgr ..( DBIF : queries
+
+
+
+
+' Additional relationships
+
+
+@enduml

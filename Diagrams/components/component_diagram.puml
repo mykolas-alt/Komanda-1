@@ -1,5 +1,6 @@
 @startuml Component Diagram
 left to right direction
+skinparam componentStyle rectangle
 
 ' Main components
 package "Frontend" {
@@ -25,7 +26,6 @@ package "Persistence" {
   [Data Access Layer] as DAL
   [Score Repository] as ScoreRepo
   [User Repository] as UserRepo
-  [Game Session Repository] as SessionRepo
 }
 
 ' External interfaces
@@ -33,31 +33,34 @@ interface "HTTP/REST API" as API
 interface "Database Interface" as DBIF
 
 ' Relationships
-UI -- API
-API -- Auth
-API -- GameCtrl
-API -- StatsMgr
-API -- UserMgr
+UI --( API : interacts
+Nav ..> UI : navigates
+API -- Auth : authenticates
+API -- GameCtrl : manages
+API -- StatsMgr : retrieves stats
+API -- UserMgr : manages users
 
 Auth ..> UserRepo : uses
+Auth ..( DBIF : queries
 GameCtrl ..> MathGame : controls
 GameCtrl ..> Sudoku : controls
 GameCtrl ..> PairMatch : controls
 GameCtrl ..> AimTrainer : controls
 GameCtrl ..> ScoreRepo : uses
-GameCtrl ..> SessionRepo : uses
-StatsMgr ..> ScoreRepo : uses
-StatsMgr ..> SessionRepo : uses
-UserMgr ..> UserRepo : uses
+GameCtrl ..( DBIF : queries
+StatsMgr ..> ScoreRepo : retrieves
+StatsMgr ..( DBIF : queries
+UserMgr ..> UserRepo : manages
+UserMgr ..( DBIF : queries
 
-ScoreRepo -- DBIF
-UserRepo -- DBIF
-SessionRepo -- DBIF
+DAL ..( DBIF : interacts
+ScoreRepo ..> DAL : accesses
+UserRepo ..> DAL : accesses
 
-Nav ..> UI : navigates
+' Additional relationships
+MathGame ..> ScoreRepo : updates
+Sudoku ..> ScoreRepo : updates
+PairMatch ..> ScoreRepo : updates
+AimTrainer ..> ScoreRepo : updates
 
-' Notes
-note bottom of GameCtrl : Manages game lifecycle and difficulty settings
-note bottom of StatsMgr : Provides various statistical views and analytics
-note bottom of Auth : Handles login, signup and user authorization
 @enduml

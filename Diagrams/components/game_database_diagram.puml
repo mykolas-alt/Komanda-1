@@ -1,0 +1,41 @@
+@startuml Game and DB Component Diagram
+left to right direction
+skinparam componentStyle rectangle
+
+' Main components
+
+
+
+
+package "Game Components" {
+  [Math Game] as MathGame
+  [Sudoku Game] as Sudoku
+  [Pair Matching Game] as PairMatch
+  [Aim Trainer Game] as AimTrainer
+}
+
+package "Persistence" {
+  [Data Access Layer] as DAL
+  [Score Repository] as ScoreRepo
+  [User Repository] as UserRepo
+  [Game Session Repository] as SessionRepo
+}
+
+' External interfaces
+
+interface "Database Interface" as DBIF
+
+' Relationships
+
+DAL ..( DBIF : interacts
+ScoreRepo ..> DAL : accesses
+UserRepo ..> DAL : accesses
+SessionRepo ..> DAL : accesses
+
+' Additional relationships
+MathGame ..> ScoreRepo : updates
+Sudoku ..> ScoreRepo : updates
+PairMatch ..> ScoreRepo : updates
+AimTrainer ..> ScoreRepo : updates
+
+@enduml
