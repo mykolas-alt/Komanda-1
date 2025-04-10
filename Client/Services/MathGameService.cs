@@ -1,4 +1,5 @@
 ﻿using Projektas.Shared.Models;
+using Projektas.Shared.Enums;
 using System.Net.Http.Json;
 using Projektas.Client.Interfaces;
 
@@ -45,15 +46,15 @@ namespace Projektas.Client.Services
             await _httpClient.PostAsJsonAsync("api/mathgame/save-score", data);
         }
 
-        public async Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username)
+        public async Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username, GameDifficulty difficulty)
         {
-            var url = $"api/mathgame/highscore?username={username}";
+            var url = $"api/mathgame/highscore?username={username}&difficulty={difficulty}";
             return await _httpClient.GetFromJsonAsync<UserScoreDto<MathGameData>>(url);
         }
 
-        public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount = 10)
+        public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(GameDifficulty difficulty, int topCount = 10)
         {
-            var url = $"api/mathgame/top-score?topCount={topCount}";
+            var url = $"api/mathgame/top-score?topCount={topCount}&difficulty={difficulty}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<MathGameData>>>(url);
         }
     }
