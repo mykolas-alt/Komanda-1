@@ -183,7 +183,7 @@ namespace Projektas.Client.Pages
 
                     if (username != null)
                     {
-                        await MathGameService.SaveScoreAsync(username, score);
+                        await MathGameService.SaveScoreAsync(username, score, Difficulty);
                     }
 
                     if (username != null)
