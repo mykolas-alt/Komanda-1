@@ -16,8 +16,8 @@ namespace Projektas.Server.Controllers {
         }
 
         [HttpGet("question")]
-        public ActionResult<string> GetQuestion([FromQuery] int score) {
-            return _mathGameService.GenerateQuestion(score);
+        public ActionResult<string> GetQuestion([FromQuery] int score, [FromQuery] GameDifficulty difficulty) {
+            return _mathGameService.GenerateQuestion(score, difficulty);
         }
 
         [HttpGet("options")]

@@ -1,4 +1,5 @@
 ﻿using Projektas.Server.Enums;
+using Projektas.Shared.Enums;
 using System.Text;
 using Projektas.Server.Extensions;
 using Projektas.Server.Interfaces.MathGame;
@@ -18,14 +19,14 @@ namespace Projektas.Server.Services.MathGame {
             _mathGenerationService = mathGenerationService;
         }
 
-        public string GenerateQuestion(int score) {
+        public string GenerateQuestion(int score, GameDifficulty difficulty) {
             int minOperands = (int)(2 + score * 0.1);
             int maxOperands = (int)(3 + score * 0.1); // increases the range of operands as the score inscreases
             int numberOfOperands = _random.Next(minOperands, maxOperands);
 
             // generate numbers and operations
-            numbers=_mathGenerationService.GenerateNumbers(numberOfOperands, score);
-            operations=_mathGenerationService.GenerateOperations(numberOfOperands, score);
+            numbers = _mathGenerationService.GenerateNumbers(numberOfOperands, score, difficulty);
+            operations = _mathGenerationService.GenerateOperations(numberOfOperands, score, difficulty);
 
             // adjust numbers by operation (division or multiplication)
             _mathGenerationService.AdjustNumbersForOperations(score, numbers, operations);
@@ -50,11 +51,15 @@ namespace Projektas.Server.Services.MathGame {
         }
 
         private string BuildQuestionToString() {
+            /// Helper function to builds the question string from numbers and operations
+
             StringBuilder questionBuilder = new();
             questionBuilder.Append(numbers[0]);
+
             for(int i = 0; i < operations.Count; i++) {
                 questionBuilder.Append($" {operations[i].GetOperationSymbol()} {numbers[i + 1]}");
             }
+
             return questionBuilder.ToString();
         }
     }

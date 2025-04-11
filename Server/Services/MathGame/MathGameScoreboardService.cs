@@ -19,9 +19,11 @@ namespace Projektas.Server.Services.MathGame
             await _scoreRepository.AddScoreToUserAsync<MathGameData>(data.Username, data.GameData, data.Timestamp);
         }
 
-        // Retrieves the user's highest, singular score for a specific game difficulty, returns the score or 'null' if not found
+        
         public async Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username, GameDifficulty difficulty)
         {
+            /// Retrieves the user's highest, singular score for a specific game difficulty, returns the score or 'null' if not found
+            
             var scores = await _scoreRepository.GetHighscoreFromUserAsync<MathGameData>(username);
 
             // Filter scores based on difficulty and orders it by score
@@ -33,9 +35,11 @@ namespace Projektas.Server.Services.MathGame
             return filteredScores.FirstOrDefault(); // Returns the first (best) score of the user or 'null' if no score found
         }
 
-        // Retrieves the top scores for a specific game difficulty, returns a list of scores
+        
         public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount, GameDifficulty difficulty)
         {
+            /// Retrieves the top scores for a specific game difficulty, returns a list of scores
+
             // Get all scores from the repository
             List<UserScoreDto<MathGameData>> userScores = await _scoreRepository.GetAllScoresAsync<MathGameData>();
 
