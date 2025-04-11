@@ -137,7 +137,7 @@ namespace Projektas.Client.Pages
         public async Task GenerateQuestionAsync()
         {
             isCorrect = null;
-            question = await MathGameService.GetQuestionAsync(score);
+            question = await MathGameService.GetQuestionAsync(score, Difficulty);
             options = await MathGameService.GetOptionsAsync();
         }
 

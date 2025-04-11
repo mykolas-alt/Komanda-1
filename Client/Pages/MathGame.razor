@@ -1,5 +1,6 @@
 @page "/mathgame"
 @using Projektas.Client.Components
+@using Projektas.Shared.Enums
 
 <PageTitle>Math Game</PageTitle>
 
@@ -25,8 +26,22 @@
             } else {
                 <div class="no_highscore"></div>
             }
-            <div class="middle">
+            <div class="place_col middle">
                 <button class="button" @onclick="StartGameAsync">Start</button>
+
+                @if(Difficulty==GameDifficulty.Easy)
+                {
+                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Easy</button>
+                } 
+                else if(Difficulty==GameDifficulty.Normal)
+                {
+                    <button class="button" @onclick='() => ChangeDifficulty("Hard")'>Difficulty: Normal</button>
+                } 
+                else if(Difficulty==GameDifficulty.Hard)
+                {
+                    <button class="button" @onclick='() => ChangeDifficulty("Easy")'>Difficulty: Hard</button>
+                }
+                
             </div>
             <div class="leaderboard">
                 Leaderboard
@@ -88,6 +103,21 @@
                     @score
                 </div>
                 <button class="button" @onclick="StartGameAsync">Restart</button>
+
+                @if(Difficulty==GameDifficulty.Easy)
+                {
+                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Easy</button>
+                } 
+                else if(Difficulty==GameDifficulty.Normal)
+                {
+                    <button class="button" @onclick='() => ChangeDifficulty("Hard")'>Difficulty: Normal</button>
+                } 
+                else if(Difficulty==GameDifficulty.Hard)
+                {
+                    <button class="button" @onclick='() => ChangeDifficulty("Easy")'>Difficulty: Hard</button>
+                }
+
+
                 <button class="button" @onclick='() => ChangeScreen("main")'>Main Menu</button>
             </div>
             <div class="leaderboard">

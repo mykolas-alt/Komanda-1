@@ -14,9 +14,9 @@ namespace Projektas.Client.Services
             _httpClient = httpClient;
         }
 
-        public async Task<string> GetQuestionAsync(int score)
+        public async Task<string> GetQuestionAsync(int score, GameDifficulty difficulty)
         {
-            var url = $"api/mathgame/question?score={score}";
+            var url = $"api/mathgame/question?score={score}&difficulty={difficulty}";
             var response = await _httpClient.GetStringAsync(url);
             return response;
         }
