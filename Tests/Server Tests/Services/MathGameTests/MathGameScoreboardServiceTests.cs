@@ -3,6 +3,10 @@ using Projektas.Server.Interfaces;
 using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
 using Projektas.Shared.Models;
+using Projektas.Shared.Enums;
+{
+	
+};
 
 namespace Projektas.Tests.Services.MathGameTests {
     public class MathGameScoreboardServiceTests {
@@ -42,13 +46,14 @@ namespace Projektas.Tests.Services.MathGameTests {
 				new UserScoreDto<MathGameData> {
 					Username = "testuser",
 					GameData = new MathGameData {
-						Scores = 200
+						Scores = 200,
+						Difficulty = GameDifficulty.Easy
 					}
 				}
 			};
 			_mockScoreRepository.Setup(repo => repo.GetHighscoreFromUserAsync<MathGameData>(username)).ReturnsAsync(expectedHighscore);
 
-			var result = await _mathGameScoreboardService.GetUserHighscoreAsync(username);
+			var result = await _mathGameScoreboardService.GetUserHighscoreAsync(username, GameDifficulty.Easy);
 
 			Assert.Equal(expectedHighscore.OrderByDescending(s => s.GameData.Scores).First(), result);
 		}
@@ -56,6 +61,7 @@ namespace Projektas.Tests.Services.MathGameTests {
 		[Fact]
 		public async Task GetTopScores_ShouldReturnTopScores() {
 			var topCount = 3;
+			GameDifficulty difficulty = GameDifficulty.Easy;
 			var userScores = new List<UserScoreDto<MathGameData>> {
 				new UserScoreDto<MathGameData> {Username = "user1", GameData = new MathGameData {Scores = 300}},
 				new UserScoreDto<MathGameData> {Username = "user2", GameData = new MathGameData {Scores = 250}},
@@ -64,7 +70,7 @@ namespace Projektas.Tests.Services.MathGameTests {
 			};
 			_mockScoreRepository.Setup(repo => repo.GetAllScoresAsync<MathGameData>()).ReturnsAsync(userScores);
 
-			var result=await _mathGameScoreboardService.GetTopScoresAsync(topCount);
+			var result=await _mathGameScoreboardService.GetTopScoresAsync(topCount, difficulty);
 
 			Assert.Equal(topCount,result.Count);
 			Assert.Equal(userScores[0],result[0]);

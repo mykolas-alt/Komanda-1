@@ -1,6 +1,7 @@
 ﻿using Projektas.Server.Interfaces.MathGame;
 using Projektas.Server.Services.MathGame;
 using Projektas.Server.Enums;
+using Projektas.Shared.Enums;
 using Moq;
 
 namespace Projektas.Tests.Services.MathGameTests {
@@ -33,11 +34,11 @@ namespace Projektas.Tests.Services.MathGameTests {
         [InlineData(new int[] {14, 2}, new Operation[] {Operation.Multiplication}, "14 * 2")]
         [InlineData(new int[] {27, 3, 3}, new Operation[] {Operation.Division, Operation.Subtraction}, "27 / 3 - 3")]
         public void GenerateQuestion_ShouldReturnValidQuestion(int[] numbers, Operation[] operations, string expectedResult) {
-            _mockMathGenerationService.Setup(m => m.GenerateNumbers(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<int>(numbers));
-            _mockMathGenerationService.Setup(m => m.GenerateOperations(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<Operation>(operations));
+            _mockMathGenerationService.Setup(m => m.GenerateNumbers(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<GameDifficulty>())).Returns(new List<int>(numbers));
+            _mockMathGenerationService.Setup(m => m.GenerateOperations(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<GameDifficulty>())).Returns(new List<Operation>(operations));
             _mockMathCalculationService.Setup(m => m.CalculateAnswer(It.IsAny<List<int>>(), It.IsAny<List<Operation>>())).Returns(42); // arbitrary answer
 
-            string question = _mathGameService.GenerateQuestion(score: 10); // score is arbitrary
+            string question = _mathGameService.GenerateQuestion(score: 10, GameDifficulty.Easy); // score is arbitrary
 
             Assert.Equal(expectedResult, question);
         }
