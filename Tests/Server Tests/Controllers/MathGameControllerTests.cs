@@ -11,7 +11,7 @@ namespace Projektas.Tests.Controllers {
 		private readonly HttpClient _client;
 		private readonly CustomWebApplicationFactory<Program> _factory;
 
-		public MathGameControllerTests(CustomWebApplicationFactory<Program> factory) {
+		internal MathGameControllerTests(CustomWebApplicationFactory<Program> factory) {
 			_factory = factory;
 			_client = _factory.CreateClient(new WebApplicationFactoryClientOptions {AllowAutoRedirect = false});
 		}

@@ -11,7 +11,7 @@ namespace Projektas.Tests.Controllers {
 		private readonly HttpClient _client;
 		private readonly CustomWebApplicationFactory<Program> _factory;
 
-		public UserControllerTests(CustomWebApplicationFactory<Program> factory) {
+		internal UserControllerTests(CustomWebApplicationFactory<Program> factory) {
 			_factory = factory;
 			_client = _factory.CreateClient(new WebApplicationFactoryClientOptions {AllowAutoRedirect = false});
 		}

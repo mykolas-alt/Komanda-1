@@ -7,7 +7,7 @@ namespace Projektas.Tests.Controllers {
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Program> _factory;
 
-        public SudokuControllerTests(CustomWebApplicationFactory<Program> factory) {
+        internal SudokuControllerTests(CustomWebApplicationFactory<Program> factory) {
             _factory = factory;
             _client = _factory.CreateClient(new WebApplicationFactoryClientOptions {
                 AllowAutoRedirect = false

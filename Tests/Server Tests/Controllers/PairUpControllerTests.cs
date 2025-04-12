@@ -13,7 +13,7 @@ namespace Projektas.Tests.Server_Tests.Controllers
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Program> _factory;
 
-        public PairUpControllerTests(CustomWebApplicationFactory<Program> factory)
+        internal PairUpControllerTests(CustomWebApplicationFactory<Program> factory)
         {
             _factory = factory;
             _client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
