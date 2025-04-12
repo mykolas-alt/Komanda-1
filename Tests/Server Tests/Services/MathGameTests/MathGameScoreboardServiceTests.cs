@@ -4,9 +4,6 @@ using Projektas.Server.Services;
 using Projektas.Server.Services.MathGame;
 using Projektas.Shared.Models;
 using Projektas.Shared.Enums;
-{
-	
-};
 
 namespace Projektas.Tests.Services.MathGameTests {
     public class MathGameScoreboardServiceTests {
