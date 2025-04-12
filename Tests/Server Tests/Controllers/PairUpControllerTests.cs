@@ -13,11 +13,13 @@ namespace Projektas.Tests.Server_Tests.Controllers
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Program> _factory;
 
-        internal PairUpControllerTests(CustomWebApplicationFactory<Program> factory)
+        public PairUpControllerTests(CustomWebApplicationFactory<Program> factory)
         {
             _factory = factory;
             _client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         }
+
+        
 
         [Fact]
         public async Task SaveScore_SavesScoreSuccessfully()

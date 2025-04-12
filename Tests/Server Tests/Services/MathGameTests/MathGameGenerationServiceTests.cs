@@ -24,9 +24,9 @@ namespace Projektas.Tests.Services.MathGameTests {
         }
 
         [Theory]
-        [InlineData(3, 0, 1, 15, GameDifficulty.Easy)]
-        [InlineData(5, 2, 10, 40,GameDifficulty.Normal)]
-        [InlineData(10, 15, 40, 60, GameDifficulty.Hard)]
+        [InlineData(3, 0, 1, 20, GameDifficulty.Easy)]
+        [InlineData(5, 2, 10, 50,GameDifficulty.Normal)]
+        [InlineData(10, 15, 40, 90, GameDifficulty.Hard)]
         public void GenerateNumbers_ShouldReturnNumbersWithinRange(int numberOfOperands, int score, int min, int max, GameDifficulty difficulty) {
             List<int> result = _mathGenerationService.GenerateNumbers(numberOfOperands, score, difficulty);
 
@@ -51,8 +51,8 @@ namespace Projektas.Tests.Services.MathGameTests {
 
         [Theory]
         [InlineData(3, 0, GameDifficulty.Easy)]
-        [InlineData(5, 4, GameDifficulty.Normal)]
-        [InlineData(20, 5, GameDifficulty.Hard)]
+        [InlineData(5, 4, GameDifficulty.Easy)]
+        [InlineData(20, 5, GameDifficulty.Easy)]
         public void GenerateOperations_ReturnsAdditionOrSubtraction_WhenScoreIsFiveOrBelow(int numberOfOperands, int score, GameDifficulty difficulty) {
             List<Operation> result = _mathGenerationService.GenerateOperations(numberOfOperands, score, difficulty);
 
