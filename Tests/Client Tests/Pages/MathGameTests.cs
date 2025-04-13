@@ -1,6 +1,7 @@
 ﻿using Bunit;
 using Moq;
 using Projektas.Client.Pages;
+using Projektas.Shared.Enums;
 using Projektas.Client.Interfaces;
 using Projektas.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,17 +22,17 @@ namespace Projektas.Tests.Client_Tests.Pages {
 			Services.AddSingleton(_mockAuthStateProvider.Object);
 
 			// setup
-			_mockMathGameService.Setup(s => s.GetQuestionAsync(It.IsAny<int>())).ReturnsAsync("Question");
+			_mockMathGameService.Setup(s => s.GetQuestionAsync(It.IsAny<int>(), It.IsAny<GameDifficulty>())).ReturnsAsync("Question");
 			_mockMathGameService.Setup(s => s.GetOptionsAsync()).ReturnsAsync(new List<int> {1, 2, 3, 4});
 			_mockMathGameService.Setup(s => s.CheckAnswerAsync(It.IsAny<int>())).ReturnsAsync(true);
-			_mockMathGameService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.CompletedTask);
-			_mockMathGameService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>())).ReturnsAsync(new UserScoreDto<MathGameData> {
+			_mockMathGameService.Setup(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<GameDifficulty>())).Returns(Task.CompletedTask);
+			_mockMathGameService.Setup(s => s.GetUserHighscoreAsync(It.IsAny<string>(), It.IsAny<GameDifficulty>())).ReturnsAsync(new UserScoreDto<MathGameData> {
 				Username = "User",
 				GameData = new MathGameData {
 					Scores = 10
 				}
 			});
-			_mockMathGameService.Setup(s => s.GetTopScoresAsync(It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto<MathGameData>> {
+			_mockMathGameService.Setup(s => s.GetTopScoresAsync(It.IsAny<GameDifficulty>(), It.IsAny<int>())).ReturnsAsync(new List<UserScoreDto<MathGameData>> {
 				new UserScoreDto<MathGameData> {
 					Username = "User1",
 					GameData = new MathGameData {
@@ -105,7 +106,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
 			Assert.Equal(0, _mockTimerService.Object.RemainingTime);
 			Assert.True(cut.Instance.isTimesUp);
 			_mockTimerService.Verify(t => t.Stop(), Times.Once);
-			_mockMathGameService.Verify(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+			_mockMathGameService.Verify(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<GameDifficulty>()), Times.Once);
 			Assert.NotNull(cut.Instance.topScores);
 		}
 
@@ -119,7 +120,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
 
 			Assert.True(cut.Instance.isTimesUp);
 			_mockTimerService.Verify(t => t.Stop(), Times.Once);
-			_mockMathGameService.Verify(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+			_mockMathGameService.Verify(s => s.SaveScoreAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<GameDifficulty>()), Times.Once);
 			Assert.NotNull(cut.Instance.topScores);
 		}
 	}

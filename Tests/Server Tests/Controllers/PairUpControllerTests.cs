@@ -19,6 +19,8 @@ namespace Projektas.Tests.Server_Tests.Controllers
             _client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         }
 
+        
+
         [Fact]
         public async Task SaveScore_SavesScoreSuccessfully()
         {

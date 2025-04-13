@@ -1,4 +1,5 @@
 ﻿using Projektas.Shared.Models;
+using Projektas.Shared.Enums;
 using Projektas.Server.Interfaces;
 using Projektas.Server.Interfaces.MathGame;
 
@@ -18,17 +19,37 @@ namespace Projektas.Server.Services.MathGame
             await _scoreRepository.AddScoreToUserAsync<MathGameData>(data.Username, data.GameData, data.Timestamp);
         }
 
-        public async Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username)
+        
+        public async Task<UserScoreDto<MathGameData>> GetUserHighscoreAsync(string username, GameDifficulty difficulty)
         {
+            /// Retrieves the user's highest, singular score for a specific game difficulty, returns the score or 'null' if not found
+            
             var scores = await _scoreRepository.GetHighscoreFromUserAsync<MathGameData>(username);
 
-            return scores.OrderByDescending(s => s.GameData.Scores).FirstOrDefault();
+            // Filter scores based on difficulty and orders it by score
+            var filteredScores = scores
+                .Where(s => s.GameData.Difficulty == difficulty)
+                .OrderByDescending(s => s.GameData.Scores)
+                .ToList();
+
+            return filteredScores.FirstOrDefault(); // Returns the first (best) score of the user or 'null' if no score found
         }
 
-        public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount)
+        
+        public async Task<List<UserScoreDto<MathGameData>>> GetTopScoresAsync(int topCount, GameDifficulty difficulty)
         {
+            /// Retrieves the top scores for a specific game difficulty, returns a list of scores
+
+            // Get all scores from the repository
             List<UserScoreDto<MathGameData>> userScores = await _scoreRepository.GetAllScoresAsync<MathGameData>();
-            List<UserScoreDto<MathGameData>> orderedScores = userScores.Where(s => !s.IsPrivate).OrderByDescending(s => s.GameData.Scores).ToList();
+
+            // Filter scores based on difficulty and orders it by score
+            List<UserScoreDto<MathGameData>> orderedScores = userScores
+                .Where(s => !s.IsPrivate && s.GameData.Difficulty == difficulty)
+                .OrderByDescending(s => s.GameData.Scores)
+                .ToList();
+
+            // Filter the top scores based on the specified count (typically 10)
             List<UserScoreDto<MathGameData>> topScores = new List<UserScoreDto<MathGameData>>();
 
             for (int i = 0; i < topCount && i < orderedScores.Count; i++)

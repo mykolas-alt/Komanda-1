@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Projektas.Client.Interfaces;
+using Projektas.Shared.Enums;
 using Projektas.Shared.Models;
 
 namespace Projektas.Client.Pages
@@ -23,13 +24,65 @@ namespace Projektas.Client.Pages
         public List<UserScoreDto<MathGameData>>? topScores { get; private set; }
         public string? username = null;
         public int score { get; private set; } = 0;
+
+
         public string gameScreen = "main";
+        private GameDifficulty Difficulty {get; set;} = GameDifficulty.Normal;
+
         private bool highscoreChecked = false;
 
         public void ChangeScreen(string mode)
         {
             gameScreen = mode;
         }
+
+        /// Function to change the difficulty of the game.
+        public async void ChangeDifficulty(string mode) {
+
+            switch(mode) {
+                case "Easy":
+                    Difficulty = GameDifficulty.Easy;
+
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await MathGameService.GetTopScoresAsync(Difficulty, topCount: 10);
+                    await InvokeAsync(StateHasChanged);
+                    break;
+
+                case "Normal":
+                    Difficulty = GameDifficulty.Normal;
+
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await MathGameService.GetTopScoresAsync(Difficulty, topCount: 10);
+                    await InvokeAsync(StateHasChanged);
+                    break;
+
+                case "Hard":
+                    Difficulty = GameDifficulty.Hard;
+
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await MathGameService.GetTopScoresAsync(Difficulty, topCount: 10);
+                    await InvokeAsync(StateHasChanged);
+                    break;
+            }
+        }
+
+        // Helper function to fetch highscores.
+        private async Task FetchHighscoreAsync() {
+            try {
+                highscore = await MathGameService.GetUserHighscoreAsync(username, Difficulty);
+            } catch {
+                highscore = null;
+            } finally {
+                highscoreChecked = true;
+            }
+        }
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -40,7 +93,7 @@ namespace Projektas.Client.Pages
             {
                 try
                 {
-                    highscore = await MathGameService.GetUserHighscoreAsync(username);
+                    highscore = await MathGameService.GetUserHighscoreAsync(username, Difficulty);
                 }
                 catch
                 {
@@ -51,7 +104,7 @@ namespace Projektas.Client.Pages
                     highscoreChecked = true;
                 }
             }
-            topScores = await MathGameService.GetTopScoresAsync(topCount: 10);
+            topScores = await MathGameService.GetTopScoresAsync(Difficulty, topCount: 10);
         }
 
         private async Task LoadUsernameAsync()
@@ -84,7 +137,7 @@ namespace Projektas.Client.Pages
         public async Task GenerateQuestionAsync()
         {
             isCorrect = null;
-            question = await MathGameService.GetQuestionAsync(score);
+            question = await MathGameService.GetQuestionAsync(score, Difficulty);
             options = await MathGameService.GetOptionsAsync();
         }
 
@@ -130,14 +183,14 @@ namespace Projektas.Client.Pages
 
                     if (username != null)
                     {
-                        await MathGameService.SaveScoreAsync(username, score);
+                        await MathGameService.SaveScoreAsync(username, score, Difficulty);
                     }
 
                     if (username != null)
                     {
                         try
                         {
-                            highscore = await MathGameService.GetUserHighscoreAsync(username);
+                            highscore = await MathGameService.GetUserHighscoreAsync(username, Difficulty);
                         }
                         catch
                         {
@@ -149,7 +202,7 @@ namespace Projektas.Client.Pages
                         }
                     }
 
-                    topScores = await MathGameService.GetTopScoresAsync(topCount: 10);
+                    topScores = await MathGameService.GetTopScoresAsync(Difficulty, topCount: 10);
                 }
                 StateHasChanged();
             });

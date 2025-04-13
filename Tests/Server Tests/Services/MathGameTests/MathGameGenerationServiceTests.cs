@@ -1,5 +1,6 @@
 ﻿using Projektas.Server.Services.MathGame;
 using Projektas.Server.Enums;
+using Projektas.Shared.Enums;
 
 namespace Projektas.Tests.Services.MathGameTests {
     public class MathGameGenerationServiceTests {
@@ -15,18 +16,19 @@ namespace Projektas.Tests.Services.MathGameTests {
         [InlineData(20, 20)]
         public void GenerateNumbers_ShouldReturnCorrectNumberOfOperands(int numberOfOperands, int expectedResult) {
             const int arbitraryScore = 1; // score doesn't matter in this case
+            const GameDifficulty arbitraryDifficulty = GameDifficulty.Easy;
 
-            List<int> result = _mathGenerationService.GenerateNumbers(numberOfOperands, arbitraryScore);
+            List<int> result = _mathGenerationService.GenerateNumbers(numberOfOperands, arbitraryScore, arbitraryDifficulty);
 
             Assert.Equal(expectedResult, result.Count);
         }
 
         [Theory]
-        [InlineData(3, 0, 1, 10)]
-        [InlineData(5, 2, 3, 14)]
-        [InlineData(10, 15, 16, 40)]
-        public void GenerateNumbers_ShouldReturnNumbersWithinRange(int numberOfOperands, int score, int min, int max) {
-            List<int> result = _mathGenerationService.GenerateNumbers(numberOfOperands, score);
+        [InlineData(3, 0, 1, 20, GameDifficulty.Easy)]
+        [InlineData(5, 2, 10, 50,GameDifficulty.Normal)]
+        [InlineData(10, 15, 40, 90, GameDifficulty.Hard)]
+        public void GenerateNumbers_ShouldReturnNumbersWithinRange(int numberOfOperands, int score, int min, int max, GameDifficulty difficulty) {
+            List<int> result = _mathGenerationService.GenerateNumbers(numberOfOperands, score, difficulty);
 
             foreach(int number in result) {
                 Assert.InRange(number, min, max);
@@ -39,30 +41,31 @@ namespace Projektas.Tests.Services.MathGameTests {
         [InlineData(20, 19)]
         public void GenerateOperations_ShouldReturnCorrectNumberOfOperations(int numberOfOperands, int expectedResult) {
             const int arbitraryScore = 1; // score doesn't matter in this case
+            const GameDifficulty arbitraryDifficulty = GameDifficulty.Easy;
 
-            List<Operation> result = _mathGenerationService.GenerateOperations(numberOfOperands, arbitraryScore);
+            List<Operation> result = _mathGenerationService.GenerateOperations(numberOfOperands, arbitraryScore, arbitraryDifficulty);
 
             // generates numberOfOperands - 1 operations
             Assert.Equal(expectedResult, result.Count);
         }
 
         [Theory]
-        [InlineData(3, 0)]
-        [InlineData(5, 4)]
-        [InlineData(20, 5)]
-        public void GenerateOperations_ReturnsAdditionOrSubtraction_WhenScoreIsFiveOrBelow(int numberOfOperands, int score) {
-            List<Operation> result = _mathGenerationService.GenerateOperations(numberOfOperands, score);
+        [InlineData(3, 0, GameDifficulty.Easy)]
+        [InlineData(5, 4, GameDifficulty.Easy)]
+        [InlineData(20, 5, GameDifficulty.Easy)]
+        public void GenerateOperations_ReturnsAdditionOrSubtraction_WhenScoreIsFiveOrBelow(int numberOfOperands, int score, GameDifficulty difficulty) {
+            List<Operation> result = _mathGenerationService.GenerateOperations(numberOfOperands, score, difficulty);
 
             foreach(Operation operation in result) {
                 Assert.True(operation == Operation.Addition || operation == Operation.Subtraction);
             }
         }
         [Theory]
-        [InlineData(3, 6)]
-        [InlineData(5, 10)]
-        [InlineData(20, 12)]
-        public void GenerateOperations_ReturnsAdditionOrSubtraction_WhenScoreIsAboveFive(int numberOfOperands, int score) {
-            List<Operation> result = _mathGenerationService.GenerateOperations(numberOfOperands, score);
+        [InlineData(3, 6, GameDifficulty.Hard)]
+        [InlineData(5, 10, GameDifficulty.Hard)]
+        [InlineData(20, 12, GameDifficulty.Hard)]
+        public void GenerateOperations_ReturnsAdditionOrSubtraction_WhenScoreIsAboveFive(int numberOfOperands, int score, GameDifficulty difficulty) {
+            List<Operation> result = _mathGenerationService.GenerateOperations(numberOfOperands, score, difficulty);
 
             foreach(Operation operation in result) {
                 Assert.True(operation == Operation.Addition || operation == Operation.Subtraction || operation == Operation.Multiplication || operation == Operation.Division);

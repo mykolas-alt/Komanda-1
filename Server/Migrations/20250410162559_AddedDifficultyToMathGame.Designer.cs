@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Projektas.Server.Database;
 
@@ -10,9 +11,11 @@ using Projektas.Server.Database;
 namespace Projektas.Server.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250410162559_AddedDifficultyToMathGame")]
+    partial class AddedDifficultyToMathGame
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -180,12 +183,8 @@ namespace Projektas.Server.Migrations
                             b1.Property<int>("ScoreId")
                                 .HasColumnType("INTEGER");
 
-                            b1.Property<string>("Difficulty")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("TEXT")
-                                .HasDefaultValue("Easy")
-                                .HasColumnName("difficulty");
+                            b1.Property<int>("Difficulty")
+                                .HasColumnType("INTEGER");
 
                             b1.Property<int>("Scores")
                                 .HasColumnType("INTEGER")

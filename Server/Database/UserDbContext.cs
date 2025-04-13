@@ -44,6 +44,10 @@ namespace Projektas.Server.Database
 			ConfigureScoreTable<MathGameData>(modelBuilder,"mathGameScores", score => {
 				score.OwnsOne(s => s.GameData, gameData => {
 					gameData.Property(g => g.Scores).HasColumnName("score");
+					gameData.Property(g => g.Difficulty)
+						.HasColumnName("difficulty")
+						.HasConversion(new EnumToStringConverter<GameDifficulty>())
+						.HasDefaultValue(GameDifficulty.Easy);
                 });
                 score.Property(s => s.Timestamp).HasColumnName("timestamp").IsRequired();
                 score.HasOne(s => s.User)
