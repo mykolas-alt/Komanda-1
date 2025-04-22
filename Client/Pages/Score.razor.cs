@@ -18,7 +18,10 @@ namespace Projektas.Client.Pages {
         public required List<UserScoreDto<SudokuData>> SudokuScores {get; set;}
 
         
-        public int MathGame_Played {get; set;}
+
+        public int MathGame_Played_Easy {get; set;}
+        public int MathGame_Played_Normal {get; set;}
+        public int MathGame_Played_Hard {get; set;}
 
         public int AimTrainer_Played_Normal {get; set;}
         public int AimTrainer_Played_Hard {get; set;}
@@ -40,7 +43,10 @@ namespace Projektas.Client.Pages {
         public int Sudoku_Played_Hard_16x16 {get; set;}
 
 
-        public required GameScore MathGame_Highscore {get; set;}
+
+        public required GameScore MathGame_Highscore_Easy {get; set;}
+        public required GameScore MathGame_Highscore_Normal {get; set;}
+        public required GameScore MathGame_Highscore_Hard {get; set;}
 
         public required GameScore AimTrainer_Highscore_Normal {get; set;}
         public required GameScore AimTrainer_Highscore_Hard {get; set;}
@@ -62,7 +68,10 @@ namespace Projektas.Client.Pages {
         public required GameScore Sudoku_Highscore_Hard_16x16 {get; set;}
 
 
-        public required GameScore MathGame_AllTimeAverage {get; set;}
+
+        public required GameScore MathGame_AllTimeAverage_Easy {get; set;}
+        public required GameScore MathGame_AllTimeAverage_Normal {get; set;}
+        public required GameScore MathGame_AllTimeAverage_Hard {get; set;}
 
         public required GameScore AimTrainer_AllTimeAverage_Normal {get; set;}
         public required GameScore AimTrainer_AllTimeAverage_Hard {get; set;}
@@ -84,7 +93,10 @@ namespace Projektas.Client.Pages {
         public required GameScore Sudoku_AllTimeAverage_Hard_16x16 {get; set;}
 
 
-        public required List<AverageScoreDto> MathGame_Average_Last7Days {get; set;}
+
+        public required List<AverageScoreDto> MathGame_Average_Last7Days_Easy {get; set;}
+        public required List<AverageScoreDto> MathGame_Average_Last7Days_Normal {get; set;}
+        public required List<AverageScoreDto> MathGame_Average_Last7Days_Hard {get; set;}
 
         public required List<AverageScoreDto> AimTrainer_Average_Last7Days_Normal {get; set;}
         public required List<AverageScoreDto> AimTrainer_Average_Last7Days_Hard {get; set;}
@@ -116,12 +128,14 @@ namespace Projektas.Client.Pages {
         public required Dataset[] Sudoku_Average_Time_Last7Days_9x9_Dataset {get; set;}
         public required Dataset[] Sudoku_Average_Time_Last7Days_16x16_Dataset {get; set;}
 
+
         private string activeTab_AimTrainer = "lastGames";
         private string activeTab_MathGame = "lastGames";
         private string activeTab_PairUp = "lastGames";
         private string activeTab_Sudoku = "lastGames";
 
         
+        private string activeDifficulty_MathGame = "easy";
         private string activeDifficulty_AimTrainer = "normal";
         private string activeDifficulty_PairUp = "easy";
         private string activeDifficulty_Sudoku = "easy";
@@ -159,6 +173,11 @@ namespace Projektas.Client.Pages {
         }
         private void SetActiveTabSudoku(string tabName) {
             activeTab_Sudoku = tabName;
+        }
+
+
+        private void SetActiveDifficultyMathGame(string difficulty) {
+            activeDifficulty_MathGame = difficulty;
         }
 
         private void SetActiveDifficultyAimTrainer(string difficulty) {
@@ -237,16 +256,24 @@ namespace Projektas.Client.Pages {
             MathGameScores = await accountScoreService.GetMathGameScoresAsync(username);
 
             // matches played
-            MathGame_Played = await accountScoreService.GetMathGameMatchesPlayedAsync(username);
+            MathGame_Played_Easy = await accountScoreService.GetMathGameMatchesPlayedAsync(username, GameDifficulty.Easy);
+            MathGame_Played_Normal  = await accountScoreService.GetMathGameMatchesPlayedAsync(username, GameDifficulty.Normal);
+            MathGame_Played_Hard = await accountScoreService.GetMathGameMatchesPlayedAsync(username, GameDifficulty.Hard);
 
             // highscore
-            MathGame_Highscore = await accountScoreService.GetMathGameHighscoreAsync(username);
+            MathGame_Highscore_Easy = await accountScoreService.GetMathGameHighscoreAsync(username, GameDifficulty.Easy);
+            MathGame_Highscore_Normal = await accountScoreService.GetMathGameHighscoreAsync(username, GameDifficulty.Normal);
+            MathGame_Highscore_Hard = await accountScoreService.GetMathGameHighscoreAsync(username, GameDifficulty.Hard);
 
             // average score
-            MathGame_AllTimeAverage = await accountScoreService.GetMathGameAverageScoreAsync(username);
+            MathGame_AllTimeAverage_Easy = await accountScoreService.GetMathGameAverageScoreAsync(username, GameDifficulty.Easy);
+            MathGame_AllTimeAverage_Normal = await accountScoreService.GetMathGameAverageScoreAsync(username, GameDifficulty.Normal);
+            MathGame_AllTimeAverage_Hard = await accountScoreService.GetMathGameAverageScoreAsync(username, GameDifficulty.Hard);
 
             // average score for the last 7 days
-            MathGame_Average_Last7Days = await accountScoreService.GetMathGameAverageScoreLast7DaysAsync(username);
+            MathGame_Average_Last7Days_Easy = await accountScoreService.GetMathGameAverageScoreLast7DaysAsync(username, GameDifficulty.Easy);
+            MathGame_Average_Last7Days_Normal = await accountScoreService.GetMathGameAverageScoreLast7DaysAsync(username, GameDifficulty.Normal);
+            MathGame_Average_Last7Days_Hard = await accountScoreService.GetMathGameAverageScoreLast7DaysAsync(username, GameDifficulty.Hard);
         }
 
         public async Task LoadPairUpScoresAsync() {
@@ -350,11 +377,21 @@ namespace Projektas.Client.Pages {
         public void LoadMathGameDatasets() {
             MathGame_Average_Last7Days_Dataset = new Dataset[] {
                 new Dataset {
-                    Label = "Scores",
-                    Data = MathGame_Average_Last7Days.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    Label = "Easy difficulty",
+                    Data = MathGame_Average_Last7Days_Easy.Select(s => s.Score.Scores ?? 0).ToArray(),
                     BorderColor = "rgba(75, 192, 192, 1)", // Green
-                    yAxisLabel = "Points"
+                },
+                new Dataset {
+                    Label = "Normal difficulty",
+                    Data = MathGame_Average_Last7Days_Normal.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    BorderColor = "rgba(153, 102, 255, 1)", // Purple
+                },
+                new Dataset {
+                    Label = "Hard difficulty",
+                    Data = MathGame_Average_Last7Days_Hard.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    BorderColor = "rgba(255, 159, 64, 1)" // Orange
                 }
+
             };
         }
 

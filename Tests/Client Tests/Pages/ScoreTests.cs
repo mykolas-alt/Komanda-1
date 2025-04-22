@@ -86,7 +86,10 @@ namespace Projektas.Tests.Client_Tests.Pages
         GameScore Sudoku_AllTimeAverage_Hard_16x16 { get; set; }
 
 
-        List<AverageScoreDto> MathGame_Average_Last7Days { get; set; }
+        List<AverageScoreDto> MathGame_Average_Last7Days_Easy { get; set; }
+        List<AverageScoreDto> MathGame_Average_Last7Days_Normal { get; set; }
+        List<AverageScoreDto> MathGame_Average_Last7Days_Hard { get; set; }
+
 
         List<AverageScoreDto> AimTrainer_Average_Last7Days_Normal { get; set; }
         List<AverageScoreDto> AimTrainer_Average_Last7Days_Hard { get; set; }
@@ -130,10 +133,10 @@ namespace Projektas.Tests.Client_Tests.Pages
             await component.Instance.LoadMathGameScoresAsync();
 
             Assert.Equal(MathGameScores, component.Instance.MathGameScores);
-            Assert.Equal(MathGame_Played, component.Instance.MathGame_Played);
-            Assert.Equal(MathGame_Highscore, component.Instance.MathGame_Highscore);
-            Assert.Equal(MathGame_AllTimeAverage, component.Instance.MathGame_AllTimeAverage);
-            Assert.Equal(MathGame_Average_Last7Days, component.Instance.MathGame_Average_Last7Days);
+            Assert.Equal(MathGame_Played, component.Instance.MathGame_Played_Easy);
+            Assert.Equal(MathGame_Highscore, component.Instance.MathGame_Highscore_Easy);
+            Assert.Equal(MathGame_AllTimeAverage, component.Instance.MathGame_AllTimeAverage_Easy);
+            Assert.Equal(MathGame_Average_Last7Days_Easy, component.Instance.MathGame_Average_Last7Days_Easy);
         }
 
         [Fact]
@@ -244,17 +247,17 @@ namespace Projektas.Tests.Client_Tests.Pages
         [Fact]
         public async Task LoadMathGameDatasets_ShouldLoadCorrectData()
         {
+            
             var component = RenderComponent<Score>();
             await component.Instance.LoadMathGameScoresAsync();
 
             component.Instance.LoadMathGameDatasets();
 
             Assert.NotNull(component.Instance.MathGame_Average_Last7Days_Dataset);
-            Assert.Single(component.Instance.MathGame_Average_Last7Days_Dataset);
 
             var dataset = component.Instance.MathGame_Average_Last7Days_Dataset[0];
-            Assert.Equal("Scores", dataset.Label);
-            Assert.Equal(new[] { 16, 15, 14, 13, 12, 11, 10 }, dataset.Data);
+            Assert.Equal("Easy difficulty", dataset.Label);
+            Assert.Equal(new[] { 10, 12, 13, 14, 15, 16, 17 }, dataset.Data);
             Assert.Equal("rgba(75, 192, 192, 1)", dataset.BorderColor);
         }
 
@@ -357,34 +360,82 @@ namespace Projektas.Tests.Client_Tests.Pages
                 new UserScoreDto<MathGameData>
                 {
                     Username = username,
-                    GameData = new MathGameData
-                    {
-                        Scores = 17
-                    },
+                    GameData = new MathGameData { Scores = 17 },
                     Timestamp = DateTime.Now
-
                 }
             };
+
             MathGame_Played = 10;
+
             MathGame_Highscore = new GameScore { Scores = 20 };
             MathGame_AllTimeAverage = new GameScore { Scores = 14 };
-            MathGame_Average_Last7Days = new List<AverageScoreDto>
+
+            MathGame_Average_Last7Days_Easy = new List<AverageScoreDto>
             {
-                new AverageScoreDto { Score = new GameScore { Scores = 16 }, Date = DateTime.Today.AddDays(-6) },
-                new AverageScoreDto { Score = new GameScore { Scores = 15 }, Date = DateTime.Today.AddDays(-5) },
-                new AverageScoreDto { Score = new GameScore { Scores = 14 }, Date = DateTime.Today.AddDays(-4) },
-                new AverageScoreDto { Score = new GameScore { Scores = 13 }, Date = DateTime.Today.AddDays(-3) },
-                new AverageScoreDto { Score = new GameScore { Scores = 12 }, Date = DateTime.Today.AddDays(-2) },
-                new AverageScoreDto { Score = new GameScore { Scores = 11 }, Date = DateTime.Today.AddDays(-1) },
-                new AverageScoreDto { Score = new GameScore { Scores = 10 }, Date = DateTime.Today }
+                new AverageScoreDto { Score = new GameScore { Scores = 10 }, Date = DateTime.Today.AddDays(-6) },
+                new AverageScoreDto { Score = new GameScore { Scores = 12 }, Date = DateTime.Today.AddDays(-5) },
+                new AverageScoreDto { Score = new GameScore { Scores = 13 }, Date = DateTime.Today.AddDays(-4) },
+                new AverageScoreDto { Score = new GameScore { Scores = 14 }, Date = DateTime.Today.AddDays(-3) },
+                new AverageScoreDto { Score = new GameScore { Scores = 15 }, Date = DateTime.Today.AddDays(-2) },
+                new AverageScoreDto { Score = new GameScore { Scores = 16 }, Date = DateTime.Today.AddDays(-1) },
+                new AverageScoreDto { Score = new GameScore { Scores = 17 }, Date = DateTime.Today }
             };
 
-            _mockAccountScoreService.Setup(s => s.GetMathGameScoresAsync(It.IsAny<string>())).ReturnsAsync(MathGameScores);
-            _mockAccountScoreService.Setup(s => s.GetMathGameMatchesPlayedAsync(It.IsAny<string>())).ReturnsAsync(MathGame_Played);
-            _mockAccountScoreService.Setup(s => s.GetMathGameHighscoreAsync(It.IsAny<string>())).ReturnsAsync(MathGame_Highscore);
-            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreAsync(It.IsAny<string>())).ReturnsAsync(MathGame_AllTimeAverage);
-            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreLast7DaysAsync(It.IsAny<string>())).ReturnsAsync(MathGame_Average_Last7Days);
+            MathGame_Average_Last7Days_Normal = new List<AverageScoreDto>
+            {
+                new AverageScoreDto { Score = new GameScore { Scores = 18 }, Date = DateTime.Today.AddDays(-6) },
+                new AverageScoreDto { Score = new GameScore { Scores = 17 }, Date = DateTime.Today.AddDays(-5) },
+                new AverageScoreDto { Score = new GameScore { Scores = 16 }, Date = DateTime.Today.AddDays(-4) },
+                new AverageScoreDto { Score = new GameScore { Scores = 15 }, Date = DateTime.Today.AddDays(-3) },
+                new AverageScoreDto { Score = new GameScore { Scores = 14 }, Date = DateTime.Today.AddDays(-2) },
+                new AverageScoreDto { Score = new GameScore { Scores = 13 }, Date = DateTime.Today.AddDays(-1) },
+                new AverageScoreDto { Score = new GameScore { Scores = 12 }, Date = DateTime.Today }
+            };
+
+            MathGame_Average_Last7Days_Hard = new List<AverageScoreDto>
+            {
+                new AverageScoreDto { Score = new GameScore { Scores = 22 }, Date = DateTime.Today.AddDays(-6) },
+                new AverageScoreDto { Score = new GameScore { Scores = 23 }, Date = DateTime.Today.AddDays(-5) },
+                new AverageScoreDto { Score = new GameScore { Scores = 24 }, Date = DateTime.Today.AddDays(-4) },
+                new AverageScoreDto { Score = new GameScore { Scores = 25 }, Date = DateTime.Today.AddDays(-3) },
+                new AverageScoreDto { Score = new GameScore { Scores = 26 }, Date = DateTime.Today.AddDays(-2) },
+                new AverageScoreDto { Score = new GameScore { Scores = 27 }, Date = DateTime.Today.AddDays(-1) },
+                new AverageScoreDto { Score = new GameScore { Scores = 28 }, Date = DateTime.Today }
+            };
+
+            // Mock service setup
+            _mockAccountScoreService.Setup(s => s.GetMathGameScoresAsync(It.IsAny<string>()))
+                .ReturnsAsync(MathGameScores);
+
+            _mockAccountScoreService.Setup(s => s.GetMathGameMatchesPlayedAsync(It.IsAny<string>(), GameDifficulty.Easy))
+                .ReturnsAsync(MathGame_Played);
+            _mockAccountScoreService.Setup(s => s.GetMathGameMatchesPlayedAsync(It.IsAny<string>(), GameDifficulty.Normal))
+                .ReturnsAsync(MathGame_Played);
+            _mockAccountScoreService.Setup(s => s.GetMathGameMatchesPlayedAsync(It.IsAny<string>(), GameDifficulty.Hard))
+                .ReturnsAsync(MathGame_Played);
+
+            _mockAccountScoreService.Setup(s => s.GetMathGameHighscoreAsync(It.IsAny<string>(), GameDifficulty.Easy))
+                .ReturnsAsync(MathGame_Highscore);
+            _mockAccountScoreService.Setup(s => s.GetMathGameHighscoreAsync(It.IsAny<string>(), GameDifficulty.Normal))
+                .ReturnsAsync(MathGame_Highscore);
+            _mockAccountScoreService.Setup(s => s.GetMathGameHighscoreAsync(It.IsAny<string>(), GameDifficulty.Hard))
+                .ReturnsAsync(MathGame_Highscore);
+
+            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreAsync(It.IsAny<string>(), GameDifficulty.Easy))
+                .ReturnsAsync(MathGame_AllTimeAverage);
+            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreAsync(It.IsAny<string>(), GameDifficulty.Normal))
+                .ReturnsAsync(MathGame_AllTimeAverage);
+            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreAsync(It.IsAny<string>(), GameDifficulty.Hard))
+                .ReturnsAsync(MathGame_AllTimeAverage);
+
+            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreLast7DaysAsync(It.IsAny<string>(), GameDifficulty.Easy))
+                .ReturnsAsync(MathGame_Average_Last7Days_Easy);
+            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreLast7DaysAsync(It.IsAny<string>(), GameDifficulty.Normal))
+                .ReturnsAsync(MathGame_Average_Last7Days_Normal);
+            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreLast7DaysAsync(It.IsAny<string>(), GameDifficulty.Hard))
+                .ReturnsAsync(MathGame_Average_Last7Days_Hard);
         }
+
 
         private void AimTrainerSetup()
         {
@@ -417,6 +468,7 @@ namespace Projektas.Tests.Client_Tests.Pages
             };
 
             AimTrainer_Average_Last7Days_Hard = new List<AverageScoreDto>
+            
             {
                 new AverageScoreDto { Score = new GameScore { Scores = 29 }, Date = DateTime.Today.AddDays(-6) },
                 new AverageScoreDto { Score = new GameScore { Scores = 30 }, Date = DateTime.Today.AddDays(-5) },
