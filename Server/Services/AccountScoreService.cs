@@ -65,6 +65,11 @@ namespace Projektas.Server.Services
                 int score = filteredScores.Max(score => ((AimTrainerData)(object)score.GameData).Scores);
                 return new GameScore { Scores = score };
             }
+            else if (typeof(T) == typeof(MathGameData))
+            {
+                int score = userSpecificScores.Max(score => ((MathGameData)(object)score.GameData).Scores);
+                return new GameScore { Scores = score };
+            }
             return new GameScore { Scores = 0, TimeSpent = 0 };
         }
 
@@ -121,6 +126,11 @@ namespace Projektas.Server.Services
             {
                 int averageScore = (int)filteredScores.Average(score => ((AimTrainerData)(object)score.GameData).Scores);
                 return new GameScore { Scores = averageScore };
+            }
+            else if (typeof(T) == typeof(MathGameData))
+            {
+                int average = (int)userSpecificScores.Average(score => ((MathGameData)(object)score.GameData).Scores);
+                return new GameScore { Scores = average };
             }
             return new GameScore { Scores = 0, TimeSpent = 0 };
         }
@@ -219,6 +229,11 @@ namespace Projektas.Server.Services
                     else if (typeof(T) == typeof(AimTrainerData))
                     {
                         int averageScore = (int)scoresForDate.Average(score => ((AimTrainerData)(object)score.GameData).Scores);
+                        average = new GameScore { Scores = averageScore };
+                    }
+                    else if (typeof(T) == typeof(MathGameData))
+                    {
+                        int averageScore = (int)scoresForDate.Average(score => ((MathGameData)(object)score.GameData).Scores);
                         average = new GameScore { Scores = averageScore };
                     }
                     averageScores.Add(new AverageScoreDto { Score = average, Date = date });

@@ -50,9 +50,9 @@ namespace Projektas.Client.Services
             var url = $"api/accountscore/scores/sudoku?username={username}";
             return await _httpClient.GetFromJsonAsync<List<UserScoreDto<SudokuData>>>(url);
         }
-        public async Task<GameScore> GetMathGameHighscoreAsync(string username)
+        public async Task<GameScore> GetMathGameHighscoreAsync(string username, GameDifficulty difficulty)
         {
-            var url = ConstructUrl("highscore/math", username);
+            var url = ConstructUrl("highscore/math", username, difficulty);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
 
@@ -74,9 +74,9 @@ namespace Projektas.Client.Services
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
 
-        public async Task<GameScore> GetMathGameAverageScoreAsync(string username)
+        public async Task<GameScore> GetMathGameAverageScoreAsync(string username, GameDifficulty difficulty)
         {
-            var url = ConstructUrl("average-score/math", username);
+            var url = ConstructUrl("average-score/math", username, difficulty);
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
 
@@ -98,9 +98,9 @@ namespace Projektas.Client.Services
             return await _httpClient.GetFromJsonAsync<GameScore>(url);
         }
 
-        public async Task<int> GetMathGameMatchesPlayedAsync(string username)
+        public async Task<int> GetMathGameMatchesPlayedAsync(string username, GameDifficulty difficulty)
         {
-            var url = ConstructUrl("matches-played/math", username);
+            var url = ConstructUrl("matches-played/math", username, difficulty);
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
 
@@ -122,9 +122,9 @@ namespace Projektas.Client.Services
             return await _httpClient.GetFromJsonAsync<int>(url);
         }
 
-        public async Task<List<AverageScoreDto>> GetMathGameAverageScoreLast7DaysAsync(string username)
+        public async Task<List<AverageScoreDto>> GetMathGameAverageScoreLast7DaysAsync(string username, GameDifficulty difficulty)
         {
-            var url = ConstructUrl("average-score-last-7days/math", username);
+            var url = ConstructUrl("average-score-last-7days/math", username, difficulty);
             return await _httpClient.GetFromJsonAsync<List<AverageScoreDto>>(url);
         }
 

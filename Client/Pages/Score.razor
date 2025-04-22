@@ -71,12 +71,27 @@
             @if(MathGameScores.Count == 0) {
                 <div class="no_scores">Math Game: No scores available.</div>
             } else {
-                <span class="game_title">Math Game</span>
+                <div class="place_row">
+                    <span class="game_title">Math Game</span>
+                    <button class="difficulty_button @(activeDifficulty_MathGame == "easy" ? "active" : "")" @onclick='() => SetActiveDifficultyMathGame("easy")'>Easy</button>
+                    <button class="difficulty_button @(activeDifficulty_MathGame == "normal" ? "active" : "")" @onclick='() => SetActiveDifficultyMathGame("normal")'>Normal</button>
+                    <button class="difficulty_button @(activeDifficulty_MathGame == "hard" ? "active" : "")" @onclick='() => SetActiveDifficultyMathGame("hard")'>Hard</button>
+                </div>
                 <div class="sub_game_score">
                     <div class="text_section @(IsMathGameActive ? "column_layout" : "row_layout")">
-                        <span class="score_words" style="--order: 0;">Played: @MathGame_Played</span>
-                        <span class="score_words" style="--order: 1;">High Score: @MathGame_Highscore.Scores</span>
-                        <span class="score_words" style="--order: 2;">Average Score: @MathGame_AllTimeAverage.Scores</span>
+                        @if(activeDifficulty_MathGame == "easy") {
+                            <span class="score_words" style="--order: 0;">Played: @MathGame_Played_Easy</span>
+                            <span class="score_words" style="--order: 1;">High Score: @MathGame_Highscore_Easy.Scores</span>
+                            <span class="score_words" style="--order: 2;">Average Score: @MathGame_AllTimeAverage_Easy.Scores</span>
+                        } else if(activeDifficulty_MathGame == "normal") {
+                            <span class="score_words" style="--order: 0;">Played: @MathGame_Played_Normal</span>
+                            <span class="score_words" style="--order: 1;">High Score: @MathGame_Highscore_Normal.Scores</span>
+                            <span class="score_words" style="--order: 2;">Average Score: @MathGame_AllTimeAverage_Normal.Scores</span>
+                        } else {
+                            <span class="score_words" style="--order: 0;">Played: @MathGame_Played_Hard</span>
+                            <span class="score_words" style="--order: 1;">High Score: @MathGame_Highscore_Hard.Scores</span>
+                            <span class="score_words" style="--order: 2;">Average Score: @MathGame_AllTimeAverage_Hard.Scores</span>
+                        }
                     </div>
                     <div class="place_col game_info">
                         <div class="place_row">
@@ -91,6 +106,7 @@
                                             <tr>
                                                 <th>Date</th>
                                                 <th>Score</th>
+                                                <th>Difficulty</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -98,6 +114,7 @@
                                                 <tr>
                                                     <td>@score.ShowOtherDateTimeFormat()</td>
                                                     <td>@score.GameData.Scores points</td>
+                                                    <td>@score.GameData.Difficulty</td>
                                                 </tr>
                                             }
                                         </tbody>
@@ -105,7 +122,7 @@
                                 </div>
                             } else if(activeTab_MathGame == "average") {
                                 <div>
-                                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGame_Average_Last7Days.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="MathGame_Average_Last7Days_Dataset" />
+                                    <ScoreChart ChartId="mathGameChart" Labels="@(MathGame_Average_Last7Days_Easy.Select(s => s.Date.ToString("dd/MM/yyyy")).ToArray())" Datasets="MathGame_Average_Last7Days_Dataset" />
                                 </div>
                             }
                         </div>

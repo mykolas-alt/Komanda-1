@@ -49,10 +49,10 @@ namespace Projektas.Server.Controllers
         }
 
         [HttpGet("highscore/math")]
-        public async Task<ActionResult<GameScore>> GetMathHighscore([FromQuery] string username)
+        public async Task<ActionResult<GameScore>> GetMathHighscore([FromQuery] string username, [FromQuery] GameDifficulty difficulty)
         {
             var user = new User { Username = username };
-            var highscore = await _accountScoreService.GetHighscore<MathGameData>(user);
+            var highscore = await _accountScoreService.GetHighscore<MathGameData>(user, difficulty);
             return Ok(highscore);
         }
 
@@ -81,10 +81,10 @@ namespace Projektas.Server.Controllers
         }
 
         [HttpGet("matches-played/math")]
-        public async Task<ActionResult<int>> GetMathMatchesPlayed([FromQuery] string username)
+        public async Task<ActionResult<int>> GetMathMatchesPlayed([FromQuery] string username, [FromQuery] GameDifficulty difficulty)
         {
             var user = new User { Username = username };
-            var matchesPlayed = await _accountScoreService.GetMatchesPlayed<MathGameData>(user);
+            var matchesPlayed = await _accountScoreService.GetMatchesPlayed<MathGameData>(user, difficulty);
             return Ok(matchesPlayed);
         }
 
@@ -113,10 +113,10 @@ namespace Projektas.Server.Controllers
         }
 
         [HttpGet("average-score/math")]
-        public async Task<ActionResult<GameScore>> GetMathAverageScore([FromQuery] string username)
+        public async Task<ActionResult<GameScore>> GetMathAverageScore([FromQuery] string username, [FromQuery] GameDifficulty difficulty)
         {
             var user = new User { Username = username };
-            var averageScore = await _accountScoreService.GetAllTimeAverageScore<MathGameData>(user);
+            var averageScore = await _accountScoreService.GetAllTimeAverageScore<MathGameData>(user, difficulty);
             return Ok(averageScore);
         }
 
@@ -146,10 +146,10 @@ namespace Projektas.Server.Controllers
 
 
         [HttpGet("average-score-last-7days/math")]
-        public async Task<ActionResult<List<AverageScoreDto>>> GetMathAverageScoreLast7Days([FromQuery] string username)
+        public async Task<ActionResult<List<AverageScoreDto>>> GetMathAverageScoreLast7Days([FromQuery] string username, [FromQuery] GameDifficulty difficulty)
         {
             var user = new User { Username = username };
-            var averageScoreLast7Days = await _accountScoreService.GetAverageScoreLast7Days<MathGameData>(user);
+            var averageScoreLast7Days = await _accountScoreService.GetAverageScoreLast7Days<MathGameData>(user, difficulty);
             return Ok(averageScoreLast7Days);
         }
 
