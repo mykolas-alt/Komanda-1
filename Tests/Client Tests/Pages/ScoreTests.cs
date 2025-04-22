@@ -130,10 +130,10 @@ namespace Projektas.Tests.Client_Tests.Pages
             await component.Instance.LoadMathGameScoresAsync();
 
             Assert.Equal(MathGameScores, component.Instance.MathGameScores);
-            Assert.Equal(MathGame_Played, component.Instance.MathGame_Played);
-            Assert.Equal(MathGame_Highscore, component.Instance.MathGame_Highscore);
-            Assert.Equal(MathGame_AllTimeAverage, component.Instance.MathGame_AllTimeAverage);
-            Assert.Equal(MathGame_Average_Last7Days, component.Instance.MathGame_Average_Last7Days);
+            Assert.Equal(MathGame_Played, component.Instance.MathGame_Played_Easy);
+            Assert.Equal(MathGame_Highscore, component.Instance.MathGame_Highscore_Easy);
+            Assert.Equal(MathGame_AllTimeAverage, component.Instance.MathGame_AllTimeAverage_Easy);
+            Assert.Equal(MathGame_Average_Last7Days, component.Instance.MathGame_Average_Last7Days_Easy);
         }
 
         [Fact]
@@ -380,10 +380,10 @@ namespace Projektas.Tests.Client_Tests.Pages
             };
 
             _mockAccountScoreService.Setup(s => s.GetMathGameScoresAsync(It.IsAny<string>())).ReturnsAsync(MathGameScores);
-            _mockAccountScoreService.Setup(s => s.GetMathGameMatchesPlayedAsync(It.IsAny<string>())).ReturnsAsync(MathGame_Played);
-            _mockAccountScoreService.Setup(s => s.GetMathGameHighscoreAsync(It.IsAny<string>())).ReturnsAsync(MathGame_Highscore);
-            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreAsync(It.IsAny<string>())).ReturnsAsync(MathGame_AllTimeAverage);
-            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreLast7DaysAsync(It.IsAny<string>())).ReturnsAsync(MathGame_Average_Last7Days);
+            _mockAccountScoreService.Setup(s => s.GetMathGameMatchesPlayedAsync(It.IsAny<string>(), GameDifficulty.Easy)).ReturnsAsync(MathGame_Played);
+            _mockAccountScoreService.Setup(s => s.GetMathGameHighscoreAsync(It.IsAny<string>(), GameDifficulty.Easy)).ReturnsAsync(MathGame_Highscore);
+            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreAsync(It.IsAny<string>(), GameDifficulty.Easy)).ReturnsAsync(MathGame_AllTimeAverage);
+            _mockAccountScoreService.Setup(s => s.GetMathGameAverageScoreLast7DaysAsync(It.IsAny<string>(), GameDifficulty.Easy)).ReturnsAsync(MathGame_Average_Last7Days);
         }
 
         private void AimTrainerSetup()
