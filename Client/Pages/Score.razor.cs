@@ -380,13 +380,11 @@ namespace Projektas.Client.Pages {
                     Label = "Easy difficulty",
                     Data = MathGame_Average_Last7Days_Easy.Select(s => s.Score.Scores ?? 0).ToArray(),
                     BorderColor = "rgba(75, 192, 192, 1)", // Green
-                    yAxisLabel = "Points"
                 },
                 new Dataset {
                     Label = "Normal difficulty",
                     Data = MathGame_Average_Last7Days_Normal.Select(s => s.Score.Scores ?? 0).ToArray(),
                     BorderColor = "rgba(153, 102, 255, 1)", // Purple
-                    //yAxisLabel = "Points"
                 },
                 new Dataset {
                     Label = "Hard difficulty",
