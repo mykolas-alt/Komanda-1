@@ -27,7 +27,9 @@
         private System.Timers.Timer? moveDotTimer;
         public (int x,int y) TargetPosition {get; set;}
         public int moveCounter {get; private set;}
-        public int moveDirection {get; set;} // 0 = left, 1 = right, 2 = up, 3 = down
+        public int moveDirection {get; set;}
+        private int directionChangeThreshold = 50;
+        private int bufferZone = 6;
 
         public int score {get; private set;}
         private UserScoreDto<AimTrainerData>? highscore {get; set;}
@@ -123,7 +125,7 @@
             moveDotTimer.Start();
         }
         private void StartMovingDotHard() {
-            moveDotTimer = new System.Timers.Timer(5);
+            moveDotTimer = new System.Timers.Timer(10);
             moveDotTimer.Elapsed += (sender, e) => {
                 MoveTargetHard(1000, 400);
                 InvokeAsync(StateHasChanged);
@@ -175,31 +177,33 @@
         }
 
         public void MoveTargetNormal(int boxWidth, int boxHeight) {
+            int dotSize = 50;
             moveCounter++;
 
-            if(moveCounter % 50 == 0) {
+
+            if(moveCounter % directionChangeThreshold == 0) {
                 moveDirection = _random.Next(4);
             }
 
             switch(moveDirection) {
                 case 0: // left
                     TargetPosition = (TargetPosition.x - 1, TargetPosition.y);
-                    if(TargetPosition.x < 4)
+                    if(TargetPosition.x < bufferZone)
                         moveDirection = 1;
                     break;
                 case 1: // right
                     TargetPosition = (TargetPosition.x + 1, TargetPosition.y);
-                    if(TargetPosition.x > boxWidth - 54)
+                    if(TargetPosition.x > boxWidth - bufferZone - dotSize)
                         moveDirection = 0;
                     break;
                 case 2: // up
                     TargetPosition = (TargetPosition.x ,TargetPosition.y - 1);
-                    if(TargetPosition.y < 4)
+                    if(TargetPosition.y < bufferZone)
                         moveDirection = 3;
                     break;
                 case 3: // down
                     TargetPosition = (TargetPosition.x, TargetPosition.y + 1);
-                    if(TargetPosition.y > boxHeight - 54)
+                    if(TargetPosition.y > boxHeight - bufferZone - dotSize)
                         moveDirection = 2;
                     break;
             }
@@ -207,59 +211,62 @@
 
         public void MoveTargetHard(int boxWidth, int boxHeight) {
             moveCounter++;
+            int dotSize = 40;
+            // max speed - fluctuates from 1 to 4. Every 3000 ms increses +1.
+            int maxSpeed = 1 + moveCounter % 4 + moveCounter / 3000; // max end game speed: 1 + max(0,3) + 10 = 14
+            // Min speed - fluctuates from 1 to 2. Every 400 ms increses +1. 
+            int minSpeed = 1 + moveCounter % 2 + moveCounter / 3000; // max end game speed: 1 + max(0,1) + 10 = 12
+            int travelSpeed = minSpeed;
 
-            if(moveCounter % 50 == 0) {
+            if (moveCounter % 10 == 0) {
+                travelSpeed = _random.Next(minSpeed, maxSpeed);
+            }
+
+            if(moveCounter % directionChangeThreshold == 0) {
 
                 moveDirection = _random.Next(8);
-
-                if (moveDirection == 0) {
-                    moveDirection = 1;
-                } else if (moveDirection == 5) {
-                    moveDirection = 4;
-                } else if (moveDirection == 7) {
-                    moveDirection = 6;
-                }
+                directionChangeThreshold = _random.Next(20, 100);
             }
 
             switch(moveDirection) {
                 case 0: // left
-                    TargetPosition = (TargetPosition.x - 1, TargetPosition.y);
-                    if(TargetPosition.x < 4)
+                    TargetPosition = (TargetPosition.x - travelSpeed, TargetPosition.y);
+                    if(TargetPosition.x < bufferZone)
                         moveDirection = 1;
                     break;
                 case 1: // right
-                    TargetPosition = (TargetPosition.x + 1, TargetPosition.y);
-                    if(TargetPosition.x > boxWidth - 34)
+                    TargetPosition = (TargetPosition.x + travelSpeed, TargetPosition.y);
+                    if(TargetPosition.x > boxWidth - bufferZone - dotSize)
                         moveDirection = 0;
                     break;
                 case 2: // up
-                    TargetPosition = (TargetPosition.x ,TargetPosition.y - 1);
-                    if(TargetPosition.y < 4)
+                    TargetPosition = (TargetPosition.x ,TargetPosition.y - travelSpeed);
+                    if(TargetPosition.y < bufferZone)
                         moveDirection = 3;
                     break;
                 case 3: // down
-                    TargetPosition = (TargetPosition.x, TargetPosition.y + 1);
-                    if(TargetPosition.y > boxHeight - 34)
+                    TargetPosition = (TargetPosition.x, TargetPosition.y + travelSpeed);
+                    if(TargetPosition.y > boxHeight - bufferZone - dotSize)
                         moveDirection = 2;
                     break;
                 case 4: // diagonal up-right
-                    TargetPosition = (TargetPosition.x + 1, TargetPosition.y + 1);
-                    if(TargetPosition.x > boxWidth - 34 || TargetPosition.y > boxHeight - 34)
+                    TargetPosition = (TargetPosition.x + travelSpeed, TargetPosition.y + travelSpeed);
+                    if(TargetPosition.x > boxWidth - bufferZone - dotSize || TargetPosition.y > boxHeight - bufferZone - dotSize)
                         moveDirection = 7;
                     break; 
                 case 5: // diagnonal up-left
-                    TargetPosition = (TargetPosition.x - 1, TargetPosition.y + 1);
-                    if(TargetPosition.x < 4 || TargetPosition.y > boxHeight - 34)
+                    TargetPosition = (TargetPosition.x - travelSpeed, TargetPosition.y + travelSpeed);
+                    if(TargetPosition.x < bufferZone || TargetPosition.y > boxHeight - bufferZone - dotSize)
                         moveDirection = 6;
                     break;
                 case 6: // diagnonal down-right
-                    TargetPosition = (TargetPosition.x + 1, TargetPosition.y - 1);
-                    if(TargetPosition.x > boxWidth - 34 || TargetPosition.y < 4)
+                    TargetPosition = (TargetPosition.x + travelSpeed, TargetPosition.y - travelSpeed);
+                    if(TargetPosition.x > boxWidth - bufferZone - dotSize || TargetPosition.y < bufferZone)
                         moveDirection = 5;
                     break;     
                 case 7: // diagnonal down-left
-                    TargetPosition = (TargetPosition.x - 1, TargetPosition.y - 1);
-                    if(TargetPosition.x < 4  || TargetPosition.y < 4)
+                    TargetPosition = (TargetPosition.x - travelSpeed, TargetPosition.y - travelSpeed);
+                    if(TargetPosition.x < bufferZone  || TargetPosition.y < bufferZone)
                         moveDirection = 4;
                     break;          
             }
