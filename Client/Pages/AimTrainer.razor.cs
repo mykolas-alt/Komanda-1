@@ -22,7 +22,7 @@
         public IAccountAuthStateProvider AuthStateProvider {get; set;}
         
         public string gameScreen = "main";
-        public GameDifficulty Difficulty {get; set;} = GameDifficulty.Normal;
+        public GameDifficulty Difficulty {get; set;} = GameDifficulty.Easy;
 
         private System.Timers.Timer? moveDotTimer;
         public (int x,int y) TargetPosition {get; set;}
@@ -42,6 +42,14 @@
 
         public async void ChangeDifficulty(string mode) {
             switch(mode) {
+                case "Easy":
+                    Difficulty = GameDifficulty.Easy;
+                    if(username != null) {
+                        await FetchHighscoreAsync();
+                    }
+                    topScores = await AimTrainerService.GetTopScoresAsync(Difficulty, topCount: 10);
+                    await InvokeAsync(StateHasChanged);
+                    break;
                 case "Normal":
                     Difficulty=GameDifficulty.Normal;
                     if(username != null) {
@@ -96,17 +104,28 @@
             ResetGame(1000, 400);
             TimerService.Start(30);
             TimerService.OnTick += TimerTick;
-
-            if(Difficulty == GameDifficulty.Hard) {
-                StartMovingDotTimer();
+            
+            if (Difficulty == GameDifficulty.Normal) {
+                StartMovingDotNormal();
+            }
+            if(Difficulty == GameDifficulty.Hard ) {
+                StartMovingDotHard();
             }
             InvokeAsync(StateHasChanged);
         }
 
-        private void StartMovingDotTimer() {
+        private void StartMovingDotNormal() {
             moveDotTimer = new System.Timers.Timer(10);
             moveDotTimer.Elapsed += (sender, e) => {
-                MoveTarget(1000, 400);
+                MoveTargetNormal(1000, 400);
+                InvokeAsync(StateHasChanged);
+            };
+            moveDotTimer.Start();
+        }
+        private void StartMovingDotHard() {
+            moveDotTimer = new System.Timers.Timer(5);
+            moveDotTimer.Elapsed += (sender, e) => {
+                MoveTargetHard(1000, 400);
                 InvokeAsync(StateHasChanged);
             };
             moveDotTimer.Start();
@@ -155,11 +174,51 @@
             TargetPosition = (x, y);
         }
 
-        public void MoveTarget(int boxWidth, int boxHeight) {
+        public void MoveTargetNormal(int boxWidth, int boxHeight) {
             moveCounter++;
 
             if(moveCounter % 50 == 0) {
                 moveDirection = _random.Next(4);
+            }
+
+            switch(moveDirection) {
+                case 0: // left
+                    TargetPosition = (TargetPosition.x - 1, TargetPosition.y);
+                    if(TargetPosition.x < 4)
+                        moveDirection = 1;
+                    break;
+                case 1: // right
+                    TargetPosition = (TargetPosition.x + 1, TargetPosition.y);
+                    if(TargetPosition.x > boxWidth - 54)
+                        moveDirection = 0;
+                    break;
+                case 2: // up
+                    TargetPosition = (TargetPosition.x ,TargetPosition.y - 1);
+                    if(TargetPosition.y < 4)
+                        moveDirection = 3;
+                    break;
+                case 3: // down
+                    TargetPosition = (TargetPosition.x, TargetPosition.y + 1);
+                    if(TargetPosition.y > boxHeight - 54)
+                        moveDirection = 2;
+                    break;
+            }
+        }
+
+        public void MoveTargetHard(int boxWidth, int boxHeight) {
+            moveCounter++;
+
+            if(moveCounter % 50 == 0) {
+
+                moveDirection = _random.Next(8);
+
+                if (moveDirection == 0) {
+                    moveDirection = 1;
+                } else if (moveDirection == 5) {
+                    moveDirection = 4;
+                } else if (moveDirection == 7) {
+                    moveDirection = 6;
+                }
             }
 
             switch(moveDirection) {
@@ -183,6 +242,26 @@
                     if(TargetPosition.y > boxHeight - 34)
                         moveDirection = 2;
                     break;
+                case 4: // diagonal up-right
+                    TargetPosition = (TargetPosition.x + 1, TargetPosition.y + 1);
+                    if(TargetPosition.x > boxWidth - 34 || TargetPosition.y > boxHeight - 34)
+                        moveDirection = 7;
+                    break; 
+                case 5: // diagnonal up-left
+                    TargetPosition = (TargetPosition.x - 1, TargetPosition.y + 1);
+                    if(TargetPosition.x < 4 || TargetPosition.y > boxHeight - 34)
+                        moveDirection = 6;
+                    break;
+                case 6: // diagnonal down-right
+                    TargetPosition = (TargetPosition.x + 1, TargetPosition.y - 1);
+                    if(TargetPosition.x > boxWidth - 34 || TargetPosition.y < 4)
+                        moveDirection = 5;
+                    break;     
+                case 7: // diagnonal down-left
+                    TargetPosition = (TargetPosition.x - 1, TargetPosition.y - 1);
+                    if(TargetPosition.x < 4  || TargetPosition.y < 4)
+                        moveDirection = 4;
+                    break;          
             }
         }
 

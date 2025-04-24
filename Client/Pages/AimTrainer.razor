@@ -28,10 +28,12 @@
             }
             <div class="place_col middle">
                 <button class="button" @onclick="StartGame">Start</button>
-                @if(Difficulty==GameDifficulty.Normal) {
+                @if(Difficulty==GameDifficulty.Easy) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Easy</button>
+                } else if(Difficulty==GameDifficulty.Normal) {
                     <button class="button" @onclick='() => ChangeDifficulty("Hard")'>Difficulty: Normal</button>
                 } else if(Difficulty==GameDifficulty.Hard) {
-                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Hard</button>
+                    <button class="button" @onclick='() => ChangeDifficulty("Easy")'>Difficulty: Hard</button>
                 }
             </div>
             <div class="leaderboard">
@@ -95,10 +97,12 @@
                     @score
                 </div>
                 <button class="button" @onclick="StartGame">Restart</button>
-                @if(Difficulty==GameDifficulty.Normal) {
+                @if(Difficulty==GameDifficulty.Easy) {
+                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Easy</button>
+                } else if(Difficulty==GameDifficulty.Normal) {
                     <button class="button" @onclick='() => ChangeDifficulty("Hard")'>Difficulty: Normal</button>
                 } else if(Difficulty==GameDifficulty.Hard) {
-                    <button class="button" @onclick='() => ChangeDifficulty("Normal")'>Difficulty: Hard</button>
+                    <button class="button" @onclick='() => ChangeDifficulty("Easy")'>Difficulty: Hard</button>
                 }
                 <button class="button" @onclick='() => ChangeScreen("main")'>Main Menu</button>
             </div>
