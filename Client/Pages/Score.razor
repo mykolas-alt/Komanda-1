@@ -14,12 +14,17 @@
             } else {
                 <div class="place_row">
                     <span class="game_title">Aim Trainer</span>
+                    <button class="difficulty_button @(activeDifficulty_AimTrainer == "easy" ? "active" : "")" @onclick='() => SetActiveDifficultyAimTrainer("easy")'>Easy</button>
                     <button class="difficulty_button @(activeDifficulty_AimTrainer == "normal" ? "active" : "")" @onclick='() => SetActiveDifficultyAimTrainer("normal")'>Normal</button>
                     <button class="difficulty_button @(activeDifficulty_AimTrainer == "hard" ? "active" : "")" @onclick='() => SetActiveDifficultyAimTrainer("hard")'>Hard</button>
                 </div>
                 <div class="sub_game_score">
                     <div class="text_section @(IsAimTrainerActive ? "column_layout" : "row_layout")">
-                        @if(activeDifficulty_AimTrainer == "normal") {
+                        @if(activeDifficulty_AimTrainer == "easy") {
+                            <span class="score_words" style="--order: 0;">Played: @MathGame_Played_Easy</span>
+                            <span class="score_words" style="--order: 1;">High Score: @MathGame_Highscore_Easy.Scores</span>
+                            <span class="score_words" style="--order: 2;">Average Score: @MathGame_AllTimeAverage_Easy.Scores</span>
+                        } else if(activeDifficulty_AimTrainer == "normal") {
                             <span class="score_words" style="--order: 0;">Played: @AimTrainer_Played_Normal</span>
                             <span class="score_words" style="--order: 1;">High Score: @AimTrainer_Highscore_Normal.Scores</span>
                             <span class="score_words" style="--order: 2;">Average Score: @AimTrainer_AllTimeAverage_Normal.Scores</span>

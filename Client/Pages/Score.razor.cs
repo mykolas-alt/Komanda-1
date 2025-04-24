@@ -23,6 +23,7 @@ namespace Projektas.Client.Pages {
         public int MathGame_Played_Normal {get; set;}
         public int MathGame_Played_Hard {get; set;}
 
+        public int AimTrainer_Played_Easy {get; set;}
         public int AimTrainer_Played_Normal {get; set;}
         public int AimTrainer_Played_Hard {get; set;}
 
@@ -48,6 +49,7 @@ namespace Projektas.Client.Pages {
         public required GameScore MathGame_Highscore_Normal {get; set;}
         public required GameScore MathGame_Highscore_Hard {get; set;}
 
+        public required GameScore AimTrainer_Highscore_Easy {get; set;}
         public required GameScore AimTrainer_Highscore_Normal {get; set;}
         public required GameScore AimTrainer_Highscore_Hard {get; set;}
 
@@ -73,6 +75,7 @@ namespace Projektas.Client.Pages {
         public required GameScore MathGame_AllTimeAverage_Normal {get; set;}
         public required GameScore MathGame_AllTimeAverage_Hard {get; set;}
 
+        public required GameScore AimTrainer_AllTimeAverage_Easy {get; set;}
         public required GameScore AimTrainer_AllTimeAverage_Normal {get; set;}
         public required GameScore AimTrainer_AllTimeAverage_Hard {get; set;}
 
@@ -98,6 +101,7 @@ namespace Projektas.Client.Pages {
         public required List<AverageScoreDto> MathGame_Average_Last7Days_Normal {get; set;}
         public required List<AverageScoreDto> MathGame_Average_Last7Days_Hard {get; set;}
 
+        public required List<AverageScoreDto> AimTrainer_Average_Last7Days_Easy {get; set;}
         public required List<AverageScoreDto> AimTrainer_Average_Last7Days_Normal {get; set;}
         public required List<AverageScoreDto> AimTrainer_Average_Last7Days_Hard {get; set;}
 
@@ -136,7 +140,7 @@ namespace Projektas.Client.Pages {
 
         
         private string activeDifficulty_MathGame = "easy";
-        private string activeDifficulty_AimTrainer = "normal";
+        private string activeDifficulty_AimTrainer = "easy";
         private string activeDifficulty_PairUp = "easy";
         private string activeDifficulty_Sudoku = "easy";
         
@@ -235,18 +239,22 @@ namespace Projektas.Client.Pages {
             AimTrainerScores = await accountScoreService.GetAimTrainerScoresAsync(username);
 
             // matches played
+            AimTrainer_Played_Hard = await accountScoreService.GetAimTrainerMatchesPlayedAsync(username, GameDifficulty.Easy);
             AimTrainer_Played_Normal = await accountScoreService.GetAimTrainerMatchesPlayedAsync(username, GameDifficulty.Normal);
             AimTrainer_Played_Hard = await accountScoreService.GetAimTrainerMatchesPlayedAsync(username, GameDifficulty.Hard);
             
             // highscore
+            AimTrainer_Highscore_Easy = await accountScoreService.GetAimTrainerHighscoreAsync(username, GameDifficulty.Easy);
             AimTrainer_Highscore_Normal = await accountScoreService.GetAimTrainerHighscoreAsync(username, GameDifficulty.Normal);
             AimTrainer_Highscore_Hard = await accountScoreService.GetAimTrainerHighscoreAsync(username, GameDifficulty.Hard);
 
             // average scores
+            AimTrainer_AllTimeAverage_Easy = await accountScoreService.GetAimTrainerAverageScoreAsync(username, GameDifficulty.Easy);
             AimTrainer_AllTimeAverage_Normal = await accountScoreService.GetAimTrainerAverageScoreAsync(username, GameDifficulty.Normal);
             AimTrainer_AllTimeAverage_Hard = await accountScoreService.GetAimTrainerAverageScoreAsync(username, GameDifficulty.Hard);
 
             // average scores for the last 7 days
+            AimTrainer_Average_Last7Days_Easy = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Easy);
             AimTrainer_Average_Last7Days_Normal = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Normal);
             AimTrainer_Average_Last7Days_Hard = await accountScoreService.GetAimTrainerAverageScoreLast7DaysAsync(username, GameDifficulty.Hard);
         }
@@ -360,6 +368,11 @@ namespace Projektas.Client.Pages {
 
         public void LoadAimTrainerDatasets() {
             AimTrainer_Average_Last7Days_Dataset = new Dataset[] {
+                new Dataset {
+                    Label = "Easy difficulty",
+                    Data = AimTrainer_Average_Last7Days_Easy.Select(s => s.Score.Scores ?? 0).ToArray(),
+                    BorderColor = "rgba(153, 102, 255, 1)", // Purple
+                },
                 new Dataset {
                     Label = "Normal difficulty",
                     Data = AimTrainer_Average_Last7Days_Normal.Select(s => s.Score.Scores ?? 0).ToArray(),
