@@ -99,7 +99,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.StartGame();
             var initialPosition = cut.Instance.TargetPosition;
 
-            cut.Instance.MoveTarget(1000, 400);
+            cut.Instance.MoveTargetNormal(1000, 400);
 
             var newPosition = cut.Instance.TargetPosition;
             Assert.NotEqual(initialPosition, newPosition);
@@ -112,7 +112,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.ChangeDifficulty("Hard");
             cut.Instance.StartGame();
 
-            cut.Instance.MoveTarget(1000, 400);
+            cut.Instance.MoveTargetNormal(1000, 400);
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(1, cut.Instance.moveDirection);
@@ -125,7 +125,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.TargetPosition = (10, 10);
             cut.Instance.moveDirection = 0; // left
 
-            cut.InvokeAsync(() => cut.Instance.MoveTarget(1000, 400));
+            cut.InvokeAsync(() => cut.Instance.MoveTargetNormal(1000, 400));
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(9, targetPosition.x);
@@ -138,7 +138,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.TargetPosition = (10, 10);
             cut.Instance.moveDirection = 1; // right
 
-            cut.InvokeAsync(() => cut.Instance.MoveTarget(1000, 400));
+            cut.InvokeAsync(() => cut.Instance.MoveTargetNormal(1000, 400));
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(11, targetPosition.x);
@@ -151,7 +151,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.TargetPosition = (10, 10);
             cut.Instance.moveDirection = 2; // up
 
-            cut.InvokeAsync(() => cut.Instance.MoveTarget(1000, 400));
+            cut.InvokeAsync(() => cut.Instance.MoveTargetNormal(1000, 400));
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(10, targetPosition.x);
@@ -164,7 +164,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.TargetPosition = (10, 10);
             cut.Instance.moveDirection = 3; // down
 
-            cut.InvokeAsync(() => cut.Instance.MoveTarget(1000, 400));
+            cut.InvokeAsync(() => cut.Instance.MoveTargetNormal(1000, 400));
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(10, targetPosition.x);
@@ -177,7 +177,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.TargetPosition = (4, 10);
             cut.Instance.moveDirection = 0; // left
 
-            cut.InvokeAsync(() => cut.Instance.MoveTarget(1000, 400));
+            cut.InvokeAsync(() => cut.Instance.MoveTargetNormal(1000, 400));
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(3, targetPosition.x);
@@ -191,7 +191,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.TargetPosition = (966, 10);
             cut.Instance.moveDirection = 1; // right
 
-            cut.InvokeAsync(() => cut.Instance.MoveTarget(1000, 400));
+            cut.InvokeAsync(() => cut.Instance.MoveTargetNormal(1000, 400));
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(967, targetPosition.x);
@@ -205,7 +205,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.TargetPosition = (10, 4);
             cut.Instance.moveDirection = 2; // up
 
-            cut.InvokeAsync(() => cut.Instance.MoveTarget(1000, 400));
+            cut.InvokeAsync(() => cut.Instance.MoveTargetNormal(1000, 400));
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(10, targetPosition.x);
@@ -219,7 +219,7 @@ namespace Projektas.Tests.Client_Tests.Pages {
             cut.Instance.TargetPosition = (10, 366);
             cut.Instance.moveDirection = 3; // down
 
-            cut.InvokeAsync(() => cut.Instance.MoveTarget(1000, 400));
+            cut.InvokeAsync(() => cut.Instance.MoveTargetNormal(1000, 400));
 
             var targetPosition = cut.Instance.TargetPosition;
             Assert.Equal(10, targetPosition.x);

@@ -90,7 +90,7 @@ namespace Projektas.Tests.Client_Tests.Pages
         List<AverageScoreDto> MathGame_Average_Last7Days_Normal { get; set; }
         List<AverageScoreDto> MathGame_Average_Last7Days_Hard { get; set; }
 
-
+         List<AverageScoreDto> AimTrainer_Average_Last7Days_Easy { get; set; }
         List<AverageScoreDto> AimTrainer_Average_Last7Days_Normal { get; set; }
         List<AverageScoreDto> AimTrainer_Average_Last7Days_Hard { get; set; }
 
@@ -233,15 +233,19 @@ namespace Projektas.Tests.Client_Tests.Pages
 
             component.Instance.LoadAimTrainerDatasets();
             Assert.NotNull(component.Instance.AimTrainer_Average_Last7Days_Dataset);
-            Assert.Equal(2, component.Instance.AimTrainer_Average_Last7Days_Dataset.Length);
+            Assert.Equal(3, component.Instance.AimTrainer_Average_Last7Days_Dataset.Length);
 
-            Assert.Equal("Normal difficulty", component.Instance.AimTrainer_Average_Last7Days_Dataset[0].Label);
+            Assert.Equal("Easy difficulty", component.Instance.AimTrainer_Average_Last7Days_Dataset[0].Label);
             Assert.Equal(new[] { 24, 25, 26, 27, 28, 29, 30 }, component.Instance.AimTrainer_Average_Last7Days_Dataset[0].Data);
-            Assert.Equal("rgba(54, 162, 235, 1)", component.Instance.AimTrainer_Average_Last7Days_Dataset[0].BorderColor);
+            Assert.Equal("rgba(153, 102, 255, 1)", component.Instance.AimTrainer_Average_Last7Days_Dataset[0].BorderColor);
 
-            Assert.Equal("Hard difficulty", component.Instance.AimTrainer_Average_Last7Days_Dataset[1].Label);
-            Assert.Equal(new[] { 29, 30, 31, 32, 33, 34, 35 }, component.Instance.AimTrainer_Average_Last7Days_Dataset[1].Data);
-            Assert.Equal("rgba(255, 99, 132, 1)", component.Instance.AimTrainer_Average_Last7Days_Dataset[1].BorderColor);
+            Assert.Equal("Normal difficulty", component.Instance.AimTrainer_Average_Last7Days_Dataset[1].Label);
+            Assert.Equal(new[] { 24, 25, 26, 27, 28, 29, 30 }, component.Instance.AimTrainer_Average_Last7Days_Dataset[1].Data);
+            Assert.Equal("rgba(54, 162, 235, 1)", component.Instance.AimTrainer_Average_Last7Days_Dataset[1].BorderColor);
+
+            Assert.Equal("Hard difficulty", component.Instance.AimTrainer_Average_Last7Days_Dataset[2].Label);
+            Assert.Equal(new[] { 29, 30, 31, 32, 33, 34, 35 }, component.Instance.AimTrainer_Average_Last7Days_Dataset[2].Data);
+            Assert.Equal("rgba(255, 99, 132, 1)", component.Instance.AimTrainer_Average_Last7Days_Dataset[2].BorderColor);
         }
 
         [Fact]
@@ -456,6 +460,18 @@ namespace Projektas.Tests.Client_Tests.Pages
             AimTrainer_Highscore_Hard = new GameScore { Scores = 35 };
             AimTrainer_AllTimeAverage_Normal = new GameScore { Scores = 22 };
             AimTrainer_AllTimeAverage_Hard = new GameScore { Scores = 28 };
+
+            AimTrainer_Average_Last7Days_Easy = new List<AverageScoreDto>
+            {
+            new AverageScoreDto { Score = new GameScore { Scores = 24 }, Date = DateTime.Today.AddDays(-6) },
+            new AverageScoreDto { Score = new GameScore { Scores = 25 }, Date = DateTime.Today.AddDays(-5) },
+            new AverageScoreDto { Score = new GameScore { Scores = 26 }, Date = DateTime.Today.AddDays(-4) },
+            new AverageScoreDto { Score = new GameScore { Scores = 27 }, Date = DateTime.Today.AddDays(-3) },
+            new AverageScoreDto { Score = new GameScore { Scores = 28 }, Date = DateTime.Today.AddDays(-2) },
+            new AverageScoreDto { Score = new GameScore { Scores = 29 }, Date = DateTime.Today.AddDays(-1) },
+            new AverageScoreDto { Score = new GameScore { Scores = 30 }, Date = DateTime.Today }
+        };
+
             AimTrainer_Average_Last7Days_Normal = new List<AverageScoreDto>
             {
                 new AverageScoreDto { Score = new GameScore { Scores = 24 }, Date = DateTime.Today.AddDays(-6) },
@@ -468,7 +484,6 @@ namespace Projektas.Tests.Client_Tests.Pages
             };
 
             AimTrainer_Average_Last7Days_Hard = new List<AverageScoreDto>
-            
             {
                 new AverageScoreDto { Score = new GameScore { Scores = 29 }, Date = DateTime.Today.AddDays(-6) },
                 new AverageScoreDto { Score = new GameScore { Scores = 30 }, Date = DateTime.Today.AddDays(-5) },
@@ -486,6 +501,7 @@ namespace Projektas.Tests.Client_Tests.Pages
             _mockAccountScoreService.Setup(s => s.GetAimTrainerHighscoreAsync(It.IsAny<string>(), GameDifficulty.Hard)).ReturnsAsync(AimTrainer_Highscore_Hard);
             _mockAccountScoreService.Setup(s => s.GetAimTrainerAverageScoreAsync(It.IsAny<string>(), GameDifficulty.Normal)).ReturnsAsync(AimTrainer_AllTimeAverage_Normal);
             _mockAccountScoreService.Setup(s => s.GetAimTrainerAverageScoreAsync(It.IsAny<string>(), GameDifficulty.Hard)).ReturnsAsync(AimTrainer_AllTimeAverage_Hard);
+            _mockAccountScoreService.Setup(s => s.GetAimTrainerAverageScoreLast7DaysAsync(It.IsAny<string>(), GameDifficulty.Easy)).ReturnsAsync(AimTrainer_Average_Last7Days_Easy);
             _mockAccountScoreService.Setup(s => s.GetAimTrainerAverageScoreLast7DaysAsync(It.IsAny<string>(), GameDifficulty.Normal)).ReturnsAsync(AimTrainer_Average_Last7Days_Normal);
             _mockAccountScoreService.Setup(s => s.GetAimTrainerAverageScoreLast7DaysAsync(It.IsAny<string>(), GameDifficulty.Hard)).ReturnsAsync(AimTrainer_Average_Last7Days_Hard);
         }
